@@ -28,14 +28,19 @@ position = Vector2(-1.6669922, 0)
 shape = SubResource("RectangleShape2D_u3kw2")
 
 [node name="Dosa" type="Sprite2D" parent="BlankOrderTicket" unique_id=1402215376]
+visible = false
 position = Vector2(-10.000162, 340)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_minuy")
 
 [node name="Chutney" type="Sprite2D" parent="BlankOrderTicket" unique_id=494091602]
+visible = false
 position = Vector2(0, 140.00002)
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("4_mugae")
+
+[node name="IconsStartPosition" type="Marker2D" parent="." unique_id=1998485111]
+position = Vector2(0, 102)
 
 [connection signal="mouse_entered" from="BlankOrderTicket" to="." method="_on_blank_order_ticket_mouse_entered"]
 [connection signal="mouse_exited" from="BlankOrderTicket" to="." method="_on_blank_order_ticket_mouse_exited"]

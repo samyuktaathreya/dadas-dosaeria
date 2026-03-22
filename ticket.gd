@@ -7,12 +7,14 @@ signal ticket_being_dragged
 var is_dragging = false
 
 const DOSA_SCALE = 0.026
-const DOSA_POSITION = Vector2(0, 230)
+var ICONS_START_POSITION
+const SPACE_BETWEEN_TICKET_ICONS = 200.0
 
 const CHUTNEY_SCALE = 0.026
 const CHUTNEY_POSITION = Vector2(0, 160)
 
-const FILE_PATH = "res://assets/"
+const DOSA_FILE_PATH = "res://assets/dosas/"
+const CHUTNEY_FILE_PATH = "res://assets/chutneys/"
 var customer_of_ticket
 var customer_data
 var hovering_on_ticket = false
@@ -30,26 +32,54 @@ var ticket_minimized = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	ICONS_START_POSITION = $IconsStartPosition.global_position
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
+	
+func spawn_dosa_icon(dosa_texture, icon_position):
+	var icon = Sprite2D.new()
+	icon.texture = dosa_texture
+	icon.global_position = icon_position
+	icon.scale = Vector2(DOSA_SCALE, DOSA_SCALE)
+	add_child(icon)
+	print("icon global position : ", icon.global_position)
+	return icon
+	
+func spawn_chutney_icon(chutney_texture, icon_position):
+	var icon = Sprite2D.new()
+	icon.texture = chutney_texture
+	icon.global_position = icon_position
+	icon.scale = Vector2(CHUTNEY_SCALE, CHUTNEY_SCALE)
+	icon.show()
+	add_child(icon)
+	print("icon global position : ", icon.global_position)
+	return icon
 
 func load_ticket(ticket_position, customer):
 	#food_type options: dosa, chutney, drink
 	customer_of_ticket = customer
 	customer_data = customer.data
 	var order = customer_data.order
+	print("customer order : ", order)
 	self.position = ticket_position
 	
-	$BlankOrderTicket/Dosa.texture = load(FILE_PATH + order.dosa + ".png")
-	$BlankOrderTicket/Dosa.position = DOSA_POSITION
-	$BlankOrderTicket/Dosa.scale = Vector2(DOSA_SCALE, DOSA_SCALE)
-
-	$BlankOrderTicket/Chutney.texture = load(FILE_PATH + order.chutney + ".png")
-	$BlankOrderTicket/Chutney.position = CHUTNEY_POSITION
-	$BlankOrderTicket/Chutney.scale = Vector2(CHUTNEY_SCALE, CHUTNEY_SCALE)
+	# i have to rewrite this 
+	# so that the icons are instantiated into the ticket based on the order
+	# iterate through dosas first
+	# spawn a dosa 
+	var icon_position = $IconsStartPosition.global_position
+	for dosa in order.dosa:
+		var dosa_texture = load(DOSA_FILE_PATH + dosa + ".png")
+		spawn_dosa_icon(dosa_texture, icon_position)
+		icon_position.y -= SPACE_BETWEEN_TICKET_ICONS
+	
+	# spawn the chutneys
+	for chutney in order.chutney:
+		var chutney_texture = load(CHUTNEY_FILE_PATH + chutney + ".png")
+		spawn_chutney_icon(chutney_texture, icon_position)
+		icon_position.y -= SPACE_BETWEEN_TICKET_ICONS
 
 func _input(event):
 	# start hovering mouse

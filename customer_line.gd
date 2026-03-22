@@ -9,16 +9,6 @@ var next_customer_id
 
 var customer_at_order_spot = false
 
-const DOSA_SPRITES = {
-	"plain": "res://assets/plaindosa.png",
-	"onion": "res://assets/oniondosa.png"
-}
-
-const CHUTNEY_SPRITES = {
-	"tomato": "res://assets/tomatochutney.png",
-	"coconut": "res://assets/Coconut_Chutney_AW.webp"
-}
-
 # structure of order
 # dictionary of lists
 # key   : value
@@ -28,10 +18,10 @@ const CHUTNEY_SPRITES = {
 
 func generate_random_order(dosa_cap: int = 1, chutney_cap: int = 1):
 	const DOSA_OPTIONS = ["PlainDosa", "OnionDosa"]
-	const CHUTNEY_OPTIONS = ["TomatoChutney", "CoconutChutney", "None"]
+	const CHUTNEY_OPTIONS = ["CoconutChutney", "MintChutney", "Sambar", "None"]
 
 	var dosa_count = randi_range(1, dosa_cap)
-	var chutney_count = randi_range(1, chutney_cap)
+	var chutney_count = randi_range(0, chutney_cap)
 
 	var dosas = []
 	for i in dosa_count:
@@ -73,9 +63,6 @@ func spawn_customer():
 	data.name = "GirlyPop"
 	data.order = generate_random_order()
 	data.state = CustomerData.CustomerState.IN_LINE
-	# TODO: change order creation so that customer can order more than 1 dosa
-	data.dosa_count = 1
-
 	#create customer child node
 	var customer = customer_scene.instantiate()
 	

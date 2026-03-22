@@ -5,11 +5,6 @@
 [ext_resource type="Texture2D" uid="uid://bhhnjubuaemof" path="res://speechbubble.png" id="2_k0wy0"]
 [ext_resource type="Texture2D" uid="uid://dc5mwp1lwkpws" path="res://customer front view.png" id="2_ngo0w"]
 [ext_resource type="Texture2D" uid="uid://dm1kyt05vexsv" path="res://chefWritingIdle.png" id="3_du5q0"]
-[ext_resource type="Texture2D" uid="uid://bldqdtb2t06tv" path="res://assets/dosa.png" id="3_k0wy0"]
-[ext_resource type="Texture2D" uid="uid://0aymdr7luekf" path="res://chefwriting.png" id="4_nntr7"]
-[ext_resource type="Texture2D" uid="uid://c8cuky8j7yxnn" path="res://assets/Coconut_Chutney_AW.webp" id="6_xika0"]
-[ext_resource type="Texture2D" uid="uid://c46px7okh8m28" path="res://assets/oniondosa.png" id="7_kjrd7"]
-[ext_resource type="Texture2D" uid="uid://c48nry8xhxgi" path="res://assets/tomatochutney.png" id="8_6171k"]
 [ext_resource type="Texture2D" uid="uid://6v3f8eqxyxug" path="res://ticket.webp" id="9_6171k"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_kjrd7"]
@@ -40,14 +35,6 @@ animations = [{
 "loop": true,
 "name": &"idle",
 "speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("4_nntr7")
-}],
-"loop": true,
-"name": &"writing",
-"speed": 5.0
 }]
 
 [node name="OrderScene" type="Control" unique_id=1516490798]
@@ -63,30 +50,8 @@ position = Vector2(912, 289)
 scale = Vector2(0.31315234, 0.32359082)
 texture = ExtResource("2_k0wy0")
 
-[node name="FoodIcons" type="Control" parent="OrderBubble" unique_id=1198999735]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="PlainDosa" type="Sprite2D" parent="OrderBubble/FoodIcons" unique_id=1005795531]
-position = Vector2(900, 250)
-scale = Vector2(0.5, 0.455)
-texture = ExtResource("3_k0wy0")
-
-[node name="OnionDosa" type="Sprite2D" parent="OrderBubble/FoodIcons" unique_id=1083773836]
-position = Vector2(926, 267)
-scale = Vector2(0.12183333, 0.11050001)
-texture = ExtResource("7_kjrd7")
-
-[node name="TomatoChutney" type="Sprite2D" parent="OrderBubble/FoodIcons" unique_id=761252448]
-position = Vector2(905.125, 257.625)
-scale = Vector2(0.10791667, 0.10425001)
-texture = ExtResource("8_6171k")
-
-[node name="CoconutChutney" type="Sprite2D" parent="OrderBubble/FoodIcons" unique_id=1611564474]
-position = Vector2(920, 247)
-scale = Vector2(0.4, 0.4)
-texture = ExtResource("6_xika0")
+[node name="SpeechBubbleIconPosition" type="Marker2D" parent="OrderBubble" unique_id=2086863294]
+position = Vector2(918, 255)
 
 [node name="CustomerOrdering" type="Node2D" parent="." unique_id=337452924]
 position = Vector2(0, 400)
@@ -115,30 +80,8 @@ offset_bottom = 532.0
 [node name="Sprite2D" type="Sprite2D" parent="TicketCinematic" unique_id=1650258993]
 texture = ExtResource("9_6171k")
 
-[node name="FoodIcons" type="Control" parent="TicketCinematic" unique_id=1516421132]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="PlainDosa" type="Sprite2D" parent="TicketCinematic/FoodIcons" unique_id=589139573]
-position = Vector2(22.999979, 336)
-scale = Vector2(0.49227226, 0.4193272)
-texture = ExtResource("3_k0wy0")
-
-[node name="OnionDosa" type="Sprite2D" parent="TicketCinematic/FoodIcons" unique_id=1166605510]
-position = Vector2(19.875122, 338.37506)
-scale = Vector2(0.09924998, 0.09591667)
-texture = ExtResource("7_kjrd7")
-
-[node name="TomatoChutney" type="Sprite2D" parent="TicketCinematic/FoodIcons" unique_id=2032788810]
-position = Vector2(6.875, 115.37503)
-scale = Vector2(0.10791667, 0.10425001)
-texture = ExtResource("8_6171k")
-
-[node name="CoconutChutney" type="Sprite2D" parent="TicketCinematic/FoodIcons" unique_id=1709881811]
-position = Vector2(16.999878, 129.99997)
-scale = Vector2(0.4, 0.4)
-texture = ExtResource("6_xika0")
+[node name="IconStartingTicketPosition" type="Marker2D" parent="TicketCinematic" unique_id=1865250917]
+position = Vector2(0, 300)
 
 [node name="BlackOverlay" type="ColorRect" parent="." unique_id=1756384086]
 visible = false
