@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://bkasbe31a11q2"]
+
+[ext_resource type="Script" uid="uid://cayee208it3ih" path="res://ui.gd" id="1_27fn8"]
+[ext_resource type="Texture2D" uid="uid://oc3h3j3117ih" path="res://assets/ticketrope.png" id="2_nltto"]
+[ext_resource type="PackedScene" uid="uid://cidvkgpklrdm5" path="res://ticket.tscn" id="3_27fn8"]
+[ext_resource type="Script" uid="uid://banep37kar5pr" path="res://button.gd" id="4_nltto"]
+
+[node name="UI" type="Control" unique_id=1022981567]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_27fn8")
+ticket_scene = ExtResource("3_27fn8")
+
+[node name="TicketHolder" type="Sprite2D" parent="." unique_id=1104468353]
+position = Vector2(961, 544)
+texture = ExtResource("2_nltto")
+
+[node name="TicketMarkers" type="Control" parent="." unique_id=2135681904]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Marker2D" type="Marker2D" parent="TicketMarkers" unique_id=1893108393]
+position = Vector2(1773, 163)
+
+[node name="Marker2D2" type="Marker2D" parent="TicketMarkers" unique_id=1650911790]
+position = Vector2(1597, 159)
+
+[node name="Marker2D3" type="Marker2D" parent="TicketMarkers" unique_id=1133496958]
+position = Vector2(1447, 159)
+
+[node name="CookingButton" type="Button" parent="." unique_id=200217667]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_left = 424.0
+offset_top = 939.0
+offset_right = 633.0
+offset_bottom = 1031.0
+text = "Cooking"
+script = ExtResource("4_nltto")
+
+[node name="ChutneyButton" type="Button" parent="." unique_id=981881124]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_left = 675.0
+offset_top = 936.0
+offset_right = 884.0
+offset_bottom = 1028.0
+text = "Chutney"
+script = ExtResource("4_nltto")
+
+[node name="DrinkButton" type="Button" parent="." unique_id=1723736018]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_left = 924.0
+offset_top = 932.0
+offset_right = 1133.0
+offset_bottom = 1024.0
+text = "Drink"
+script = ExtResource("4_nltto")
+
+[node name="OrderButton" type="Button" parent="." unique_id=518023973]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 0
+offset_left = 147.0
+offset_top = 939.0
+offset_right = 356.0
+offset_bottom = 1031.0
+text = "Order"
+script = ExtResource("4_nltto")
+
+[connection signal="pressed" from="CookingButton" to="." method="_on_cooking_button_pressed"]
+[connection signal="pressed" from="ChutneyButton" to="." method="_on_chutney_button_pressed"]
+[connection signal="pressed" from="DrinkButton" to="." method="_on_drink_button_pressed"]
+[connection signal="pressed" from="OrderButton" to="." method="_on_order_button_pressed"]

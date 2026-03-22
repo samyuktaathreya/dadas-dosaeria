@@ -1,0 +1,177 @@
+[gd_scene format=3 uid="uid://dng8bgp6rya5o"]
+
+[ext_resource type="Texture2D" uid="uid://e4vmfb40kgdg" path="res://assets/bananaleaf.webp" id="1_5urrr"]
+[ext_resource type="Script" uid="uid://njp1iswwd5e1" path="res://drink_scene.gd" id="1_ptjgn"]
+[ext_resource type="PackedScene" uid="uid://cfvcomapmnrg0" path="res://cup.tscn" id="2_woxac"]
+[ext_resource type="Texture2D" uid="uid://echvx6hretqk" path="res://assets/emptiestdrinkdispenser.png" id="3_rei6w"]
+[ext_resource type="Texture2D" uid="uid://e4xrojj2n3e2" path="res://assets/emptydrinkdispenser.png" id="4_herq5"]
+[ext_resource type="Script" uid="uid://c230gj2h3hdfy" path="res://sugar_ice_collection.gd" id="5_qo2ml"]
+[ext_resource type="Texture2D" uid="uid://bkqxh5yu3d8um" path="res://assets/barfordispensingicesugar.png" id="7_51ej6"]
+[ext_resource type="Texture2D" uid="uid://du7vil3nk84lh" path="res://assets/ballfordispensingsugarice.png" id="8_cahwq"]
+[ext_resource type="Script" uid="uid://dkw7td5ghjghf" path="res://ball.gd" id="9_lmtur"]
+[ext_resource type="Texture2D" uid="uid://by3if2fs0j31n" path="res://assets/submit_ticket.png" id="10_herq5"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ptjgn"]
+radius = 188.0
+height = 694.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fmbap"]
+size = Vector2(47.25, 69.25)
+
+[node name="DrinkScene" type="Node2D" unique_id=838950850]
+script = ExtResource("1_ptjgn")
+cup_scene = ExtResource("2_woxac")
+
+[node name="BananaLeaf" type="Area2D" parent="." unique_id=983708873]
+position = Vector2(978, 631)
+scale = Vector2(0.8, 0.8)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=696622561]
+texture = ExtResource("1_5urrr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BananaLeaf" unique_id=824070031]
+position = Vector2(-55, 7)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_ptjgn")
+
+[node name="DrinkDispenser" type="Control" parent="." unique_id=2079022300]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 782.0
+offset_top = 391.0
+offset_right = 822.0
+offset_bottom = 391.0
+scale = Vector2(0.5, 0.5)
+
+[node name="CupSpawnPoint" type="Marker2D" parent="DrinkDispenser" unique_id=2027452296]
+position = Vector2(-676, 10)
+scale = Vector2(2, 2)
+
+[node name="DrinkDispenserRect" type="Sprite2D" parent="DrinkDispenser" unique_id=786062488]
+texture = ExtResource("3_rei6w")
+
+[node name="EmptyDrinkDispenser" type="Sprite2D" parent="DrinkDispenser" unique_id=114546349]
+texture = ExtResource("4_herq5")
+
+[node name="DrinkCollection" type="Control" parent="DrinkDispenser/EmptyDrinkDispenser" unique_id=1604842740]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MangoLassi" type="Button" parent="DrinkDispenser/EmptyDrinkDispenser/DrinkCollection" unique_id=1850374841]
+layout_mode = 0
+offset_left = -1216.0
+offset_top = -702.0
+offset_right = -896.0
+offset_bottom = -426.0
+text = "Mango Lassi
+"
+
+[node name="FilterCoffee" type="Button" parent="DrinkDispenser/EmptyDrinkDispenser/DrinkCollection" unique_id=2117774288]
+layout_mode = 0
+offset_left = -886.0
+offset_top = -700.0
+offset_right = -482.0
+offset_bottom = -432.0
+text = "Filter Coffee
+"
+
+[node name="SugarIceCollection" type="Control" parent="DrinkDispenser/EmptyDrinkDispenser" unique_id=542582512]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("5_qo2ml")
+
+[node name="SugarButton" type="Button" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=395170539]
+layout_mode = 0
+offset_left = -1208.0
+offset_top = -620.0
+offset_right = -970.0
+offset_bottom = -424.0
+text = "Sugar"
+
+[node name="IceButton" type="Button" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=703863723]
+layout_mode = 0
+offset_left = -428.0
+offset_top = -610.0
+offset_right = -114.0
+offset_bottom = -424.0
+text = "Ice"
+
+[node name="Bar" type="Sprite2D" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=1766269558]
+texture = ExtResource("7_51ej6")
+
+[node name="Ball" type="Sprite2D" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=305465467]
+texture = ExtResource("8_cahwq")
+script = ExtResource("9_lmtur")
+
+[node name="ButtonForMinigame" type="Button" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=631999875]
+layout_mode = 0
+offset_left = -722.0
+offset_top = -504.0
+offset_right = -618.0
+offset_bottom = -410.0
+
+[node name="SugarIceEncouragement" type="Label" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=15182794]
+layout_mode = 0
+offset_left = -1548.0
+offset_top = -418.0
+offset_right = -1214.0
+offset_bottom = -158.0
+
+[node name="SugarIceEncouragementTimer" type="Timer" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=657138879]
+
+[node name="TooManyCupsWarning" type="Label" parent="." unique_id=279763916]
+offset_left = 353.0
+offset_top = 371.0
+offset_right = 541.0
+offset_bottom = 420.0
+text = "Too many cups in queue
+Cannot dispense drink"
+
+[node name="TooManyCupsWarningTimer" type="Timer" parent="." unique_id=1693873020]
+wait_time = 3.0
+
+[node name="SubmitTicketHere" type="Area2D" parent="." unique_id=334729559]
+position = Vector2(333, 745)
+metadata/_edit_group_ = true
+
+[node name="SubmitTicketSprite" type="Sprite2D" parent="SubmitTicketHere" unique_id=2102267453]
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("10_herq5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SubmitTicketHere" unique_id=1710386996]
+position = Vector2(4.5, -3.5)
+scale = Vector2(4, 4)
+shape = SubResource("RectangleShape2D_fmbap")
+
+[node name="SubmitTicketHereLabel" type="Label" parent="SubmitTicketHere" unique_id=1842203005]
+offset_left = -91.0
+offset_right = 97.0
+offset_bottom = 75.0
+text = " Submit ticket here"
+
+[node name="CantPourNowWarning" type="Label" parent="." unique_id=1811081757]
+offset_left = 111.0
+offset_top = 337.0
+offset_right = 358.0
+offset_bottom = 385.0
+text = "pouring other drink in progress"
+
+[node name="CantPourNowTimer" type="Timer" parent="." unique_id=557789173]
+
+[connection signal="mouse_entered" from="BananaLeaf" to="." method="_on_banana_leaf_mouse_entered"]
+[connection signal="mouse_exited" from="BananaLeaf" to="." method="_on_banana_leaf_mouse_exited"]
+[connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/DrinkCollection/MangoLassi" to="." method="_on_mango_lassi_pressed"]
+[connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/DrinkCollection/FilterCoffee" to="." method="_on_filter_coffee_pressed"]
+[connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection/SugarButton" to="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" method="_on_sugar_button_pressed"]
+[connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection/IceButton" to="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" method="_on_ice_button_pressed"]
+[connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection/ButtonForMinigame" to="." method="_on_button_for_minigame_pressed"]
+[connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection/ButtonForMinigame" to="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" method="_on_button_for_minigame_pressed"]
+[connection signal="timeout" from="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection/SugarIceEncouragementTimer" to="." method="_on_sugar_ice_encouragement_timer_timeout"]
+[connection signal="timeout" from="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection/SugarIceEncouragementTimer" to="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" method="_on_sugar_ice_encouragement_timer_timeout"]
+[connection signal="timeout" from="TooManyCupsWarningTimer" to="." method="_on_too_many_cups_warning_timer_timeout"]
+[connection signal="timeout" from="CantPourNowTimer" to="." method="_on_cant_pour_now_timer_timeout"]

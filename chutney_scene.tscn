@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://36hp7hvdr83p"]
+
+[ext_resource type="Script" uid="uid://cmukepvd3bwuw" path="res://chutney_scene.gd" id="1_d8ey3"]
+[ext_resource type="PackedScene" uid="uid://dg4m7keqbr3yg" path="res://katori.tscn" id="2_7omhc"]
+[ext_resource type="Texture2D" uid="uid://e4vmfb40kgdg" path="res://assets/bananaleaf.webp" id="2_p4bs0"]
+[ext_resource type="Texture2D" uid="uid://ddbooh5xnnk5r" path="res://assets/sambarcontainer.png" id="4_kpurj"]
+[ext_resource type="Texture2D" uid="uid://ctkv6aeapd7l3" path="res://assets/coconutchutneycontainer.png" id="5_w2k57"]
+[ext_resource type="Texture2D" uid="uid://dvwlef71t5m0j" path="res://assets/mintchutneycontainer.png" id="6_4io5g"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7omhc"]
+radius = 188.0
+height = 694.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5ru28"]
+size = Vector2(199, 25)
+
+[node name="ChutneyScene" type="Node2D" unique_id=1190726134]
+script = ExtResource("1_d8ey3")
+katori_scene = ExtResource("2_7omhc")
+
+[node name="DosaPile" type="Node2D" parent="." unique_id=1328042216]
+position = Vector2(246, 665)
+
+[node name="BananaLeaf2" type="Area2D" parent="DosaPile" unique_id=1575324487]
+scale = Vector2(0.5, 0.5)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="DosaPile/BananaLeaf2" unique_id=571810990]
+texture = ExtResource("2_p4bs0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DosaPile/BananaLeaf2" unique_id=400835781]
+position = Vector2(-55, 7)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_7omhc")
+
+[node name="BananaLeaf" type="Area2D" parent="." unique_id=1330158170]
+position = Vector2(978, 631)
+scale = Vector2(0.8, 0.8)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=12128473]
+texture = ExtResource("2_p4bs0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BananaLeaf" unique_id=928741626]
+position = Vector2(-55, 7)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_7omhc")
+
+[node name="KatoriSpawnPoint" type="Marker2D" parent="." unique_id=1793355345]
+position = Vector2(1606, 634)
+
+[node name="SambarChutneyContainer" type="Control" parent="." unique_id=357273474]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SambarContainer" type="Area2D" parent="SambarChutneyContainer" unique_id=1213215072]
+position = Vector2(338, 317)
+
+[node name="Sprite2D" type="Sprite2D" parent="SambarChutneyContainer/SambarContainer" unique_id=1927538283]
+position = Vector2(51, -352)
+texture = ExtResource("4_kpurj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SambarChutneyContainer/SambarContainer" unique_id=171949763]
+position = Vector2(-1.5, -99.5)
+shape = SubResource("RectangleShape2D_5ru28")
+
+[node name="CocountChutneyContainer" type="Area2D" parent="SambarChutneyContainer" unique_id=1347080038]
+position = Vector2(612, 316)
+
+[node name="Sprite2D" type="Sprite2D" parent="SambarChutneyContainer/CocountChutneyContainer" unique_id=614074459]
+position = Vector2(51, -352)
+texture = ExtResource("5_w2k57")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SambarChutneyContainer/CocountChutneyContainer" unique_id=1316573572]
+position = Vector2(-4, -95)
+shape = SubResource("RectangleShape2D_5ru28")
+
+[node name="MintChutneyContainer" type="Area2D" parent="SambarChutneyContainer" unique_id=1937206544]
+position = Vector2(880, 324)
+
+[node name="Sprite2D" type="Sprite2D" parent="SambarChutneyContainer/MintChutneyContainer" unique_id=446568149]
+position = Vector2(51, -352)
+texture = ExtResource("6_4io5g")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SambarChutneyContainer/MintChutneyContainer" unique_id=1983889567]
+position = Vector2(-2, -96)
+shape = SubResource("RectangleShape2D_5ru28")
+
+[node name="ContinueButton" type="Button" parent="." unique_id=335829934]
+offset_left = 1457.0
+offset_top = 473.0
+offset_right = 1532.0
+offset_bottom = 498.0
+
+[node name="ContinueLabel" type="Label" parent="ContinueButton" unique_id=1000376642]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Continue
+"
+
+[node name="WarningLabel" type="Label" parent="ContinueButton" unique_id=1511769056]
+layout_mode = 0
+offset_left = 1.0
+offset_top = -66.0
+offset_right = 270.0
+offset_bottom = -17.0
+text = "Finish the order in the drink scene 
+before submitting this one."
+
+[node name="WarningTimer" type="Timer" parent="ContinueButton" unique_id=891292062]
+
+[connection signal="mouse_entered" from="DosaPile/BananaLeaf2" to="." method="_on_banana_leaf_2_mouse_entered"]
+[connection signal="mouse_exited" from="DosaPile/BananaLeaf2" to="." method="_on_banana_leaf_2_mouse_exited"]
+[connection signal="area_entered" from="BananaLeaf" to="." method="_on_banana_leaf_area_entered"]
+[connection signal="area_exited" from="BananaLeaf" to="." method="_on_banana_leaf_area_exited"]
+[connection signal="mouse_entered" from="BananaLeaf" to="." method="_on_banana_leaf_mouse_entered"]
+[connection signal="mouse_exited" from="BananaLeaf" to="." method="_on_banana_leaf_mouse_exited"]
+[connection signal="pressed" from="ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="timeout" from="ContinueButton/WarningTimer" to="." method="_on_warning_timer_timeout"]

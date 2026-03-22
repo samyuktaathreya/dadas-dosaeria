@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://7fntxqcuyaaa"]
+
+[ext_resource type="Script" uid="uid://citanece3xe5y" path="res://dough_particle.gd" id="1_wg4tg"]
+[ext_resource type="Texture2D" uid="uid://bpw3csectujho" path="res://assets/dough pour 4.png" id="2_l4he3"]
+[ext_resource type="Texture2D" uid="uid://c27ab3fgvl1rs" path="res://assets/dough pour 3.png" id="3_g3d4r"]
+[ext_resource type="Texture2D" uid="uid://c8dhy8excgpw3" path="res://assets/dough pour 2.png" id="4_qrx2v"]
+[ext_resource type="Texture2D" uid="uid://b5atbr11rwjjf" path="res://assets/dough pour 1.png" id="5_65foj"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qhalt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_65foj")
+}],
+"loop": true,
+"name": &"poured",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_l4he3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_g3d4r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_qrx2v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_65foj")
+}],
+"loop": false,
+"name": &"pouring",
+"speed": 5.0
+}]
+
+[node name="DoughParticle" type="RigidBody2D" unique_id=2085515236]
+script = ExtResource("1_wg4tg")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=594424646]
+scale = Vector2(0.05, 0.05)
+sprite_frames = SubResource("SpriteFrames_qhalt")
+animation = &"pouring"

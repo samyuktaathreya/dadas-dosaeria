@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://cxoinwbbw7h18"]
+
+[ext_resource type="Script" uid="uid://85wli6iydyig" path="res://submit_scene.gd" id="1_xu1dr"]
+[ext_resource type="Texture2D" uid="uid://oxv28jdynp51" path="res://girlypopfacingforward.PNG" id="2_ansjy"]
+[ext_resource type="Texture2D" uid="uid://e4vmfb40kgdg" path="res://assets/bananaleaf.webp" id="2_l3md0"]
+[ext_resource type="Texture2D" uid="uid://bl1ukvmt00slq" path="res://tip_jar.webp" id="4_gs1np"]
+[ext_resource type="PackedScene" uid="uid://bkasbe31a11q2" path="res://ui.tscn" id="5_8kuvi"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gs1np"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ansjy")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ansjy"]
+radius = 188.0
+height = 694.0
+
+[node name="SubmitScene" type="Node2D" unique_id=810134885]
+script = ExtResource("1_xu1dr")
+
+[node name="Customer" type="AnimatedSprite2D" parent="." unique_id=301051675]
+position = Vector2(562, 311)
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_gs1np")
+offset = Vector2(520, -500)
+
+[node name="BananaLeaf" type="Area2D" parent="." unique_id=1581775536]
+position = Vector2(978, 631)
+scale = Vector2(0.8, 0.8)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=163308388]
+texture = ExtResource("2_l3md0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BananaLeaf" unique_id=515465172]
+position = Vector2(-55, 7)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_ansjy")
+
+[node name="ScoreLabels" type="Control" parent="." unique_id=1731590680]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="OrderScore" type="Label" parent="ScoreLabels" unique_id=2138781639]
+layout_mode = 0
+offset_left = 144.0
+offset_top = 731.0
+offset_right = 358.0
+offset_bottom = 848.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CookingScore" type="Label" parent="ScoreLabels" unique_id=46519778]
+layout_mode = 0
+offset_left = 422.0
+offset_top = 740.0
+offset_right = 636.0
+offset_bottom = 857.0
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ChutneyScore" type="Label" parent="ScoreLabels" unique_id=424575677]
+layout_mode = 0
+offset_left = 677.0
+offset_top = 695.0
+offset_right = 891.0
+offset_bottom = 812.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DrinkScore" type="Label" parent="ScoreLabels" unique_id=928203002]
+layout_mode = 0
+offset_left = 921.0
+offset_top = 686.0
+offset_right = 1135.0
+offset_bottom = 803.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TotalScore" type="Label" parent="ScoreLabels" unique_id=953823874]
+layout_mode = 0
+offset_left = 201.0
+offset_top = 59.0
+offset_right = 388.0
+offset_bottom = 176.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TipJar" type="Sprite2D" parent="." unique_id=527794881]
+position = Vector2(1505, 458)
+scale = Vector2(0.6191406, 0.5527344)
+texture = ExtResource("4_gs1np")
+
+[node name="Tip" type="Label" parent="." unique_id=1784370757]
+offset_left = 1332.0
+offset_top = 189.0
+offset_right = 1719.0
+offset_bottom = 291.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BlackOverlay" type="ColorRect" parent="." unique_id=620788375]
+visible = false
+modulate = Color(0, 0, 0, 1)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="UI" parent="." unique_id=1022981567 instance=ExtResource("5_8kuvi")]
+offset_top = -79.0
+offset_bottom = -39.0

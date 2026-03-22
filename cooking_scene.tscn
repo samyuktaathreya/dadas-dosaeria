@@ -1,0 +1,91 @@
+[gd_scene format=3 uid="uid://bqkmmqprpq326"]
+
+[ext_resource type="Script" uid="uid://crpxcd278ewhp" path="res://cooking_scene.gd" id="1_h4ueq"]
+[ext_resource type="Texture2D" uid="uid://cnyoi53x5v2ts" path="res://assets/dosadoughtexture.png" id="2_d012u"]
+[ext_resource type="Script" uid="uid://bqpf8hbildk6f" path="res://dosa_pan.gd" id="3_4s84g"]
+[ext_resource type="Texture2D" uid="uid://cilfw7v8cycb4" path="res://pan.webp" id="3_d012u"]
+[ext_resource type="Shader" uid="uid://cejgqwynjtpx7" path="res://batter.gdshader" id="4_p3dy2"]
+[ext_resource type="Script" uid="uid://c0ojx2osfom80" path="res://dough_bucket.gd" id="6_pxni0"]
+[ext_resource type="Texture2D" uid="uid://n03brvxpm4dv" path="res://dosadoughbucket.jpeg" id="7_xw36g"]
+[ext_resource type="Texture2D" uid="uid://4c03ks73b3j5" path="res://ladel.png" id="8_bnxyp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4s84g"]
+radius = 12.450521
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o2vds"]
+shader = ExtResource("4_p3dy2")
+shader_parameter/cook_level = 0.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b6ovn"]
+size = Vector2(141, 171)
+
+[node name="CookingScene" type="Node2D" unique_id=1663736171]
+script = ExtResource("1_h4ueq")
+
+[node name="DosaPan" type="Area2D" parent="." unique_id=731614058]
+position = Vector2(461, 564)
+script = ExtResource("3_4s84g")
+
+[node name="Sprite2D" type="Sprite2D" parent="DosaPan" unique_id=749559250]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_d012u")
+
+[node name="DosaPanCollision" type="CollisionShape2D" parent="DosaPan" unique_id=336043458]
+position = Vector2(-71, 78)
+scale = Vector2(18, 18)
+shape = SubResource("CircleShape2D_4s84g")
+
+[node name="DosaPan2" type="Area2D" parent="." unique_id=950702104]
+position = Vector2(461, 564)
+script = ExtResource("3_4s84g")
+
+[node name="Sprite2D" type="Sprite2D" parent="DosaPan2" unique_id=1680672432]
+position = Vector2(679, -6)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_d012u")
+
+[node name="DosaPanCollision" type="CollisionShape2D" parent="DosaPan2" unique_id=391157063]
+position = Vector2(-71, 78)
+scale = Vector2(18, 18)
+shape = SubResource("CircleShape2D_4s84g")
+
+[node name="BatterCanvas" type="Sprite2D" parent="." unique_id=160923288]
+material = SubResource("ShaderMaterial_o2vds")
+position = Vector2(960, 540)
+texture = ExtResource("2_d012u")
+
+[node name="DoughBucket" type="Area2D" parent="." unique_id=579768859]
+position = Vector2(168, 154)
+script = ExtResource("6_pxni0")
+
+[node name="DoughBucket" type="Sprite2D" parent="DoughBucket" unique_id=1704687388]
+texture = ExtResource("7_xw36g")
+
+[node name="Ladle" type="Sprite2D" parent="DoughBucket" unique_id=1220520488]
+position = Vector2(11.000015, -59)
+scale = Vector2(0.24722221, 0.36666667)
+texture = ExtResource("8_bnxyp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoughBucket" unique_id=870981745]
+position = Vector2(3.5, 26.5)
+shape = SubResource("RectangleShape2D_b6ovn")
+
+[node name="SpreadDoughTimer" type="Timer" parent="." unique_id=133030555]
+wait_time = 6.0
+one_shot = true
+
+[node name="PourDoughDetector" type="Area2D" parent="." unique_id=1862068313]
+
+[node name="PourDoughCollision" type="CollisionShape2D" parent="PourDoughDetector" unique_id=1911382022]
+position = Vector2(391, 642)
+scale = Vector2(3, 3)
+shape = SubResource("CircleShape2D_4s84g")
+
+[connection signal="mouse_entered" from="DosaPan" to="." method="_on_dosa_pan_mouse_entered"]
+[connection signal="mouse_exited" from="DosaPan" to="." method="_on_dosa_pan_mouse_exited"]
+[connection signal="mouse_entered" from="DosaPan2" to="." method="_on_dosa_pan_mouse_entered"]
+[connection signal="mouse_exited" from="DosaPan2" to="." method="_on_dosa_pan_mouse_exited"]
+[connection signal="doughBucketClicked" from="DoughBucket" to="." method="_on_dough_bucket_dough_bucket_clicked"]
+[connection signal="mouse_entered" from="DoughBucket" to="." method="_on_dough_bucket_mouse_entered"]
+[connection signal="timeout" from="SpreadDoughTimer" to="." method="_on_spread_dough_timer_timeout"]
+[connection signal="mouse_entered" from="PourDoughDetector" to="." method="_on_pour_dough_detector_mouse_entered"]

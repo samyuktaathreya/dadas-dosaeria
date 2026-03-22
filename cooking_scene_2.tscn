@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://cwg3522v8sj6p"]
+
+[ext_resource type="Script" uid="uid://bpabrjfuht7vf" path="res://cooking_scene_2.gd" id="1_5mg6d"]
+[ext_resource type="PackedScene" uid="uid://vf2u543my0jc" path="res://tawa.tscn" id="1_ewv8k"]
+[ext_resource type="Script" uid="uid://c0ojx2osfom80" path="res://dough_bucket.gd" id="2_qv3c0"]
+[ext_resource type="Texture2D" uid="uid://n03brvxpm4dv" path="res://dosadoughbucket.jpeg" id="3_tlmgs"]
+[ext_resource type="Texture2D" uid="uid://4c03ks73b3j5" path="res://ladel.png" id="4_5mq4u"]
+[ext_resource type="Script" uid="uid://b4skg2e44jt1p" path="res://ladle.gd" id="5_tlmgs"]
+[ext_resource type="Texture2D" uid="uid://e4vmfb40kgdg" path="res://assets/bananaleaf.webp" id="6_5mq4u"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5mg6d"]
+size = Vector2(141, 171)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_msocd"]
+size = Vector2(663, 392)
+
+[node name="CookingScene2" type="Node2D" unique_id=704392818]
+script = ExtResource("1_5mg6d")
+
+[node name="TawaController" parent="." unique_id=33808163 instance=ExtResource("1_ewv8k")]
+position = Vector2(0, -98)
+
+[node name="TawaController2" parent="." unique_id=806975220 instance=ExtResource("1_ewv8k")]
+position = Vector2(642, -102)
+
+[node name="TawaController3" parent="." unique_id=1100728395 instance=ExtResource("1_ewv8k")]
+position = Vector2(1214, -101)
+
+[node name="DoughBucket" type="Area2D" parent="." unique_id=770816145]
+position = Vector2(168, 154)
+script = ExtResource("2_qv3c0")
+
+[node name="DoughBucket" type="Sprite2D" parent="DoughBucket" unique_id=476228350]
+texture = ExtResource("3_tlmgs")
+
+[node name="Ladle" type="Sprite2D" parent="DoughBucket" unique_id=1506782833]
+position = Vector2(11.000015, -59)
+scale = Vector2(0.24722221, 0.36666667)
+texture = ExtResource("4_5mq4u")
+script = ExtResource("5_tlmgs")
+
+[node name="LadleCooldown" type="Timer" parent="DoughBucket" unique_id=638501347]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoughBucket" unique_id=1555700680]
+position = Vector2(3.5, 26.5)
+shape = SubResource("RectangleShape2D_5mg6d")
+
+[node name="BananaLeaf" type="Area2D" parent="." unique_id=77542014]
+position = Vector2(1716.0001, 958)
+scale = Vector2(0.6, 0.6)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=1118434003]
+texture = ExtResource("6_5mq4u")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BananaLeaf" unique_id=1641845174]
+position = Vector2(-56.5, -3)
+shape = SubResource("RectangleShape2D_msocd")
+
+[connection signal="drag_ladle_signal" from="TawaController" to="DoughBucket/Ladle" method="_on_tawa_controller_drag_ladle_signal"]
+[connection signal="return_ladle" from="TawaController" to="DoughBucket/Ladle" method="_on_tawa_controller_return_ladle"]
+[connection signal="drag_ladle_signal" from="TawaController2" to="DoughBucket/Ladle" method="_on_tawa_controller_drag_ladle_signal"]
+[connection signal="return_ladle" from="TawaController2" to="DoughBucket/Ladle" method="_on_tawa_controller_return_ladle"]
+[connection signal="drag_ladle_signal" from="TawaController3" to="DoughBucket/Ladle" method="_on_tawa_controller_drag_ladle_signal"]
+[connection signal="return_ladle" from="TawaController3" to="DoughBucket/Ladle" method="_on_tawa_controller_return_ladle"]
+[connection signal="area_entered" from="DoughBucket" to="DoughBucket" method="_on_area_entered"]
+[connection signal="area_exited" from="DoughBucket" to="DoughBucket" method="_on_area_exited"]
+[connection signal="doughBucketClicked" from="DoughBucket" to="DoughBucket/Ladle" method="_on_dough_bucket_dough_bucket_clicked"]
+[connection signal="mouse_entered" from="DoughBucket" to="TawaController" method="_on_dough_bucket_mouse_entered"]
+[connection signal="mouse_entered" from="DoughBucket" to="TawaController2" method="_on_dough_bucket_mouse_entered"]
+[connection signal="mouse_entered" from="DoughBucket" to="TawaController3" method="_on_dough_bucket_mouse_entered"]
+[connection signal="mouse_exited" from="DoughBucket" to="TawaController" method="_on_dough_bucket_mouse_exited"]
+[connection signal="mouse_exited" from="DoughBucket" to="TawaController2" method="_on_dough_bucket_mouse_exited"]
+[connection signal="mouse_exited" from="DoughBucket" to="TawaController3" method="_on_dough_bucket_mouse_exited"]
+[connection signal="timeout" from="DoughBucket/LadleCooldown" to="DoughBucket/Ladle" method="_on_ladle_cooldown_timeout"]
+[connection signal="mouse_entered" from="BananaLeaf" to="TawaController" method="_on_banana_leaf_mouse_entered"]
+[connection signal="mouse_entered" from="BananaLeaf" to="TawaController2" method="_on_banana_leaf_mouse_entered"]
+[connection signal="mouse_entered" from="BananaLeaf" to="TawaController3" method="_on_banana_leaf_mouse_entered"]
+[connection signal="mouse_exited" from="BananaLeaf" to="TawaController" method="_on_banana_leaf_mouse_exited"]
+[connection signal="mouse_exited" from="BananaLeaf" to="TawaController2" method="_on_banana_leaf_mouse_exited"]
+[connection signal="mouse_exited" from="BananaLeaf" to="TawaController3" method="_on_banana_leaf_mouse_exited"]
