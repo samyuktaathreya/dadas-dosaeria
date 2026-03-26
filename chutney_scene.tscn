@@ -66,14 +66,14 @@ texture = ExtResource("4_kpurj")
 position = Vector2(-1.5, -99.5)
 shape = SubResource("RectangleShape2D_5ru28")
 
-[node name="CocountChutneyContainer" type="Area2D" parent="SambarChutneyContainer" unique_id=1347080038]
+[node name="CoconutChutneyContainer" type="Area2D" parent="SambarChutneyContainer" unique_id=1347080038]
 position = Vector2(612, 316)
 
-[node name="Sprite2D" type="Sprite2D" parent="SambarChutneyContainer/CocountChutneyContainer" unique_id=614074459]
+[node name="Sprite2D" type="Sprite2D" parent="SambarChutneyContainer/CoconutChutneyContainer" unique_id=614074459]
 position = Vector2(51, -352)
 texture = ExtResource("5_w2k57")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SambarChutneyContainer/CocountChutneyContainer" unique_id=1316573572]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SambarChutneyContainer/CoconutChutneyContainer" unique_id=1316573572]
 position = Vector2(-4, -95)
 shape = SubResource("RectangleShape2D_5ru28")
 

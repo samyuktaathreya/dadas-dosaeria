@@ -73,9 +73,6 @@ shape = SubResource("RectangleShape2D_0xm2m")
 [node name="CustomerSpawnPoint" type="Marker2D" parent="CustomerLineScene" unique_id=1280739318]
 position = Vector2(1562, 575)
 
-[node name="OrderScene" parent="." unique_id=1516490798 instance=ExtResource("4_1bvp3")]
-visible = false
-
 [node name="CookingScene" parent="." unique_id=704392818 instance=ExtResource("7_4c57u")]
 visible = false
 
@@ -93,16 +90,18 @@ position = Vector2(0, -21)
 offset_top = -100.0
 offset_bottom = -60.0
 
+[node name="OrderScene" parent="." unique_id=1516490798 instance=ExtResource("4_1bvp3")]
+visible = false
+
 [connection signal="order_scene" from="." to="UI" method="_on_main_order_scene"]
 [connection signal="area_entered" from="CustomerLineScene/OrderSpot" to="CustomerLineScene" method="_on_order_spot_area_entered"]
 [connection signal="area_exited" from="CustomerLineScene/OrderSpot" to="CustomerLineScene" method="_on_order_spot_area_exited"]
 [connection signal="timeout" from="CustomerLineScene/CustomerSpawner" to="CustomerLineScene" method="_on_customer_spawner_timeout"]
-[connection signal="order_complete" from="OrderScene" to="CustomerLineScene" method="_on_order_scene_order_complete"]
 [connection signal="dosa_submitted" from="CookingScene" to="ChutneyScene" method="_on_cooking_scene_dosa_submitted"]
 [connection signal="banana_leaf_updated" from="ChutneyScene" to="." method="_on_chutney_scene_banana_leaf_updated"]
-[connection signal="banana_leaf_updated" from="ChutneyScene" to="DrinkScene" method="_on_chutney_scene_banana_leaf_updated"]
 [connection signal="submit_scene_finished" from="SubmitScene" to="." method="_on_submit_scene_submit_scene_finished"]
 [connection signal="chutney_button_pressed" from="UI" to="." method="_on_ui_chutney_button_pressed"]
 [connection signal="cooking_button_pressed" from="UI" to="." method="_on_ui_cooking_button_pressed"]
 [connection signal="drink_button_pressed" from="UI" to="." method="_on_ui_drink_button_pressed"]
 [connection signal="order_button_pressed" from="UI" to="." method="_on_ui_order_button_pressed"]
+[connection signal="order_complete" from="OrderScene" to="CustomerLineScene" method="_on_order_scene_order_complete"]

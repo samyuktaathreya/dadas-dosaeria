@@ -18,10 +18,10 @@ var customer_at_order_spot = false
 
 func generate_random_order(dosa_cap: int = 1, chutney_cap: int = 1):
 	const DOSA_OPTIONS = ["PlainDosa", "OnionDosa"]
-	const CHUTNEY_OPTIONS = ["CoconutChutney", "MintChutney", "Sambar", "None"]
+	const CHUTNEY_OPTIONS = ["CoconutChutney", "MintChutney", "Sambar"]
 
 	var dosa_count = randi_range(1, dosa_cap)
-	var chutney_count = randi_range(0, chutney_cap)
+	var chutney_count = randi_range(1, chutney_cap)
 
 	var dosas = []
 	for i in dosa_count:

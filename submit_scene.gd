@@ -5,8 +5,8 @@ signal submit_scene_finished
 
 var customer
 
-const T_MIN = 120.0
-const T_MAX = 420.0
+const T_MIN = 10.0
+const T_MAX = 120.0
 
 func _ready() -> void:
 	# hide all score labels initially
@@ -26,7 +26,7 @@ func play_submit_animation():
 	# fake scores for now
 	var order_score = calculateOrderScore()
 	var cooking_score = calculate_cooking_score()
-	var chutney_score = 100
+	var chutney_score = calculate_chutney_score()
 	var drink_score = 100
 	var total_score = (order_score + cooking_score + chutney_score + drink_score) / 4
 
@@ -78,12 +78,15 @@ func calculateOrderScore():
 	
 func calculate_cooking_score():
 	var banana_leaf_items = CookingState.banana_leaf_items
+	print(banana_leaf_items)
 	var dosas = banana_leaf_items.filter(
 		func(item): return item.has_meta("item_type") and item.get_meta("item_type") == "dosa"
 	)
 
 	var submitted_count = dosas.size()
-	var expected_count  = customer.customer_data.order["dosa_count"]
+	print("submitted count : ", submitted_count)
+	var expected_count  = len(customer.data.order.dosa)
+	print("expected count : ", expected_count)
 
 	# Count penalty: deduct proportionally for wrong number
 	var count_ratio = 0.0
@@ -95,12 +98,60 @@ func calculate_cooking_score():
 	var avg_dosa_quality = 0.0
 	for dosa in dosas:
 		avg_dosa_quality += dosa.get_meta("total_score")  # already 0-100
+		print("average dosa quality : ", avg_dosa_quality)
 	if submitted_count > 0:
 		avg_dosa_quality /= submitted_count
 
 	# Final dosa score: quality × count accuracy
 	# If they gave too many dosas, count_ratio is capped at 1.0 (no bonus)
+	print("count ratio ", count_ratio)
 	return avg_dosa_quality * count_ratio
 	
 func calculate_chutney_score():
-	pass
+	print("--- CALCULATE CHUTNEY SCORE DEBUG ---")
+	var expected_order = customer.data.order
+	var expected_chutneys = expected_order.get("chutney", [])
+	
+	# Get submitted chutneys from banana leaf
+	var banana_leaf_items = CookingState.banana_leaf_items
+	var submitted_chutneys = banana_leaf_items.filter(
+		func(item): return item.has_meta("item_type") and item.get_meta("item_type") == "chutney"
+	)
+	
+	if expected_chutneys.is_empty() and submitted_chutneys.is_empty():
+		return 100.0
+	
+	# Count expected occurrences of each chutney type
+	var expected_counts = {}
+	for chutney in expected_chutneys:
+		expected_counts[chutney] = expected_counts.get(chutney, 0) + 1
+	
+	# Count submitted occurrences of each chutney type
+	var submitted_counts = {}
+	for chutney in submitted_chutneys:
+		var chutney_type = chutney.get_meta("chutney_type")
+		submitted_counts[chutney_type] = submitted_counts.get(chutney_type, 0) + 1
+	
+	print("expected counts : ", expected_counts)
+	print("submitted counts : ", submitted_counts)
+	# Score each expected chutney type
+	var total_score = 0.0
+	for chutney_type in expected_counts:
+		var expected = expected_counts[chutney_type]
+		var submitted = submitted_counts.get(chutney_type, 0)
+		var ratio = clamp(float(submitted) / float(expected), 0.0, 1.0)
+		total_score += ratio
+		
+	print("total score before penalty : ", total_score)
+	
+	# Penalty for extra wrong chutneys submitted
+	for chutney_type in submitted_counts:
+		if not expected_counts.has(chutney_type):
+			total_score -= 0.5  # tweak this penalty as you see fit
+			
+	print("total score after penalty : ", total_score)
+	
+	total_score = clamp(total_score / expected_counts.size(), 0.0, 1.0)
+	print("expected counts : ", expected_counts)
+	
+	return total_score * 100.0

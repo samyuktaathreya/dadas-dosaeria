@@ -15,13 +15,23 @@ var ICON_STARTING_TICKET_POSITION
 const SPEECH_BUBBLE_CHUTNEY_SCALE = Vector2(0.4, 0.4)
 const BIG_TICKET_CHUTNEY_SCALE = Vector2(0.4, 0.4)
 
+var ticket_icons = []
+
+var testing_order_scene = false
+
 func _ready():
 	SPEECH_BUBBLE_POSITION = $OrderBubble/SpeechBubbleIconPosition.position
-	ICON_STARTING_TICKET_POSITION = $TicketCinematic/IconStartingTicketPosition.global_position
+	if testing_order_scene:
+		show_order(null)
+	$OrderBubble/BubbleSprite.hide()
 
 func show_order(customer):
-	current_order = customer.data.order
-	customerOrdered = customer
+	if testing_order_scene:
+		current_order = { "dosa": ["OnionDosa"], "chutney": ["MintChutney"] }
+	else:
+		current_order = customer.data.order
+		customerOrdered = customer
+	print(" customer order : ", current_order)
 	$TicketCinematic.position = Vector2(1644, 492)
 	$TicketCinematic.scale = Vector2(1.,1.)
 	show()
@@ -29,30 +39,56 @@ func show_order(customer):
 
 func play_order_animation():
 	var tween = create_tween()
-	var time = 0.0
 	
 	# Fade in from black
 	tween.tween_property($BlackOverlay, "modulate:a", 0.0, TIME_INTERVAL)
-	time += TIME_INTERVAL
-
-	show_icons(tween, time)
+	await get_tree().create_timer(TIME_INTERVAL).timeout
 	
-	#hide speech bubble when customer done speaking
-	$OrderBubble/BubbleSprite.hide()
+	await show_icons()
 	
-	# Finished
-	tween.tween_callback(on_animation_complete)
+	on_animation_complete()
 
-func show_food_icon(where, what):
-	$OrderBubble/BubbleSprite.show()
-	print(where + "/FoodIcons/" + what)
-	get_node(where + "/FoodIcons/" + what).show()
+func show_icons():
+	var ticket_position = $TicketCinematic/IconStartingTicketPosition.global_position
+	
+	for dosa in current_order.dosa:
+		var dosa_texture = load(DOSA_FILE_PATH + dosa + ".png")
+		
+		$OrderBubble/BubbleSprite.show()
+		var speech_bubble_dosa = spawn_icon(dosa_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_DOSA_SCALE)
+		await get_tree().create_timer(TIME_INTERVAL).timeout
+		ticket_icons.pop_back()		
 
-func hide_food_icon(where, what):
-	get_node(where + "/FoodIcons/" + what).hide()
-	$OrderBubble/BubbleSprite.hide()
+		spawn_icon(dosa_texture, ticket_position, BIG_TICKET_DOSA_SCALE)
+		await get_tree().create_timer(TIME_INTERVAL).timeout
+		
+		speech_bubble_dosa.queue_free()
+		$OrderBubble/BubbleSprite.hide()
+		await get_tree().create_timer(TIME_INTERVAL).timeout
+		
+		ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
+
+	for chutney in current_order.chutney:
+		var chutney_texture = load(CHUTNEY_FILE_PATH + chutney + ".png")
+		
+		$OrderBubble/BubbleSprite.show()
+		var speech_bubble_chutney = spawn_icon(chutney_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_CHUTNEY_SCALE)
+		await get_tree().create_timer(TIME_INTERVAL).timeout
+		ticket_icons.pop_back()
+		
+		spawn_icon(chutney_texture, ticket_position, BIG_TICKET_CHUTNEY_SCALE)
+		await get_tree().create_timer(TIME_INTERVAL).timeout
+		
+		speech_bubble_chutney.queue_free()
+		$OrderBubble/BubbleSprite.hide()
+		await get_tree().create_timer(TIME_INTERVAL).timeout
+		
+		ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
 
 func on_animation_complete():
+	while len(ticket_icons) > 0:
+		var icon = ticket_icons.pop_front()
+		icon.queue_free()
 	print("Order animation finished!")
 	# send signal to main that the order is finished
 	# main will 
@@ -63,33 +99,14 @@ func on_animation_complete():
 func spawn_icon(icon_texture, icon_position, icon_scale):
 	var icon = Sprite2D.new()
 	icon.texture = icon_texture
-	icon.global_position = icon_position
 	icon.scale = icon_scale
 	icon.visible = true
 	print("icon global position: ", icon.global_position)
 	add_child(icon)
+	icon.global_position = icon_position
+	ticket_icons.append(icon)
 	return icon
-	
-func show_icons(tween, time):
-	var ticket_position = ICON_STARTING_TICKET_POSITION
-	
-	for dosa in current_order.dosa:
-		var dosa_texture = load(DOSA_FILE_PATH + dosa + ".png")
-		var speech_bubble_dosa = spawn_icon(dosa_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_DOSA_SCALE)
 
-		tween.tween_interval(TIME_INTERVAL)
-		spawn_icon(dosa_texture, ticket_position, BIG_TICKET_DOSA_SCALE)
-		ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
-		tween.tween_callback(speech_bubble_dosa.queue_free)
-
-	for chutney in current_order.chutney:
-		var chutney_texture = load(CHUTNEY_FILE_PATH + chutney + ".png")
-		var speech_bubble_chutney = spawn_icon(chutney_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_CHUTNEY_SCALE)
-
-		tween.tween_interval(TIME_INTERVAL)
-		spawn_icon(chutney_texture, ticket_position, BIG_TICKET_CHUTNEY_SCALE)
-		ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
-		tween.tween_callback(speech_bubble_chutney.queue_free)
 func _on_main_order_scene(customer) -> void:
 	show_order(customer)
 	

@@ -23,7 +23,7 @@ script = ExtResource("1_ptjgn")
 cup_scene = ExtResource("2_woxac")
 
 [node name="BananaLeaf" type="Area2D" parent="." unique_id=983708873]
-position = Vector2(978, 631)
+position = Vector2(978, 731)
 scale = Vector2(0.8, 0.8)
 metadata/_edit_group_ = true
 

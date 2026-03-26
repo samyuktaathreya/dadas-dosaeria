@@ -22,8 +22,12 @@ func serve_dosa():
 		if child is Sprite2D and child != $BananaLeaf:
 			dosa_sprite = child
 			break
-			
-	CookingState.add_dosa(dosa_sprite.texture, dosa_sprite.material)
+	var scores = {
+		"cook_score": dosa_sprite.get_meta("cook_score"),
+		"shape_score": dosa_sprite.get_meta("shape_score"),
+		"total_score": dosa_sprite.get_meta("total_score")
+	}
+	CookingState.add_dosa(dosa_sprite.texture, dosa_sprite.material, scores)
 	dosa_submitted.emit()
 	var tween = create_tween()
 	tween.set_parallel(true)

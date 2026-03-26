@@ -42,14 +42,14 @@ func _input(event):
 		dragging = false
 
 func _on_chutney_scene_banana_leaf_updated() -> void:
-	for item in CookingState.banana_leaf_items:
+	var items_to_move = CookingState.banana_leaf_items.duplicate()
+	for item in items_to_move:
+		var global_pos = item.global_position  # save before reparenting
 		var prev_parent = item.get_parent()
 		if prev_parent:
 			prev_parent.remove_child(item)
-		if item is not Katori:
-			item.position += DOSAPILE_POSITION
-		item.position -= $BananaLeaf.position
 		$BananaLeaf.add_child(item)
+		item.global_position = global_pos  # restore after reparenting
 		
 func show_drinks():
 	$DrinkDispenser/EmptyDrinkDispenser/DrinkCollection.show()

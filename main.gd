@@ -96,16 +96,27 @@ func _on_order_scene_order_complete(customer) -> void:
 	showScene("CustomerLineScene")
 
 func showScene(scene):
-	if current_scene == "SubmitScene":
-		for child in $UI.get_children():
-			if child is Ticket:
-				child.show()
-		$UI/TicketHolder.show()
+	print("=== showScene called with: ", scene, " current: ", current_scene)
+	if scene == "SubmitScene":
+		var banana_leaf = $DrinkScene/BananaLeaf
+		for child in banana_leaf.get_children():
+			banana_leaf.remove_child(child)
+			$SubmitScene/BananaLeaf.add_child(child)
+			child.global_position = child.global_position
+			# prevent the reparented node from intercepting mouse events
+			if child.has_method("set_process_input"):
+				child.set_process_input(false)
+			if child.has_method("set_process_unhandled_input"):
+				child.set_process_unhandled_input(false)
+				
 	# hide buttons during order scene
 	if scene == "OrderScene":
 		for child in $UI.get_children():
 			if child.name.ends_with("Button"):
 				child.hide()
+				
+			if child is Ticket:
+				child.order_scene_called()
 				
 	# if previous scene was order scene, then show buttons
 	elif current_scene == "OrderScene":
@@ -125,7 +136,8 @@ func showScene(scene):
 			$SubmitScene/BananaLeaf.add_child(child)
 			# keep the same global position so nothing jumps
 			child.global_position = child.global_position
-
+	if scene == "DrinkScene":
+		$DrinkScene._on_chutney_scene_banana_leaf_updated()
 	get_node(current_scene).hide()
 	get_node(scene).show()
 	current_scene = scene
@@ -147,7 +159,11 @@ func _on_ui_order_button_pressed() -> void:
 		showScene("CustomerLineScene")
 
 func _on_chutney_scene_banana_leaf_updated() -> void:
+	print("=== BANANA LEAF UPDATED RECEIVED ===")
+	print("about to call showScene DrinkScene")
 	showScene("DrinkScene")
+	print("showScene finished")
+	# showScene("DrinkScene")
 
 func _on_submit_ticket_area_mouse_entered():
 	print("mouse on ticket area")
@@ -162,4 +178,7 @@ func _on_ticket_being_dragged(ticket):
 		dragged_ticket = ticket
 
 func _on_submit_scene_submit_scene_finished() -> void:
+	for child in $SubmitScene/BananaLeaf.get_children():
+		child.queue_free()
+	CookingState.clear_on_submit()
 	showScene("CustomerLineScene")

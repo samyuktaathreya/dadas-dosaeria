@@ -7,12 +7,14 @@ var order_in_drink_scene = false
 
 var dosas: Array[Texture2D] = []
 var dosa_materials = []
+var dosa_scores = []
 
 var customer_of_submitted_order = null
 
-func add_dosa(tex: Texture2D, material):
+func add_dosa(tex: Texture2D, material, scores):
 	dosas.append(tex)
 	dosa_materials.append(material)
+	dosa_scores.append(scores)
 
 func clear():
 	banana_leaf_items = []
@@ -23,3 +25,4 @@ func add_to_banana_leaf_items(new_item):
 func clear_on_submit():
 	banana_leaf_items = []
 	customer_of_submitted_order = null
+	order_in_drink_scene = false

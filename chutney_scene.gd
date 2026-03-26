@@ -24,8 +24,14 @@ var mouse_on_container = null
 
 var container_to_katori_texture_dict = {
 	"SambarContainer": "res://assets/katorisambar.png",
-	"CocountChutneyContainer": "res://assets/katoricoconutchutney.png",
+	"CoconutChutneyContainer": "res://assets/katoricoconutchutney.png",
 	"MintChutneyContainer": "res://assets/katorimintchutney.png"
+}
+
+var container_to_katori_name_dict = {
+	"SambarContainer": "Sambar",
+	"CoconutChutneyContainer": "CoconutChutney",
+	"MintChutneyContainer": "MintChutney"
 }
 
 # Called when the node enters the scene tree for the first time.
@@ -65,12 +71,13 @@ func _input(event):
 			dragging = false
 
 func _on_cooking_scene_dosa_submitted() -> void:
-	# add dosa to stack 
+	# add dosa to stack
 	var s = Sprite2D.new()
-	s.texture = CookingState.dosas[-1]
-	# index
 	var i = len(CookingState.dosas) - 1
-	s.material = CookingState.dosa_materials[-1]
+	s.texture = CookingState.dosas[i]
+	s.material = CookingState.dosa_materials[i]
+	s.set_meta("item_type", "dosa")
+	s.set_meta("total_score", CookingState.dosa_scores[i].total_score)
 	
 	var pan_center_normalized = s.material.get_shader_parameter("pan_center")
 	var pan_center = pan_center_normalized * Vector2(1920, 1080)
@@ -199,15 +206,25 @@ func fill_katori(katori):
 	var katori_sprite = katori.get_node("KatoriSprite")
 	katori_sprite.texture = load(container_to_katori_texture_dict[mouse_on_container.name])
 	katori_sprite.offset = FILLED_KATORI_OFFSET
-
+	var chutney_type = container_to_katori_name_dict[mouse_on_container.name]
+	katori.set_meta("chutney_type", chutney_type)
 
 func _on_continue_button_pressed() -> void:
+	print("=== CONTINUE PRESSED ===")
+	print("order_in_drink_scene: ", CookingState.order_in_drink_scene)
+	print("banana_leaf_items: ", CookingState.banana_leaf_items)
+	for item in CookingState.banana_leaf_items:
+		print("  item: ", item, " | is_instance_valid: ", is_instance_valid(item))
+	print("current_scene in main: ")  # you'll need to print this from main somehow
+	print("continue button pressed")
 	if CookingState.order_in_drink_scene:
+		print("order is in drink scene already")
 		# there is already an order in the drink scene 
 		# so you cannot press continue button
 		$ContinueButton/WarningLabel.show()
 		$ContinueButton/WarningTimer.start()
 	else:
+		print("banana leaf updated signal sent")
 		CookingState.order_in_drink_scene = true
 		banana_leaf_updated.emit()
 
