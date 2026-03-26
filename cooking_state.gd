@@ -1,6 +1,10 @@
 extends Node
 
 var drag_ladle = false
+
+# prevents dragging dough on multiple dosa pans in one go
+var dragging_ladle = false 
+
 var drag_cooldown = false
 var banana_leaf_items = []  # Array of dicts with node info
 var order_in_drink_scene = false

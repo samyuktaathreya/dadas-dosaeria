@@ -8,15 +8,23 @@ var customer
 const T_MIN = 10.0
 const T_MAX = 120.0
 
+var SCORE_LABELS_PATH
+
 func _ready() -> void:
-	# hide all score labels initially
-	$ScoreLabels/OrderScore.hide()
-	$ScoreLabels/CookingScore.hide()
-	$ScoreLabels/ChutneyScore.hide()
-	$ScoreLabels/DrinkScore.hide()
-	$ScoreLabels/TotalScore.hide()
+	SCORE_LABELS_PATH = get_parent().get_node("UI").get_node("ScoreLabels")
+	
+	# increase font sizes
+	for child in get_parent().get_node("UI").get_node("ScoreLabels").get_children():
+		child.add_theme_font_size_override("font_size", 32)
+		child.hide()
+	$Tip.add_theme_font_size_override("font_size", 32)
 	$Tip.hide()
 
+func hide_score_labels():
+	for child in get_parent().get_node("UI").get_node("ScoreLabels").get_children():
+		child.add_theme_font_size_override("font_size", 32)
+		child.hide()
+		
 func _process(delta: float) -> void:
 	pass
 	
@@ -36,16 +44,20 @@ func play_submit_animation():
 	await tween.finished
 
 	# show each score with a pause between each
-	await show_label_animated($ScoreLabels/OrderScore, str(order_score))
-	await show_label_animated($ScoreLabels/CookingScore, str(cooking_score))
-	await show_label_animated($ScoreLabels/ChutneyScore, str(chutney_score))
-	await show_label_animated($ScoreLabels/DrinkScore, str(drink_score))
+	await show_label_animated(SCORE_LABELS_PATH.get_node("OrderScore"), str(order_score))
+	await show_label_animated(SCORE_LABELS_PATH.get_node("CookingScore"), str(cooking_score))
+	await show_label_animated(SCORE_LABELS_PATH.get_node("ChutneyScore"), str(chutney_score))
+	await show_label_animated(SCORE_LABELS_PATH.get_node("DrinkScore"), str(drink_score))
 
 	# total score
-	await show_label_animated($ScoreLabels/TotalScore, str(total_score))
+	await show_label_animated(SCORE_LABELS_PATH.get_node("TotalScore"), str(total_score))
 
 	# tip
 	await show_label_animated($Tip, str(total_score * 0.01 * 5))
+	
+	# hide the scores when they are done being shown
+	hide_score_labels()
+	$Tip.hide()
 
 	CookingState.customer_of_submitted_order = null
 	
@@ -115,8 +127,10 @@ func calculate_chutney_score():
 	# Get submitted chutneys from banana leaf
 	var banana_leaf_items = CookingState.banana_leaf_items
 	var submitted_chutneys = banana_leaf_items.filter(
-		func(item): return item.has_meta("item_type") and item.get_meta("item_type") == "chutney"
+		func(item): return (item is Katori)
 	)
+	
+	print("len submitted chutneys: ", len(submitted_chutneys))
 	
 	if expected_chutneys.is_empty() and submitted_chutneys.is_empty():
 		return 100.0

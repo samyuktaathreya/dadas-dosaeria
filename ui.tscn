@@ -71,6 +71,56 @@ offset_bottom = 1031.0
 text = "Order"
 script = ExtResource("4_nltto")
 
+[node name="ScoreLabels" type="Control" parent="." unique_id=548828610]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="OrderScore" type="Label" parent="ScoreLabels" unique_id=1424303703]
+layout_mode = 0
+offset_left = 145.0
+offset_top = 740.0
+offset_right = 359.0
+offset_bottom = 857.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CookingScore" type="Label" parent="ScoreLabels" unique_id=1558357385]
+layout_mode = 0
+offset_left = 422.0
+offset_top = 740.0
+offset_right = 636.0
+offset_bottom = 857.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ChutneyScore" type="Label" parent="ScoreLabels" unique_id=622025260]
+layout_mode = 0
+offset_left = 672.0
+offset_top = 740.0
+offset_right = 886.0
+offset_bottom = 857.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DrinkScore" type="Label" parent="ScoreLabels" unique_id=543919229]
+layout_mode = 0
+offset_left = 921.0
+offset_top = 740.0
+offset_right = 1135.0
+offset_bottom = 857.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TotalScore" type="Label" parent="ScoreLabels" unique_id=2019854814]
+layout_mode = 0
+offset_left = 201.0
+offset_top = 59.0
+offset_right = 388.0
+offset_bottom = 176.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="pressed" from="CookingButton" to="." method="_on_cooking_button_pressed"]
 [connection signal="pressed" from="ChutneyButton" to="." method="_on_chutney_button_pressed"]
 [connection signal="pressed" from="DrinkButton" to="." method="_on_drink_button_pressed"]

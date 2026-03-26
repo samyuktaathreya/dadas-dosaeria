@@ -83,12 +83,12 @@ position = Vector2(0, 100)
 [node name="DrinkScene" parent="." unique_id=838950850 instance=ExtResource("10_dg77c")]
 visible = false
 
-[node name="SubmitScene" parent="." unique_id=810134885 instance=ExtResource("11_dg77c")]
-position = Vector2(0, -21)
-
 [node name="UI" parent="." unique_id=1022981567 instance=ExtResource("5_lquwl")]
 offset_top = -100.0
 offset_bottom = -60.0
+
+[node name="SubmitScene" parent="." unique_id=810134885 instance=ExtResource("11_dg77c")]
+position = Vector2(0, -21)
 
 [node name="OrderScene" parent="." unique_id=1516490798 instance=ExtResource("4_1bvp3")]
 visible = false
@@ -99,9 +99,9 @@ visible = false
 [connection signal="timeout" from="CustomerLineScene/CustomerSpawner" to="CustomerLineScene" method="_on_customer_spawner_timeout"]
 [connection signal="dosa_submitted" from="CookingScene" to="ChutneyScene" method="_on_cooking_scene_dosa_submitted"]
 [connection signal="banana_leaf_updated" from="ChutneyScene" to="." method="_on_chutney_scene_banana_leaf_updated"]
-[connection signal="submit_scene_finished" from="SubmitScene" to="." method="_on_submit_scene_submit_scene_finished"]
 [connection signal="chutney_button_pressed" from="UI" to="." method="_on_ui_chutney_button_pressed"]
 [connection signal="cooking_button_pressed" from="UI" to="." method="_on_ui_cooking_button_pressed"]
 [connection signal="drink_button_pressed" from="UI" to="." method="_on_ui_drink_button_pressed"]
 [connection signal="order_button_pressed" from="UI" to="." method="_on_ui_order_button_pressed"]
+[connection signal="submit_scene_finished" from="SubmitScene" to="." method="_on_submit_scene_submit_scene_finished"]
 [connection signal="order_complete" from="OrderScene" to="CustomerLineScene" method="_on_order_scene_order_complete"]

@@ -10,6 +10,8 @@ signal order_scene_initialized
 const EXPANDED_TICKET_POSITION = Vector2(1644.0, 492.0)
 const EXPANDED_TICKET_SCALE = Vector2(1.0, 1.0)
 
+const VERTICAL_SCORE_OFFSET = Vector2(125, -100)
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var buttons := [
@@ -46,7 +48,12 @@ func _ready() -> void:
 		# Optional polish
 		btn.add_theme_font_size_override("font_size", 24)
 		btn.add_theme_constant_override("corner_radius", 16)
-
+	
+	# move scores right above button
+	$ScoreLabels/OrderScore.position = $OrderButton.position + VERTICAL_SCORE_OFFSET
+	$ScoreLabels/CookingScore.position = $CookingButton.position + VERTICAL_SCORE_OFFSET
+	$ScoreLabels/ChutneyScore.position = $ChutneyButton.position + VERTICAL_SCORE_OFFSET
+	$ScoreLabels/DrinkScore.position = $DrinkButton.position + VERTICAL_SCORE_OFFSET
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

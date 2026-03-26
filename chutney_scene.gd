@@ -23,6 +23,8 @@ var mouse_on_container = null
 const KATORI_FILE_PATH = "res://assets/Chutneys/"
 const KATORI_SCALE = Vector2(1.0, 0.9)
 
+const DOSA_COOKING_SPRITE_OFFSET = Vector2(760, -170) - Vector2(235, -80)
+
 
 var container_to_katori_texture_dict = {
 	"SambarContainer": KATORI_FILE_PATH + "Sambar.png",
@@ -83,9 +85,8 @@ func _on_cooking_scene_dosa_submitted() -> void:
 	
 	var pan_center_normalized = s.material.get_shader_parameter("pan_center")
 	var pan_center = pan_center_normalized * Vector2(1920, 1080)
-	s.offset = Vector2(960, 540) - pan_center
-	
-	s.position = Vector2(i * 6, -i * 8)
+	s.offset = Vector2(960, 540) - pan_center + DOSA_COOKING_SPRITE_OFFSET
+	s.position = Vector2(i * 6, -i * 8) 
 	s.z_index = i + 10
 	s.visible = true
 	$DosaPile.add_child(s)

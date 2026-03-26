@@ -58,23 +58,46 @@ const COOK_SPEED = 0.05
 var dosa_cooked_amounts = [0,0] # two indices for the two sides of the dosa
 var dosa_cooked_amounts_index = 0 # index changes when the dosa is flipped
 
+const DOSA_COOKING_SPRITE_OFFSET = Vector2(760, -170) - Vector2(235, -80)
+# const DOSA_COOKING_SPRITE_OFFSET = Vector2.ZERO
+
+const DOSA_COOKING_SPRITES_FILE_PATH = "res://assets/DosaCookingSprites/"
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	var dosa_tex = load("res://assets/dosatexture.png")
+	$Tawa/CookingProgressUI/ProgressBar.max_value = 2.0
 	$BatterCanvas.material = $BatterCanvas.material.duplicate()
-	$BatterCanvas.material.set_shader_parameter("dosa_texture", dosa_tex)
-	#get_parent().dough_bucket_clicked.connect(_on_dough_bucket_dough_bucket_clicked)	
-	# connect to $DoughBucket.on_mouse_entered
+
+	$BatterCanvas.material.set_shader_parameter(
+		"dosa_texture_undercooked", 
+		load(DOSA_COOKING_SPRITES_FILE_PATH + "UndercookedDosa.png")
+	)
+
+	$BatterCanvas.material.set_shader_parameter(
+		"dosa_texture_cooked", 
+		load(DOSA_COOKING_SPRITES_FILE_PATH + "CookedDosa.png")
+	)
 	
-	# get_parent().get_node("DoughBucket").mouse_entered.connect(_on_dough_bucket_mouse_entered)
-	# get_parent().get_node("DoughBucket").mouse_exited.connect(_on_dough_bucket_mouse_exited)
+	$BatterCanvas.material.set_shader_parameter(
+		"dosa_texture_slightly_overcooked", 
+		load(DOSA_COOKING_SPRITES_FILE_PATH + "SlightlyOvercookedDosa.png")
+	)
+	
+	$BatterCanvas.material.set_shader_parameter(
+		"dosa_texture_overcooked", 
+		load(DOSA_COOKING_SPRITES_FILE_PATH + "OvercookedDosa.png")
+	)
+
+	$BatterCanvas.material.set_shader_parameter("cooked_stage", 0.0)
+
 	$Tawa/DoughSpreadingTimer.timeout.connect(_on_dough_spreading_timer_timeout)
 
 	$BatterCanvas.global_position = CANVAS_SIZE / 2  # (960, 540)
 	$BatterCanvas.centered = true  # this is default
 	DOSA_PAN_COLLISION_CENTER = $Tawa/TawaCenterMarker.global_position
 
-	$BatterCanvas.material.set_shader_parameter("pan_center", DOSA_PAN_COLLISION_CENTER / CANVAS_SIZE)
+	var normalized_offset = (DOSA_COOKING_SPRITE_OFFSET) / CANVAS_SIZE
+	$BatterCanvas.material.set_shader_parameter("pan_center", DOSA_PAN_COLLISION_CENTER / CANVAS_SIZE + normalized_offset)
+
 	$Tawa/DoughSpreadingTimer.wait_time = 6.0
 	
 	# create the blank transparent canvas
@@ -105,8 +128,8 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if submit_dosa and dosa_drag_sprite:
-		var offset = Vector2(960, 540) - DOSA_PAN_COLLISION_CENTER
-		dosa_drag_sprite.global_position = get_global_mouse_position() + offset
+		# var offset = Vector2(960, 540) - DOSA_PAN_COLLISION_CENTER
+		dosa_drag_sprite.global_position = get_global_mouse_position()
 	if flip_cooldown > 0:
 		flip_cooldown -= delta
 	if mouse_over_pan:
@@ -141,9 +164,20 @@ func _process(delta: float) -> void:
 			canvas_texture.update(canvas_image)
 			last_batter_pos = batter_pos
 	if dosaInPan:
-		cook_level = clamp(cook_level + COOK_SPEED * delta, 0.0, 1.0)
+		cook_level = clamp(cook_level + COOK_SPEED * delta, 0.0, 2.0)
 	last_mouse_pos = mouse_pos
+	
 	$Tawa/CookingProgressUI/ProgressBar.value = cook_level
+
+	if cook_level < 0.7:
+		$Tawa/CookingProgressUI/ProgressBar.modulate = Color.WHITE
+	elif cook_level < 1.0:
+		$Tawa/CookingProgressUI/ProgressBar.modulate = Color.YELLOW
+	elif cook_level < 1.3:
+		$Tawa/CookingProgressUI/ProgressBar.modulate = Color.ORANGE
+	else:
+		$Tawa/CookingProgressUI/ProgressBar.modulate = Color.RED
+
 	$Tawa/CookingProgressUI/FlipLabel.visible = (cook_level >= 1.0)
 	
 	$Tawa/CookingProgressUI/ProgressBar.visible = mouse_over_pan \
@@ -162,6 +196,7 @@ func _input(event):
 		if click_bucket and not CookingState.drag_ladle:
 			drag_ladle_signal.emit()
 			print("drag ladle signal emitted")
+			
 		if dosaInPan and not CookingState.drag_ladle and flip_cooldown <= 0 and mouse_over_pan \
 		and CookingState.dragging_dosa == null:
 			CookingState.dragging_dosa = self
@@ -174,6 +209,7 @@ func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if mouse_over_pan and dosaInPan and not CookingState.drag_ladle and flip_cooldown <= 0:
 			flip_dosa()
+			
 	# stop hovering mouse
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 		if CookingState.dragging_dosa == self:
@@ -182,6 +218,7 @@ func _input(event):
 			return_ladle.emit()
 			dough_spread_triggered = false
 			flip_cooldown = 0.5
+			CookingState.dragging_ladle = false
 		elif submit_dosa:
 			undrag_dosa()
 
@@ -231,9 +268,10 @@ func _on_tawa_mouse_exited() -> void:
 
 func _on_tawa_center_mouse_entered() -> void:
 	mouse_over_pan = true
-	if CookingState.drag_ladle and not dosaInPan:
+	if CookingState.drag_ladle and not dosaInPan and not CookingState.dragging_ladle:
 		dough_spread_triggered = true
 		dosaInPan = true
+		CookingState.dragging_ladle = true
 		$Tawa/DoughSpreadingTimer.start()
 
 func _on_dough_bucket_mouse_entered() -> void:
@@ -244,14 +282,29 @@ func _on_dough_bucket_mouse_exited() -> void:
 	click_bucket = false
 
 func flip_dosa():
-	dosa_cooked_amounts[dosa_cooked_amounts_index] = cook_level  # save current side
-	dosa_cooked_amounts_index = 1 - dosa_cooked_amounts_index    # toggle
-	cook_level = dosa_cooked_amounts[dosa_cooked_amounts_index]  # load new side
-	
-	# show how cooked the bottom was when it gets flipped up
+	flip_cooldown = 0.5
+	dosa_cooked_amounts[dosa_cooked_amounts_index] = cook_level
+	dosa_cooked_amounts_index = 1 - dosa_cooked_amounts_index
+	cook_level = dosa_cooked_amounts[dosa_cooked_amounts_index]
+
+	# the side now facing UP is the one that was just cooking
 	visible_cook_level = dosa_cooked_amounts[1 - dosa_cooked_amounts_index]
 	$BatterCanvas.material.set_shader_parameter("cook_level", visible_cook_level)
-	
+
+	# pick which sprite to show based on how cooked that side is
+	var stage = cook_level_to_stage(visible_cook_level)
+	$BatterCanvas.material.set_shader_parameter("cooked_stage", stage)
+
+func cook_level_to_stage(level: float) -> float:
+	if 0.2 < level and level < 0.8:
+		return 0.5   # slightly cooked
+	elif level < 1.0:
+		return 1.0   # done
+	elif level < 1.5:
+		return 2.0   # overcooked
+	else: 
+		return 3.0
+		
 func start_dragging_dosa():
 	if not submit_dosa: 
 		submit_dosa = true
@@ -262,6 +315,8 @@ func start_dragging_dosa():
 		dosa_drag_sprite.texture = drag_texture
 		dosa_drag_sprite.centered = true
 		dosa_drag_sprite.material = $BatterCanvas.material.duplicate()
+		# dosa_drag_sprite.material.set_shader_parameter("pan_center", Vector2(0.5, 0.5))
+		dosa_drag_sprite.offset = DOSA_COOKING_SPRITE_OFFSET
 		# get score of dosa
 		var scores = calculate_dosa_score()
 		dosa_drag_sprite.set_meta("cook_score", scores.cook_score)
@@ -330,7 +385,6 @@ func reset_tawa():
 	flip_cooldown = 0.0
 	force_constant = 40
 
-
 func _on_banana_leaf_mouse_exited() -> void:
 	mouse_on_banana_leaf = false
 	
@@ -392,3 +446,6 @@ func calculate_dosa_score() -> Dictionary:
 		"shape_score": shape_score,
 		"total": (cook_score + shape_score) / 2.0
 	}
+	
+func dosa_submitted():
+	cook_level = 0.0

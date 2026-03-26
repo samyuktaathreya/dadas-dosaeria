@@ -11,8 +11,8 @@ radius = 136.0588
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gxv0q"]
 shader = ExtResource("3_cxa3y")
+shader_parameter/cooked_stage = 0.0
 shader_parameter/pan_center = Vector2(0, 0)
-shader_parameter/cook_level = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8uu6o"]
 radius = 31.016125

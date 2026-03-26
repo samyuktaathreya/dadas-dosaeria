@@ -45,58 +45,6 @@ position = Vector2(-55, 7)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_ansjy")
 
-[node name="ScoreLabels" type="Control" parent="." unique_id=1731590680]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="OrderScore" type="Label" parent="ScoreLabels" unique_id=2138781639]
-layout_mode = 0
-offset_left = 144.0
-offset_top = 731.0
-offset_right = 358.0
-offset_bottom = 848.0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CookingScore" type="Label" parent="ScoreLabels" unique_id=46519778]
-layout_mode = 0
-offset_left = 422.0
-offset_top = 740.0
-offset_right = 636.0
-offset_bottom = 857.0
-text = "100"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ChutneyScore" type="Label" parent="ScoreLabels" unique_id=424575677]
-layout_mode = 0
-offset_left = 677.0
-offset_top = 695.0
-offset_right = 891.0
-offset_bottom = 812.0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="DrinkScore" type="Label" parent="ScoreLabels" unique_id=928203002]
-layout_mode = 0
-offset_left = 921.0
-offset_top = 686.0
-offset_right = 1135.0
-offset_bottom = 803.0
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="TotalScore" type="Label" parent="ScoreLabels" unique_id=953823874]
-layout_mode = 0
-offset_left = 201.0
-offset_top = 59.0
-offset_right = 388.0
-offset_bottom = 176.0
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="TipJar" type="Sprite2D" parent="." unique_id=527794881]
 position = Vector2(1505, 458)
 scale = Vector2(0.6191406, 0.5527344)

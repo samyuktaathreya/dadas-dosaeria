@@ -100,8 +100,19 @@ func _on_order_scene_order_complete(customer) -> void:
 	showScene("CustomerLineScene")
 
 func showScene(scene):
-	print("=== showScene called with: ", scene, " current: ", current_scene)
-	if scene == "SubmitScene":
+	print("--- CURRENT SCENE : ", current_scene)
+	print("--- NEXT SCENE : ", scene)
+	if current_scene == "SubmitScene":
+		for child in $UI.get_children():
+			if child is Ticket:
+				child.show()
+		$UI/TicketHolder.show()
+		$SubmitScene/BananaLeaf.show()
+		$DrinkScene/BananaLeaf.show()
+		for child in $DrinkScene/BananaLeaf.get_children():
+			print("child is ", child)
+
+	'''if scene == "SubmitScene":
 		var banana_leaf = $DrinkScene/BananaLeaf
 		for child in banana_leaf.get_children():
 			banana_leaf.remove_child(child)
@@ -112,7 +123,8 @@ func showScene(scene):
 				child.set_process_input(false)
 			if child.has_method("set_process_unhandled_input"):
 				child.set_process_unhandled_input(false)
-				
+	'''
+	
 	# hide buttons during order scene
 	if scene == "OrderScene":
 		for child in $UI.get_children():
@@ -134,32 +146,27 @@ func showScene(scene):
 				child.hide()
 		$UI/TicketHolder.hide()
 		
-		var banana_leaf = $DrinkScene/BananaLeaf
-		for child in banana_leaf.get_children():
-			banana_leaf.remove_child(child)
-			$SubmitScene/BananaLeaf.add_child(child)
-			# keep the same global position so nothing jumps
-			child.global_position = child.global_position
 	if scene == "DrinkScene":
 		$DrinkScene._on_chutney_scene_banana_leaf_updated()
+		
 	get_node(current_scene).hide()
 	get_node(scene).show()
 	current_scene = scene
 
 func _on_ui_cooking_button_pressed() -> void:
-	if current_scene != "OrderScene":
+	if current_scene != "OrderScene" and current_scene != "SubmitScene":
 		showScene("CookingScene")
 
 func _on_ui_chutney_button_pressed() -> void:
-	if current_scene != "OrderScene":
+	if current_scene != "OrderScene" and current_scene != "SubmitScene":
 		showScene("ChutneyScene")
 
 func _on_ui_drink_button_pressed() -> void:
-	if current_scene != "OrderScene":
+	if current_scene != "OrderScene" and current_scene != "SubmitScene":
 		showScene("DrinkScene")
 
 func _on_ui_order_button_pressed() -> void:
-	if current_scene != "OrderScene":
+	if current_scene != "OrderScene" and current_scene != "SubmitScene":
 		showScene("CustomerLineScene")
 
 func _on_chutney_scene_banana_leaf_updated() -> void:
@@ -186,6 +193,8 @@ func _on_ticket_being_dragged(ticket):
 
 func _on_submit_scene_submit_scene_finished() -> void:
 	for child in $SubmitScene/BananaLeaf.get_children():
-		child.queue_free()
+		if child in CookingState.banana_leaf_items:
+			print("child getting freed : ", child)
+			child.queue_free()
 	CookingState.clear_on_submit()
 	showScene("CustomerLineScene")

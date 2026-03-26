@@ -78,6 +78,7 @@ texture = ExtResource("8_msocd")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="BananaLeaf" unique_id=2139552668]
 polygon = PackedVector2Array(-6.666992, -155, 128.33301, -136.66663, 214.99976, -81.666626, 261.66626, 18.333374, 198.33301, 118.333374, 128.33301, 146.66663, -56.666992, 165, -338.33374, 108.333374, -410.00024, 21.666626, -376.667, -51.666626, -143.33374, -140)
 
+[connection signal="drag_ladle_signal" from="TawaController" to="." method="_on_tawa_controller_drag_ladle_signal"]
 [connection signal="drag_ladle_signal" from="TawaController" to="DoughBucket/Ladle" method="_on_tawa_controller_drag_ladle_signal"]
 [connection signal="drag_ladle_signal" from="TawaController2" to="DoughBucket/Ladle" method="_on_tawa_controller_2_drag_ladle_signal"]
 [connection signal="drag_ladle_signal" from="TawaController3" to="DoughBucket/Ladle" method="_on_tawa_controller_3_drag_ladle_signal"]

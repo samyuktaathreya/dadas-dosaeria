@@ -10,6 +10,7 @@ func _ready() -> void:
 	for child in get_parent().get_parent().get_children():
 		if child is TawaController:
 			child.drag_ladle_signal.connect(_on_tawa_controller_drag_ladle_signal)
+			child.return_ladle.connect(_on_tawa_controller_return_ladle)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -22,6 +23,7 @@ func _input(event):
 func _on_tawa_controller_return_ladle() -> void:
 	play("empty_ladle")
 	CookingState.drag_ladle = false
+	CookingState.dragging_ladle = false
 	CookingState.drag_cooldown = true
 	get_parent().get_node("LadleCooldown").start()
 	var tween = create_tween()
