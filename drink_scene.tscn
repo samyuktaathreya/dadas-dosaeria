@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://dng8bgp6rya5o"]
 
-[ext_resource type="Texture2D" uid="uid://e4vmfb40kgdg" path="res://assets/bananaleaf.webp" id="1_5urrr"]
 [ext_resource type="Script" uid="uid://njp1iswwd5e1" path="res://drink_scene.gd" id="1_ptjgn"]
 [ext_resource type="PackedScene" uid="uid://cfvcomapmnrg0" path="res://cup.tscn" id="2_woxac"]
+[ext_resource type="Texture2D" uid="uid://c4vvy37fghkvk" path="res://assets/CookingUtensils/BananaLeaf.png" id="3_herq5"]
 [ext_resource type="Texture2D" uid="uid://echvx6hretqk" path="res://assets/emptiestdrinkdispenser.png" id="3_rei6w"]
 [ext_resource type="Texture2D" uid="uid://e4xrojj2n3e2" path="res://assets/emptydrinkdispenser.png" id="4_herq5"]
 [ext_resource type="Script" uid="uid://c230gj2h3hdfy" path="res://sugar_ice_collection.gd" id="5_qo2ml"]
@@ -28,7 +28,9 @@ scale = Vector2(0.8, 0.8)
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=696622561]
-texture = ExtResource("1_5urrr")
+scale = Vector2(0.53, 0.53)
+texture = ExtResource("3_herq5")
+offset = Vector2(-30, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BananaLeaf" unique_id=824070031]
 position = Vector2(-55, 7)

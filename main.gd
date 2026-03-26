@@ -41,16 +41,20 @@ func _on_customer_clicked(customer):
 	totalTickets += 1
 
 func _input(event):
-	if event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-		dragging = true
+	# if event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+	#	dragging = true
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		dragging = true
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 		if dragging:
 			dragging = false
+			print("dragged_ticket: ", dragged_ticket)
 			if dragged_ticket != null:
+				print("dropped ticket, dragged_ticket: ", dragged_ticket)
+				print("DrinkScene visible: ", $DrinkScene.visible)
 				# Manually check if mouse is over the submit area
 				var submit_area = $DrinkScene/SubmitTicketHere
+				print("mouse over submit: ", _is_mouse_over_control(submit_area))
 				if $DrinkScene.visible and _is_mouse_over_control(submit_area):
 					CookingState.customer_of_submitted_order = dragged_ticket.customer_of_ticket
 					dragged_ticket.hide()
@@ -174,6 +178,9 @@ func _on_submit_ticket_area_mouse_exited():
 	mouse_on_submit_ticket_area = false
 	
 func _on_ticket_being_dragged(ticket):
+	print("on ticket being dragged signal called")
+	print("ticket : ", ticket)
+	print("ticket.is_dragging : ", ticket.is_dragging)
 	if ticket.is_dragging:
 		dragged_ticket = ticket
 

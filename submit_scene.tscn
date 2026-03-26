@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://85wli6iydyig" path="res://submit_scene.gd" id="1_xu1dr"]
 [ext_resource type="Texture2D" uid="uid://oxv28jdynp51" path="res://girlypopfacingforward.PNG" id="2_ansjy"]
-[ext_resource type="Texture2D" uid="uid://e4vmfb40kgdg" path="res://assets/bananaleaf.webp" id="2_l3md0"]
+[ext_resource type="Texture2D" uid="uid://c4vvy37fghkvk" path="res://assets/CookingUtensils/BananaLeaf.png" id="3_8kuvi"]
 [ext_resource type="Texture2D" uid="uid://bl1ukvmt00slq" path="res://tip_jar.webp" id="4_gs1np"]
 [ext_resource type="PackedScene" uid="uid://bkasbe31a11q2" path="res://ui.tscn" id="5_8kuvi"]
 
@@ -36,7 +36,9 @@ scale = Vector2(0.8, 0.8)
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=163308388]
-texture = ExtResource("2_l3md0")
+position = Vector2(-30, 0)
+scale = Vector2(0.52, 0.52)
+texture = ExtResource("3_8kuvi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BananaLeaf" unique_id=515465172]
 position = Vector2(-55, 7)

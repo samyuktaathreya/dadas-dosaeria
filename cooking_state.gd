@@ -11,6 +11,12 @@ var dosa_scores = []
 
 var customer_of_submitted_order = null
 
+# prevent user from dragging multiple tickets at once
+var dragging_ticket = null
+
+# prevent user from dragging multiple dosas at once
+var dragging_dosa = null
+
 func add_dosa(tex: Texture2D, material, scores):
 	dosas.append(tex)
 	dosa_materials.append(material)

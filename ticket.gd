@@ -33,9 +33,12 @@ const EXPANDED_SCALE = Vector2(1.0, 1.0)
 var ticket_minimized = true
 var minimized_position
 
+var og_z_index
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	ICONS_START_POSITION = $IconsStartPosition.global_position
+	og_z_index = z_index
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -85,27 +88,33 @@ func load_ticket(ticket_position, customer):
 		icon_position.y -= SPACE_BETWEEN_TICKET_ICONS
 
 func _input(event):
-	if event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-		if hovering_on_ticket and is_dragging:  # check is_dragging too
-			ticket_being_dragged.emit(self)
-			self.global_position = get_global_mouse_position()
+	# Handle dragging movement
+	if event is InputEventMouseMotion:
+		if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+			if hovering_on_ticket and not is_dragging and CookingState.dragging_ticket == null:
+				is_dragging = true
+				CookingState.dragging_ticket = self
+				ticket_being_dragged.emit(self)
+			if is_dragging and CookingState.dragging_ticket == self:
+				self.global_position = get_global_mouse_position()
+				self.z_index = 100
 
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed and hovering_on_ticket:
-			is_dragging = true  # set on press, not on motion
-		elif not event.pressed:
-			is_dragging = false
-			if hovering_on_ticket:  # only expand/minimize the ticket YOU clicked
-				if self.global_position.y > UI_BAR_Y_POSITION + VERTICAL_SPACING \
-				and self.global_position.x > X_THRESHOLD_FOR_EXPANDING_TICKET:
-					expand_ticket()
-				else:
-					minimized_position = Vector2(self.position.x, UI_BAR_Y_POSITION)
-					minimize_ticket()
+	# Handle mouse button release
+	if event is InputEventMouseButton \
+	and event.button_index == MOUSE_BUTTON_LEFT \
+	and not event.pressed:
+		if is_dragging and CookingState.dragging_ticket == self:
+			CookingState.dragging_ticket = null
+			self.z_index = og_z_index
+		is_dragging = false
+		if self.global_position.y > UI_BAR_Y_POSITION + VERTICAL_SPACING \
+		and self.global_position.x > X_THRESHOLD_FOR_EXPANDING_TICKET:
+			expand_ticket()
+		else:
+			minimize_ticket()
 
 func _on_blank_order_ticket_mouse_entered() -> void:
-	if not is_dragging:  # ADD THIS - ignore hover if this ticket is being dragged over
-		hovering_on_ticket = true
+	hovering_on_ticket = true
 
 func _on_blank_order_ticket_mouse_exited() -> void:
 	hovering_on_ticket = false
@@ -128,7 +137,7 @@ func minimize_ticket():
 			icon.scale *= (MINIMIZED_SCALE / EXPANDED_SCALE) * 2
 		
 	# move position of ticket 
-	self.position = minimized_position
+	self.position = Vector2(self.position.x, UI_BAR_Y_POSITION)
 	
 	ticket_minimized = true
 	

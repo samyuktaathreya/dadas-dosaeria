@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name TawaController
+
 signal return_ladle
 signal drag_ladle_signal
 
@@ -159,7 +161,10 @@ func _input(event):
 	if event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
 		if click_bucket and not CookingState.drag_ladle:
 			drag_ladle_signal.emit()
-		if dosaInPan and not CookingState.drag_ladle and flip_cooldown <= 0 and mouse_over_pan:
+			print("drag ladle signal emitted")
+		if dosaInPan and not CookingState.drag_ladle and flip_cooldown <= 0 and mouse_over_pan \
+		and CookingState.dragging_dosa == null:
+			CookingState.dragging_dosa = self
 			start_dragging_dosa()
 			
 		if mouse_on_banana_leaf and submit_dosa and dosaInPan and not CookingState.drag_ladle:
@@ -171,6 +176,8 @@ func _input(event):
 			flip_dosa()
 	# stop hovering mouse
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		if CookingState.dragging_dosa == self:
+			CookingState.dragging_dosa = null
 		if not click_bucket and CookingState.drag_ladle and dough_spread_triggered:
 			return_ladle.emit()
 			dough_spread_triggered = false
@@ -230,6 +237,7 @@ func _on_tawa_center_mouse_entered() -> void:
 		$Tawa/DoughSpreadingTimer.start()
 
 func _on_dough_bucket_mouse_entered() -> void:
+	print("on dough bucket mouse entered signal activated")
 	click_bucket = true
 
 func _on_dough_bucket_mouse_exited() -> void:

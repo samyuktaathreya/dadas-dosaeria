@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://vf2u543my0jc"]
 
 [ext_resource type="Script" uid="uid://bmro1x4eyjv6n" path="res://TawaController.gd" id="1_2wcu6"]
-[ext_resource type="Texture2D" uid="uid://cilfw7v8cycb4" path="res://pan.webp" id="2_mijs8"]
+[ext_resource type="Texture2D" uid="uid://drbrdyefv4nrs" path="res://assets/CookingUtensils/Tawa.png" id="2_8uu6o"]
 [ext_resource type="Script" uid="uid://dditg6olfh5od" path="res://progress_bar.gd" id="3_8uu6o"]
 [ext_resource type="Shader" uid="uid://cejgqwynjtpx7" path="res://batter.gdshader" id="3_cxa3y"]
 [ext_resource type="Texture2D" uid="uid://cnyoi53x5v2ts" path="res://assets/dosadoughtexture.png" id="4_8uu6o"]
@@ -24,8 +24,9 @@ script = ExtResource("1_2wcu6")
 position = Vector2(418, 630)
 
 [node name="Sprite2D" type="Sprite2D" parent="Tawa" unique_id=1790241774]
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_mijs8")
+position = Vector2(-29.999998, 27.999998)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_8uu6o")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tawa" unique_id=264761458]
 position = Vector2(-81, 80)

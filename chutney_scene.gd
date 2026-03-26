@@ -18,14 +18,16 @@ var dragging = false
 
 var dosa_on_banana_leaf = false
 
-const FILLED_KATORI_OFFSET = Vector2(83.333, -236.667)
-
 var mouse_on_container = null
 
+const KATORI_FILE_PATH = "res://assets/Chutneys/"
+const KATORI_SCALE = Vector2(1.0, 0.9)
+
+
 var container_to_katori_texture_dict = {
-	"SambarContainer": "res://assets/katorisambar.png",
-	"CoconutChutneyContainer": "res://assets/katoricoconutchutney.png",
-	"MintChutneyContainer": "res://assets/katorimintchutney.png"
+	"SambarContainer": KATORI_FILE_PATH + "Sambar.png",
+	"CoconutChutneyContainer": KATORI_FILE_PATH + "CoconutChutney.png",
+	"MintChutneyContainer": KATORI_FILE_PATH + "MintChutney.png"
 }
 
 var container_to_katori_name_dict = {
@@ -205,7 +207,7 @@ func fill_katori(katori):
 	katori.empty = false
 	var katori_sprite = katori.get_node("KatoriSprite")
 	katori_sprite.texture = load(container_to_katori_texture_dict[mouse_on_container.name])
-	katori_sprite.offset = FILLED_KATORI_OFFSET
+	katori_sprite.scale = KATORI_SCALE
 	var chutney_type = container_to_katori_name_dict[mouse_on_container.name]
 	katori.set_meta("chutney_type", chutney_type)
 

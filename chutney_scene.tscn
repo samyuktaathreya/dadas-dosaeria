@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://cmukepvd3bwuw" path="res://chutney_scene.gd" id="1_d8ey3"]
 [ext_resource type="PackedScene" uid="uid://dg4m7keqbr3yg" path="res://katori.tscn" id="2_7omhc"]
-[ext_resource type="Texture2D" uid="uid://e4vmfb40kgdg" path="res://assets/bananaleaf.webp" id="2_p4bs0"]
 [ext_resource type="Texture2D" uid="uid://ddbooh5xnnk5r" path="res://assets/sambarcontainer.png" id="4_kpurj"]
+[ext_resource type="Texture2D" uid="uid://c4vvy37fghkvk" path="res://assets/CookingUtensils/BananaLeaf.png" id="4_w2k57"]
 [ext_resource type="Texture2D" uid="uid://ctkv6aeapd7l3" path="res://assets/coconutchutneycontainer.png" id="5_w2k57"]
 [ext_resource type="Texture2D" uid="uid://dvwlef71t5m0j" path="res://assets/mintchutneycontainer.png" id="6_4io5g"]
 
@@ -26,7 +26,9 @@ scale = Vector2(0.5, 0.5)
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="DosaPile/BananaLeaf2" unique_id=571810990]
-texture = ExtResource("2_p4bs0")
+position = Vector2(-30, 0)
+scale = Vector2(0.52, 0.52)
+texture = ExtResource("4_w2k57")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DosaPile/BananaLeaf2" unique_id=400835781]
 position = Vector2(-55, 7)
@@ -39,7 +41,9 @@ scale = Vector2(0.8, 0.8)
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=12128473]
-texture = ExtResource("2_p4bs0")
+scale = Vector2(0.53, 0.53)
+texture = ExtResource("4_w2k57")
+offset = Vector2(-40, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BananaLeaf" unique_id=928741626]
 position = Vector2(-55, 7)

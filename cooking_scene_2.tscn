@@ -3,16 +3,34 @@
 [ext_resource type="Script" uid="uid://bpabrjfuht7vf" path="res://cooking_scene_2.gd" id="1_5mg6d"]
 [ext_resource type="PackedScene" uid="uid://vf2u543my0jc" path="res://tawa.tscn" id="1_ewv8k"]
 [ext_resource type="Script" uid="uid://c0ojx2osfom80" path="res://dough_bucket.gd" id="2_qv3c0"]
-[ext_resource type="Texture2D" uid="uid://n03brvxpm4dv" path="res://dosadoughbucket.jpeg" id="3_tlmgs"]
-[ext_resource type="Texture2D" uid="uid://4c03ks73b3j5" path="res://ladel.png" id="4_5mq4u"]
+[ext_resource type="Texture2D" uid="uid://cse8ulfig53xb" path="res://assets/CookingUtensils/DoughBucket.png" id="4_msocd"]
 [ext_resource type="Script" uid="uid://b4skg2e44jt1p" path="res://ladle.gd" id="5_tlmgs"]
-[ext_resource type="Texture2D" uid="uid://e4vmfb40kgdg" path="res://assets/bananaleaf.webp" id="6_5mq4u"]
+[ext_resource type="Texture2D" uid="uid://cl1rvptsgpr2" path="res://assets/CookingUtensils/EmptyLadle.png" id="5_vjjh2"]
+[ext_resource type="Texture2D" uid="uid://cifp1er0aro8n" path="res://assets/CookingUtensils/Full Dosa Ladle.png" id="6_d11v2"]
+[ext_resource type="Texture2D" uid="uid://c4vvy37fghkvk" path="res://assets/CookingUtensils/BananaLeaf.png" id="8_msocd"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5mg6d"]
-size = Vector2(141, 171)
+[sub_resource type="SpriteFrames" id="SpriteFrames_l558y"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_vjjh2")
+}],
+"loop": true,
+"name": &"empty_ladle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_d11v2")
+}],
+"loop": true,
+"name": &"full_ladle",
+"speed": 5.0
+}]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_msocd"]
-size = Vector2(663, 392)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_n7x67"]
+radius = 48.0
+height = 153.99998
 
 [node name="CookingScene2" type="Node2D" unique_id=704392818]
 script = ExtResource("1_5mg6d")
@@ -26,46 +44,45 @@ position = Vector2(642, -102)
 [node name="TawaController3" parent="." unique_id=1100728395 instance=ExtResource("1_ewv8k")]
 position = Vector2(1214, -101)
 
-[node name="DoughBucket" type="Area2D" parent="." unique_id=770816145]
+[node name="DoughBucket" type="Area2D" parent="." unique_id=1657890024]
 position = Vector2(168, 154)
 script = ExtResource("2_qv3c0")
 
-[node name="DoughBucket" type="Sprite2D" parent="DoughBucket" unique_id=476228350]
-texture = ExtResource("3_tlmgs")
+[node name="DoughBucket" type="Sprite2D" parent="DoughBucket" unique_id=1132414475]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("4_msocd")
 
-[node name="Ladle" type="Sprite2D" parent="DoughBucket" unique_id=1506782833]
-position = Vector2(11.000015, -59)
-scale = Vector2(0.24722221, 0.36666667)
-texture = ExtResource("4_5mq4u")
+[node name="Ladle" type="AnimatedSprite2D" parent="DoughBucket" unique_id=1247408045]
+position = Vector2(19.597225, -29.666664)
+scale = Vector2(0.20561111, 0.27333337)
+sprite_frames = SubResource("SpriteFrames_l558y")
+animation = &"empty_ladle"
 script = ExtResource("5_tlmgs")
 
-[node name="LadleCooldown" type="Timer" parent="DoughBucket" unique_id=638501347]
+[node name="LadleCooldown" type="Timer" parent="DoughBucket" unique_id=442809622]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DoughBucket" unique_id=1555700680]
-position = Vector2(3.5, 26.5)
-shape = SubResource("RectangleShape2D_5mg6d")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoughBucket" unique_id=1449587289]
+position = Vector2(0, -17)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_n7x67")
 
 [node name="BananaLeaf" type="Area2D" parent="." unique_id=77542014]
 position = Vector2(1716.0001, 958)
 scale = Vector2(0.6, 0.6)
-metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=1118434003]
-texture = ExtResource("6_5mq4u")
+position = Vector2(-43.333534, -6.6666665)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("8_msocd")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BananaLeaf" unique_id=1641845174]
-position = Vector2(-56.5, -3)
-shape = SubResource("RectangleShape2D_msocd")
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="BananaLeaf" unique_id=2139552668]
+polygon = PackedVector2Array(-6.666992, -155, 128.33301, -136.66663, 214.99976, -81.666626, 261.66626, 18.333374, 198.33301, 118.333374, 128.33301, 146.66663, -56.666992, 165, -338.33374, 108.333374, -410.00024, 21.666626, -376.667, -51.666626, -143.33374, -140)
 
 [connection signal="drag_ladle_signal" from="TawaController" to="DoughBucket/Ladle" method="_on_tawa_controller_drag_ladle_signal"]
-[connection signal="return_ladle" from="TawaController" to="DoughBucket/Ladle" method="_on_tawa_controller_return_ladle"]
-[connection signal="drag_ladle_signal" from="TawaController2" to="DoughBucket/Ladle" method="_on_tawa_controller_drag_ladle_signal"]
-[connection signal="return_ladle" from="TawaController2" to="DoughBucket/Ladle" method="_on_tawa_controller_return_ladle"]
-[connection signal="drag_ladle_signal" from="TawaController3" to="DoughBucket/Ladle" method="_on_tawa_controller_drag_ladle_signal"]
-[connection signal="return_ladle" from="TawaController3" to="DoughBucket/Ladle" method="_on_tawa_controller_return_ladle"]
+[connection signal="drag_ladle_signal" from="TawaController2" to="DoughBucket/Ladle" method="_on_tawa_controller_2_drag_ladle_signal"]
+[connection signal="drag_ladle_signal" from="TawaController3" to="DoughBucket/Ladle" method="_on_tawa_controller_3_drag_ladle_signal"]
 [connection signal="area_entered" from="DoughBucket" to="DoughBucket" method="_on_area_entered"]
 [connection signal="area_exited" from="DoughBucket" to="DoughBucket" method="_on_area_exited"]
-[connection signal="doughBucketClicked" from="DoughBucket" to="DoughBucket/Ladle" method="_on_dough_bucket_dough_bucket_clicked"]
 [connection signal="mouse_entered" from="DoughBucket" to="TawaController" method="_on_dough_bucket_mouse_entered"]
 [connection signal="mouse_entered" from="DoughBucket" to="TawaController2" method="_on_dough_bucket_mouse_entered"]
 [connection signal="mouse_entered" from="DoughBucket" to="TawaController3" method="_on_dough_bucket_mouse_entered"]

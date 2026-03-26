@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://dg4m7keqbr3yg"]
 
-[ext_resource type="Texture2D" uid="uid://c7mpilpqndold" path="res://assets/katori.png" id="1_3xfxl"]
 [ext_resource type="Script" uid="uid://cqx6xue384ltk" path="res://katori.gd" id="1_htcue"]
+[ext_resource type="Texture2D" uid="uid://dq3q6nps1hfpc" path="res://assets/Chutneys/EmptyKatori.png" id="2_htcue"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_htcue"]
-radius = 166.0
+radius = 183.33333
 height = 416.0
 
 [node name="Katori" type="Area2D" unique_id=1746567353]
@@ -12,9 +12,10 @@ scale = Vector2(0.3, 0.3)
 script = ExtResource("1_htcue")
 
 [node name="KatoriSprite" type="Sprite2D" parent="." unique_id=1194835389]
-texture = ExtResource("1_3xfxl")
+scale = Vector2(1, 0.9)
+texture = ExtResource("2_htcue")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=360705728]
-position = Vector2(2, 1)
+position = Vector2(-6.666666, -13.333332)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_htcue")
