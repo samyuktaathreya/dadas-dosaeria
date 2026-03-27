@@ -13,6 +13,7 @@ void fragment(){
 	vec2 dosa_uv = UV - pan_center + vec2(0.5, 0.5);
 
 	vec4 dosa;
+	
 	if (cooked_stage > 0.5) {
 		if (cooked_stage > 1.0) 
 			dosa = texture(dosa_texture_cooked, dosa_uv);

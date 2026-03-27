@@ -7,6 +7,8 @@ signal drag_ladle_signal
 
 var PLACEHOLDER_VECTOR = Vector2(-1,-1)
 
+var click_start_pos = Vector2.ZERO
+
 var mouse_over_pan = false
 var flip_cooldown = 0.0
 
@@ -128,8 +130,8 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if submit_dosa and dosa_drag_sprite:
-		# var offset = Vector2(960, 540) - DOSA_PAN_COLLISION_CENTER
-		dosa_drag_sprite.global_position = get_global_mouse_position()
+		var offset = Vector2(400, 600) - DOSA_PAN_COLLISION_CENTER
+		dosa_drag_sprite.global_position = get_global_mouse_position() + offset
 	if flip_cooldown > 0:
 		flip_cooldown -= delta
 	if mouse_over_pan:
@@ -191,14 +193,14 @@ func _on_mouse_exited():
 	mouse_over_pan = false
 
 func _input(event):
-	# start hovering mouse
+	# 1. HANDLE MOUSE MOVEMENT (DRAGGING)
 	if event is InputEventMouseMotion and event.button_mask & MOUSE_BUTTON_MASK_LEFT:
 		if click_bucket and not CookingState.drag_ladle:
 			drag_ladle_signal.emit()
-			print("drag ladle signal emitted")
 			
-		if dosaInPan and not CookingState.drag_ladle and flip_cooldown <= 0 and mouse_over_pan \
-		and CookingState.dragging_dosa == null:
+		# Check if they have moved the mouse far enough to count as a "drag" (e.g., 10 pixels)
+		if dosaInPan and not CookingState.drag_ladle and mouse_over_pan \
+		and CookingState.dragging_dosa == null and click_start_pos.distance_to(event.global_position) > 10.0:
 			CookingState.dragging_dosa = self
 			start_dragging_dosa()
 			
@@ -206,21 +208,29 @@ func _input(event):
 			get_parent().serve_dosa()
 			reset_tawa()
 	
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		if mouse_over_pan and dosaInPan and not CookingState.drag_ladle and flip_cooldown <= 0:
-			flip_dosa()
+	# 2. HANDLE MOUSE PRESS
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			# Record where the user clicked down
+			click_start_pos = event.global_position
 			
-	# stop hovering mouse
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
-		if CookingState.dragging_dosa == self:
-			CookingState.dragging_dosa = null
-		if not click_bucket and CookingState.drag_ladle and dough_spread_triggered:
-			return_ladle.emit()
-			dough_spread_triggered = false
-			flip_cooldown = 0.5
-			CookingState.dragging_ladle = false
-		elif submit_dosa:
-			undrag_dosa()
+		# 3. HANDLE MOUSE RELEASE
+		elif not event.pressed:
+			# If they released the button WITHOUT moving the mouse much, treat it as a FLIP
+			if click_start_pos.distance_to(event.global_position) <= 10.0:
+				if mouse_over_pan and dosaInPan and not CookingState.drag_ladle and flip_cooldown <= 0:
+					flip_dosa()
+
+			# Handle dropping the drag state
+			if CookingState.dragging_dosa == self:
+				CookingState.dragging_dosa = null
+			if not click_bucket and CookingState.drag_ladle and dough_spread_triggered:
+				return_ladle.emit()
+				dough_spread_triggered = false
+				flip_cooldown = 0.5
+				CookingState.dragging_ladle = false
+			elif submit_dosa:
+				undrag_dosa()
 
 func stamp_along_path(a: Vector2, b: Vector2, brushIndex: int):
 	var dist = a.distance_to(b)
@@ -275,36 +285,44 @@ func _on_tawa_center_mouse_entered() -> void:
 		$Tawa/DoughSpreadingTimer.start()
 
 func _on_dough_bucket_mouse_entered() -> void:
-	print("on dough bucket mouse entered signal activated")
 	click_bucket = true
 
 func _on_dough_bucket_mouse_exited() -> void:
 	click_bucket = false
 
 func flip_dosa():
-	flip_cooldown = 0.5
-	dosa_cooked_amounts[dosa_cooked_amounts_index] = cook_level
-	dosa_cooked_amounts_index = 1 - dosa_cooked_amounts_index
-	cook_level = dosa_cooked_amounts[dosa_cooked_amounts_index]
+	if flip_cooldown <= 0:
+		flip_cooldown = 0.5
+		
+		dosa_cooked_amounts[dosa_cooked_amounts_index] = cook_level
+		
+		# the side now facing UP is the one that was just cooking
+		visible_cook_level = cook_level
+		$BatterCanvas.material.set_shader_parameter("cook_level", visible_cook_level)
+		
+		# swap index between 0 and 1
+		dosa_cooked_amounts_index = 1 - dosa_cooked_amounts_index
+		
+		# track cook level of dosa side facing pan
+		cook_level = dosa_cooked_amounts[dosa_cooked_amounts_index]
 
-	# the side now facing UP is the one that was just cooking
-	visible_cook_level = dosa_cooked_amounts[1 - dosa_cooked_amounts_index]
-	$BatterCanvas.material.set_shader_parameter("cook_level", visible_cook_level)
-
-	# pick which sprite to show based on how cooked that side is
-	var stage = cook_level_to_stage(visible_cook_level)
-	$BatterCanvas.material.set_shader_parameter("cooked_stage", stage)
+		# pick which sprite to show based on how cooked that side is
+		var stage = cook_level_to_stage(visible_cook_level)
+		if stage != 0:
+			$BatterCanvas.material.set_shader_parameter("cooked_stage", stage)
 
 func cook_level_to_stage(level: float) -> float:
-	if 0.2 < level and level < 0.8:
-		return 0.5   # slightly cooked
-	elif level < 1.0:
-		return 1.0   # done
+	if level < 0.4:
+		return 0
+	if level < 1.0:
+		return 1.0
 	elif level < 1.5:
-		return 2.0   # overcooked
-	else: 
+		return 2.0
+	elif level < 1.9:
 		return 3.0
-		
+	else: 
+		return 4.0
+
 func start_dragging_dosa():
 	if not submit_dosa: 
 		submit_dosa = true
@@ -327,6 +345,7 @@ func start_dragging_dosa():
 		get_parent().add_child(dosa_drag_sprite)
 		# hide the original canvas
 		$BatterCanvas.visible = false
+		
 func undrag_dosa():
 	if submit_dosa:
 		submit_dosa = false
@@ -335,7 +354,6 @@ func undrag_dosa():
 			dosa_drag_sprite = null
 		$BatterCanvas.visible = true
 		flip_cooldown = 0.5  # small cooldown so releasing doesn't immediately trigger a flip
-
 
 func _on_banana_leaf_mouse_entered() -> void:
 	mouse_on_banana_leaf = true
@@ -381,7 +399,7 @@ func reset_tawa():
 	canvas_image.fill(Color(0, 0, 0, 0))
 	canvas_texture.update(canvas_image)
 	$BatterCanvas.visible = true
-	$BatterCanvas.material.set_shader_parameter("cook_level", 0.0)
+	$BatterCanvas.material.set_shader_parameter("cooked_stage", 0.0)
 	flip_cooldown = 0.0
 	force_constant = 40
 
@@ -439,7 +457,6 @@ func calculate_dosa_score() -> Dictionary:
 
 		shape_score = clamp(fill_ratio, 0.0, 1.0) * 70.0  # up to 70 for roundness
 		shape_score += center_score * 30.0                 # up to 30 for centering
-	# shape_score is now 0-100
 
 	return {
 		"cook_score": cook_score,

@@ -36,13 +36,13 @@ height = 153.99998
 script = ExtResource("1_5mg6d")
 
 [node name="TawaController" parent="." unique_id=33808163 instance=ExtResource("1_ewv8k")]
-position = Vector2(0, -98)
+position = Vector2(-158, -97)
 
 [node name="TawaController2" parent="." unique_id=806975220 instance=ExtResource("1_ewv8k")]
-position = Vector2(642, -102)
+position = Vector2(334, -83)
 
 [node name="TawaController3" parent="." unique_id=1100728395 instance=ExtResource("1_ewv8k")]
-position = Vector2(1214, -101)
+position = Vector2(816, -70)
 
 [node name="DoughBucket" type="Area2D" parent="." unique_id=1657890024]
 position = Vector2(168, 154)
@@ -67,8 +67,9 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_n7x67")
 
 [node name="BananaLeaf" type="Area2D" parent="." unique_id=77542014]
-position = Vector2(1716.0001, 958)
+position = Vector2(1318.0001, 930)
 scale = Vector2(0.6, 0.6)
+metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=1118434003]
 position = Vector2(-43.333534, -6.6666665)

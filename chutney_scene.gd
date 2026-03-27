@@ -16,12 +16,14 @@ var dragged_object = null
 var dragged_object_original_position = null
 var dragging = false
 
-var dosa_on_banana_leaf = false
+# var dosa_on_banana_leaf = false
 
 var mouse_on_container = null
 
 const KATORI_FILE_PATH = "res://assets/Chutneys/"
 const KATORI_SCALE = Vector2(1.0, 0.9)
+
+var z_index_on_banana_leaf = 10
 
 const DOSA_COOKING_SPRITE_OFFSET = Vector2(760, -170) - Vector2(235, -80)
 
@@ -105,19 +107,18 @@ func _on_banana_leaf_2_mouse_exited() -> void:
 func _drag(node):
 	if node is String and node == "dosa":
 		dosa_pile[-1].global_position = get_global_mouse_position()
+		dosa_pile[-1].z_index = z_index_on_banana_leaf + 1
 	else:
 		node.global_position = get_global_mouse_position()
 	
 func _drop(node, original_position):
-	# for each node, we need to check if it reached the position successfully
-	# if it didn't, it must return to the original position
 	match node:
 		"dosa":
 			if mouse_on_banana_leaf:
-				# the dosa is placed onto the banana leaf
 				var dosa = dosa_pile.pop_back()
+				z_index_on_banana_leaf += 1
 				dosa_pile_positions.pop_back()
-				dosa_on_banana_leaf = true
+				# dosa_on_banana_leaf = true
 				CookingState.add_to_banana_leaf_items(dosa)
 			else:
 				print("dosa pile positions -1 : ", dosa_pile_positions[-1])
@@ -133,15 +134,16 @@ func _drop(node, original_position):
 		
 	dragged_object = null
 	dragged_object_original_position = null
+	
+	# THE FIX: If your mouse is still over the pile after dropping, instantly queue up the next dosa!
+	if mouse_on_dosa_pile and dosa_pile.size() > 0:
+		dragged_object = "dosa"
+		
 
 func change_dragged_object_on_enter(node):
-	if visible:
-		if not dragging:
-			if node is String \
-			and node == "dosa" and dosa_on_banana_leaf:
-				pass
-			else:
-				dragged_object = node
+	if visible and not dragging:
+		# Just assign the node directly, no empty 'pass' logic needed!
+		dragged_object = node
 
 func change_dragged_object_on_exit(node):
 	if visible:
@@ -213,6 +215,7 @@ func fill_katori(katori):
 	katori.set_meta("chutney_type", chutney_type)
 
 func _on_continue_button_pressed() -> void:
+	# dosa_on_banana_leaf = false
 	print("=== CONTINUE PRESSED ===")
 	print("order_in_drink_scene: ", CookingState.order_in_drink_scene)
 	print("banana_leaf_items: ", CookingState.banana_leaf_items)
