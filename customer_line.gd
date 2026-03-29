@@ -19,6 +19,9 @@ var customer_at_order_spot = false
 func generate_random_order(dosa_cap: int = 1, chutney_cap: int = 1):
 	const DOSA_OPTIONS = ["PlainDosa", "OnionDosa"]
 	const CHUTNEY_OPTIONS = ["CoconutChutney", "MintChutney", "Sambar"]
+	const DRINK_OPTIONS = ["MangoLassi", "FilteredCoffee"]
+	
+	const SUGAR_ICE_OPTIONS = [true, false]
 
 	var dosa_count = randi_range(1, dosa_cap)
 	var chutney_count = randi_range(1, chutney_cap)
@@ -30,10 +33,17 @@ func generate_random_order(dosa_cap: int = 1, chutney_cap: int = 1):
 	var chutneys = []
 	for i in chutney_count:
 		chutneys.append(CHUTNEY_OPTIONS.pick_random())
+		
+	var drink = DRINK_OPTIONS.pick_random()
+	var sugar = SUGAR_ICE_OPTIONS.pick_random()
+	var ice = not sugar
 
 	return {
 		"dosa": dosas,
 		"chutney": chutneys,
+		"drink": drink,
+		"ice": ice,
+		"sugar": sugar
 	}
 
 # Called when the node enters the scene tree for the first time.

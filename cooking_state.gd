@@ -6,7 +6,9 @@ var drag_ladle = false
 var dragging_ladle = false 
 
 var drag_cooldown = false
-var banana_leaf_items = []  # Array of dicts with node info
+
+var pending_items = [] # items on banana leaf in chutney scene
+var banana_leaf_items = []  # items on banana leaf in drink scene
 var order_in_drink_scene = false
 
 var dosas: Array[Texture2D] = []

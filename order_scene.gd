@@ -7,6 +7,8 @@ const TIME_INTERVAL = 1.0
 var customerOrdered
 const DOSA_FILE_PATH = "res://assets/dosas/"
 const CHUTNEY_FILE_PATH = "res://assets/chutneys/"
+const DRINK_FILE_PATH = "res://assets/drinks/"
+
 var SPEECH_BUBBLE_POSITION
 const SPEECH_BUBBLE_DOSA_SCALE = Vector2(0.5, 0.455)
 const SPACE_BETWEEN_ICONS_ON_BIG_TICKET = 200
@@ -15,9 +17,12 @@ var ICON_STARTING_TICKET_POSITION
 const SPEECH_BUBBLE_CHUTNEY_SCALE = Vector2(0.4, 0.4)
 const BIG_TICKET_CHUTNEY_SCALE = Vector2(0.4, 0.4)
 
+const SPEECH_BUBBLE_DRINK_SCALE = Vector2(0.4, 0.4)
+const BIG_TICKET_DRINK_SCALE = Vector2(0.4, 0.4)
+
 var ticket_icons = []
 
-var testing_order_scene = false
+var testing_order_scene = true
 
 func _ready():
 	SPEECH_BUBBLE_POSITION = $OrderBubble/SpeechBubbleIconPosition.position
@@ -27,7 +32,7 @@ func _ready():
 
 func show_order(customer):
 	if testing_order_scene:
-		current_order = { "dosa": ["OnionDosa"], "chutney": ["MintChutney"] }
+		current_order = { "dosa": ["OnionDosa"], "chutney": ["MintChutney"], "drink": "MangoLassi", "sugar": true, "ice": false}
 	else:
 		current_order = customer.data.order
 		customerOrdered = customer
@@ -84,6 +89,24 @@ func show_icons():
 		await get_tree().create_timer(TIME_INTERVAL).timeout
 		
 		ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
+		
+	# handle drinks
+	var drink = current_order.drink
+	var drink_texture = load(DRINK_FILE_PATH + drink + ".png")
+	
+	$OrderBubble/BubbleSprite.show()
+	var speech_bubble_chutney = spawn_icon(drink_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_DRINK_SCALE)
+	await get_tree().create_timer(TIME_INTERVAL).timeout
+	ticket_icons.pop_back()
+	
+	spawn_icon(drink_texture, ticket_position, BIG_TICKET_DRINK_SCALE)
+	await get_tree().create_timer(TIME_INTERVAL).timeout
+	
+	speech_bubble_chutney.queue_free()
+	$OrderBubble/BubbleSprite.hide()
+	await get_tree().create_timer(TIME_INTERVAL).timeout
+	
+	ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
 
 func on_animation_complete():
 	while len(ticket_icons) > 0:

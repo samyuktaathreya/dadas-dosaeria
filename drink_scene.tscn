@@ -2,18 +2,15 @@
 
 [ext_resource type="Script" uid="uid://njp1iswwd5e1" path="res://drink_scene.gd" id="1_ptjgn"]
 [ext_resource type="PackedScene" uid="uid://cfvcomapmnrg0" path="res://cup.tscn" id="2_woxac"]
-[ext_resource type="Texture2D" uid="uid://c4vvy37fghkvk" path="res://assets/CookingUtensils/BananaLeaf.png" id="3_herq5"]
+[ext_resource type="PackedScene" uid="uid://cb4xv2pchwnxa" path="res://banana_leaf.tscn" id="3_herq5"]
 [ext_resource type="Texture2D" uid="uid://echvx6hretqk" path="res://assets/emptiestdrinkdispenser.png" id="3_rei6w"]
+[ext_resource type="Script" uid="uid://b1ptpjw0hbv18" path="res://banana_leaf.gd" id="4_fmbap"]
 [ext_resource type="Texture2D" uid="uid://e4xrojj2n3e2" path="res://assets/emptydrinkdispenser.png" id="4_herq5"]
 [ext_resource type="Script" uid="uid://c230gj2h3hdfy" path="res://sugar_ice_collection.gd" id="5_qo2ml"]
 [ext_resource type="Texture2D" uid="uid://bkqxh5yu3d8um" path="res://assets/barfordispensingicesugar.png" id="7_51ej6"]
 [ext_resource type="Texture2D" uid="uid://du7vil3nk84lh" path="res://assets/ballfordispensingsugarice.png" id="8_cahwq"]
 [ext_resource type="Script" uid="uid://dkw7td5ghjghf" path="res://ball.gd" id="9_lmtur"]
 [ext_resource type="Texture2D" uid="uid://by3if2fs0j31n" path="res://assets/submit_ticket.png" id="10_herq5"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ptjgn"]
-radius = 188.0
-height = 694.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fmbap"]
 size = Vector2(47.25, 69.25)
@@ -22,20 +19,9 @@ size = Vector2(47.25, 69.25)
 script = ExtResource("1_ptjgn")
 cup_scene = ExtResource("2_woxac")
 
-[node name="BananaLeaf" type="Area2D" parent="." unique_id=983708873]
+[node name="BananaLeaf" parent="." unique_id=495446425 instance=ExtResource("3_herq5")]
 position = Vector2(978, 731)
-scale = Vector2(0.8, 0.8)
-metadata/_edit_group_ = true
-
-[node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=696622561]
-scale = Vector2(0.53, 0.53)
-texture = ExtResource("3_herq5")
-offset = Vector2(-30, 0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="BananaLeaf" unique_id=824070031]
-position = Vector2(-55, 7)
-rotation = 1.5707964
-shape = SubResource("CapsuleShape2D_ptjgn")
+script = ExtResource("4_fmbap")
 
 [node name="DrinkDispenser" type="Control" parent="." unique_id=2079022300]
 layout_mode = 3

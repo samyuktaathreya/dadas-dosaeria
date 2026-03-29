@@ -2,6 +2,8 @@ extends Node2D
 
 signal order_scene
 
+@export var banana_leaf: PackedScene
+
 var totalTickets = 0
 const TICKET_POSITION_Y = 280.0
 const TICKET_SPACE = 100 #space between tickets
@@ -15,6 +17,8 @@ var mouse_on_submit_ticket_area = false
 var dragged_ticket = null
 
 var dragging = false
+
+const BANANA_LEAF_POSITION_IN_DRINK_SCENE = Vector2(978, 731)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -98,10 +102,18 @@ func _on_order_scene_order_complete(customer) -> void:
 	totalTickets += 1
 	
 	showScene("CustomerLineScene")
+	
+func add_new_banana_leaf_to_drink_scene():
+	var new_banana_leaf = banana_leaf.instantiate()
 
+	new_banana_leaf.position = BANANA_LEAF_POSITION_IN_DRINK_SCENE
+	new_banana_leaf.z_index = 0
+	$DrinkScene.add_child(new_banana_leaf)
+	
 func showScene(scene):
 	print("--- CURRENT SCENE : ", current_scene)
 	print("--- NEXT SCENE : ", scene)
+	
 	if current_scene == "SubmitScene":
 		for child in $UI.get_children():
 			if child is Ticket:
@@ -109,8 +121,26 @@ func showScene(scene):
 		$UI/TicketHolder.show()
 		$SubmitScene/BananaLeaf.show()
 		$DrinkScene/BananaLeaf.show()
-		for child in $DrinkScene/BananaLeaf.get_children():
-			print("child is ", child)
+		
+		# re-add a new banana leaf to the drink scene
+		# since the old one gets deleted
+		add_new_banana_leaf_to_drink_scene()
+			
+	if scene == "SubmitScene":
+		# hide the ticket bar at the top
+		for child in $UI.get_children():
+			if child is Ticket:
+				child.hide()
+		$UI/TicketHolder.hide()
+		
+		# transfer banana leaf items from drink scene
+		# to the drink scene
+		var banana_leaf = $DrinkScene/BananaLeaf
+		for child in banana_leaf.get_children():
+			var saved_global_pos = child.global_position
+			banana_leaf.remove_child(child)
+			$SubmitScene/BananaLeaf.add_child(child)
+			child.global_position = saved_global_pos
 
 	'''if scene == "SubmitScene":
 		var banana_leaf = $DrinkScene/BananaLeaf
@@ -139,16 +169,7 @@ func showScene(scene):
 		for child in $UI.get_children():
 			if child.name.ends_with("Button"):
 				child.show()
-	if scene == "SubmitScene":
-		# hide the ticket bar at the top
-		for child in $UI.get_children():
-			if child is Ticket:
-				child.hide()
-		$UI/TicketHolder.hide()
-		
-	if scene == "DrinkScene":
-		$DrinkScene._on_chutney_scene_banana_leaf_updated()
-		
+
 	get_node(current_scene).hide()
 	get_node(scene).show()
 	current_scene = scene
@@ -170,10 +191,7 @@ func _on_ui_order_button_pressed() -> void:
 		showScene("CustomerLineScene")
 
 func _on_chutney_scene_banana_leaf_updated() -> void:
-	print("=== BANANA LEAF UPDATED RECEIVED ===")
-	print("about to call showScene DrinkScene")
 	showScene("DrinkScene")
-	print("showScene finished")
 	# showScene("DrinkScene")
 
 func _on_submit_ticket_area_mouse_entered():

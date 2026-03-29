@@ -19,6 +19,10 @@ func _ready() -> void:
 	show_drinks()
 	$TooManyCupsWarning.hide()
 	$CantPourNowWarning.hide()
+	for child in get_children():
+		if child is BananaLeaf:
+			child.mouse_entered.connect(_on_banana_leaf_mouse_entered)
+			child.mouse_exited.connect(_on_banana_leaf_mouse_exited)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -42,15 +46,19 @@ func _input(event):
 		dragging = false
 
 func _on_chutney_scene_banana_leaf_updated() -> void:
-	var items_to_move = CookingState.banana_leaf_items.duplicate()
-	for item in items_to_move:
-		var global_pos = item.global_position  # save before reparenting
+	var starting_z_index = $BananaLeaf.z_index + 5
+	for item in CookingState.pending_items:
+		var global_pos = item.global_position
 		var prev_parent = item.get_parent()
 		if prev_parent:
 			prev_parent.remove_child(item)
 		$BananaLeaf.add_child(item)
-		item.global_position = global_pos  # restore after reparenting
-		
+		item.z_index = starting_z_index + 1
+		starting_z_index += 1
+		item.global_position = global_pos
+		CookingState.banana_leaf_items.append(item)
+	CookingState.pending_items.clear()
+
 func show_drinks():
 	$DrinkDispenser/EmptyDrinkDispenser/DrinkCollection.show()
 	$DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection.hide()
@@ -173,7 +181,6 @@ func spawn_cup_error():
 	# when the player tries to spawn more cups 
 	$TooManyCupsWarning.show()
 	$TooManyCupsWarningTimer.start()
-
 
 func _on_button_for_minigame_pressed() -> void:
 	# when the button for minigame is pressed

@@ -1,77 +1,21 @@
 [gd_scene format=3 uid="uid://dikmxjaikbmqy"]
 
 [ext_resource type="Script" uid="uid://dph1cl5ki2u3s" path="res://main.gd" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://coovcxgy8jqs4" path="res://customer_line.gd" id="2_0xm2m"]
-[ext_resource type="PackedScene" uid="uid://dsr3prstj5fhw" path="res://customer.tscn" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://cb4xv2pchwnxa" path="res://banana_leaf.tscn" id="2_ycdy4"]
+[ext_resource type="PackedScene" uid="uid://duydwanuxdd5j" path="res://customer_line_scene.tscn" id="3_kek77"]
 [ext_resource type="PackedScene" uid="uid://fan0ons4hwq4" path="res://order_scene.tscn" id="4_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://bkasbe31a11q2" path="res://ui.tscn" id="5_lquwl"]
-[ext_resource type="Texture2D" uid="uid://c4k6c7gb8i7eq" path="res://greenarrow1.png" id="6_272bh"]
-[ext_resource type="Texture2D" uid="uid://bsqp31karqdyu" path="res://assets/rough_draft_dadas_dosaeria.webp" id="6_kek77"]
 [ext_resource type="PackedScene" uid="uid://cwg3522v8sj6p" path="res://cooking_scene_2.tscn" id="7_4c57u"]
-[ext_resource type="Texture2D" uid="uid://wvk4ipwsydix" path="res://greenarrow2.png" id="7_5vw27"]
 [ext_resource type="PackedScene" uid="uid://36hp7hvdr83p" path="res://chutney_scene.tscn" id="9_4c57u"]
 [ext_resource type="PackedScene" uid="uid://dng8bgp6rya5o" path="res://drink_scene.tscn" id="10_dg77c"]
 [ext_resource type="PackedScene" uid="uid://cxoinwbbw7h18" path="res://submit_scene.tscn" id="11_dg77c"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_kek77"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("6_272bh")
-}, {
-"duration": 1.0,
-"texture": ExtResource("7_5vw27")
-}],
-"loop": true,
-"name": &"bobbing",
-"speed": 5.0
-}]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4c57u"]
-radius = 60.0
-height = 134.0
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0xm2m"]
-
 [node name="main" type="Node2D" unique_id=226761845]
 script = ExtResource("1_ig7tw")
+banana_leaf = ExtResource("2_ycdy4")
 
-[node name="CustomerLineScene" type="Node2D" parent="." unique_id=1235723339]
-visible = false
+[node name="CustomerLineScene" parent="." unique_id=1035739897 instance=ExtResource("3_kek77")]
 position = Vector2(0, 100)
-script = ExtResource("2_0xm2m")
-customer_scene = ExtResource("3_h2yge")
-
-[node name="DadaDosaeria" type="Sprite2D" parent="CustomerLineScene" unique_id=525964833]
-position = Vector2(532.75, 389.24997)
-scale = Vector2(0.6868655, 0.65482026)
-texture = ExtResource("6_kek77")
-
-[node name="OrderArrow" type="Area2D" parent="CustomerLineScene" unique_id=1531707505]
-position = Vector2(931, 283)
-scale = Vector2(0.8, 0.8)
-metadata/_edit_group_ = true
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CustomerLineScene/OrderArrow" unique_id=399472418]
-scale = Vector2(0.05, 0.05)
-sprite_frames = SubResource("SpriteFrames_kek77")
-animation = &"bobbing"
-frame_progress = 0.017451309
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CustomerLineScene/OrderArrow" unique_id=2081345805]
-shape = SubResource("CapsuleShape2D_4c57u")
-
-[node name="OrderSpot" type="Area2D" parent="CustomerLineScene" unique_id=1949998889]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CustomerLineScene/OrderSpot" unique_id=18463413]
-position = Vector2(803, 574)
-scale = Vector2(5, 5)
-shape = SubResource("RectangleShape2D_0xm2m")
-
-[node name="CustomerSpawner" type="Timer" parent="CustomerLineScene" unique_id=772609778]
-
-[node name="CustomerSpawnPoint" type="Marker2D" parent="CustomerLineScene" unique_id=1280739318]
-position = Vector2(1562, 575)
 
 [node name="CookingScene" parent="." unique_id=704392818 instance=ExtResource("7_4c57u")]
 visible = false
@@ -94,9 +38,6 @@ position = Vector2(0, -21)
 visible = false
 
 [connection signal="order_scene" from="." to="UI" method="_on_main_order_scene"]
-[connection signal="area_entered" from="CustomerLineScene/OrderSpot" to="CustomerLineScene" method="_on_order_spot_area_entered"]
-[connection signal="area_exited" from="CustomerLineScene/OrderSpot" to="CustomerLineScene" method="_on_order_spot_area_exited"]
-[connection signal="timeout" from="CustomerLineScene/CustomerSpawner" to="CustomerLineScene" method="_on_customer_spawner_timeout"]
 [connection signal="dosa_submitted" from="CookingScene" to="ChutneyScene" method="_on_cooking_scene_dosa_submitted"]
 [connection signal="banana_leaf_updated" from="ChutneyScene" to="." method="_on_chutney_scene_banana_leaf_updated"]
 [connection signal="chutney_button_pressed" from="UI" to="." method="_on_ui_chutney_button_pressed"]
@@ -104,4 +45,3 @@ visible = false
 [connection signal="drink_button_pressed" from="UI" to="." method="_on_ui_drink_button_pressed"]
 [connection signal="order_button_pressed" from="UI" to="." method="_on_ui_order_button_pressed"]
 [connection signal="submit_scene_finished" from="SubmitScene" to="." method="_on_submit_scene_submit_scene_finished"]
-[connection signal="order_complete" from="OrderScene" to="CustomerLineScene" method="_on_order_scene_order_complete"]

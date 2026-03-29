@@ -63,6 +63,7 @@ offset_bottom = 112.0
 text = "FLIP!"
 
 [node name="BatterCanvas" type="Sprite2D" parent="." unique_id=1070041578]
+texture_filter = 2
 material = SubResource("ShaderMaterial_gxv0q")
 texture = ExtResource("4_8uu6o")
 

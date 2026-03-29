@@ -169,3 +169,58 @@ func calculate_chutney_score():
 	print("expected counts : ", expected_counts)
 	
 	return total_score * 100.0
+	
+func calculate_drink_score():
+	var expected_order = customer.data.order
+	var expected_drink = expected_order.get("drink", "")
+	var wants_sugar = expected_order.get("sugar", false)
+	var wants_ice = expected_order.get("ice", false)
+
+	# find cups on the banana leaf
+	var banana_leaf_items = CookingState.banana_leaf_items
+	var cups = banana_leaf_items.filter(
+		func(item): return item is Cup
+	)
+
+	# no cup served at all
+	if cups.is_empty():
+		return 0.0
+
+	# just score the first cup for now
+	var cup = cups[0]
+	var served_drink = cup.get_meta("drink_name") if cup.has_meta("drink_name") else ""
+
+	# wrong drink type = 0 immediately
+	if served_drink != expected_drink:
+		return 0.0
+
+	# drink type is correct — now score sugar/ice/ball
+	var drink_type_score = 40.0  # base points for correct drink
+
+	# sugar score (30 pts)
+	var sugar_score = 0.0
+	var served_sugar = cup.has_meta("sugar_or_ice") and cup.get_meta("sugar_or_ice") == "sugar"
+	if wants_sugar and served_sugar:
+		var ball_score = cup.get_meta("sugar_or_ice_score") if cup.has_meta("sugar_or_ice_score") else 0.0
+		sugar_score = (ball_score / 100.0) * 30.0
+	elif not wants_sugar and not served_sugar:
+		sugar_score = 30.0  # correctly omitted
+	elif wants_sugar and not served_sugar:
+		sugar_score = 0.0   # forgot sugar
+	else:
+		sugar_score = 0.0   # added sugar they didn't want
+
+	# ice score (30 pts)
+	var ice_score = 0.0
+	var served_ice = cup.has_meta("sugar_or_ice") and cup.get_meta("sugar_or_ice") == "ice"
+	if wants_ice and served_ice:
+		var ball_score = cup.get_meta("sugar_or_ice_score") if cup.has_meta("sugar_or_ice_score") else 0.0
+		ice_score = (ball_score / 100.0) * 30.0
+	elif not wants_ice and not served_ice:
+		ice_score = 30.0
+	elif wants_ice and not served_ice:
+		ice_score = 0.0
+	else:
+		ice_score = 0.0
+
+	return drink_type_score + sugar_score + ice_score

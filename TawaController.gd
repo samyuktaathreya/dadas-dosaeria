@@ -88,6 +88,11 @@ func _ready() -> void:
 		"dosa_texture_overcooked", 
 		load(DOSA_COOKING_SPRITES_FILE_PATH + "OvercookedDosa.png")
 	)
+	
+	var cooked_tex = load(DOSA_COOKING_SPRITES_FILE_PATH + "CookedDosa.png")
+	
+	$BatterCanvas.material.set_shader_parameter("canvas_size", CANVAS_SIZE)
+	$BatterCanvas.material.set_shader_parameter("sprite_size", cooked_tex.get_size())
 
 	$BatterCanvas.material.set_shader_parameter("cooked_stage", 0.0)
 
@@ -308,8 +313,7 @@ func flip_dosa():
 
 		# pick which sprite to show based on how cooked that side is
 		var stage = cook_level_to_stage(visible_cook_level)
-		if stage != 0:
-			$BatterCanvas.material.set_shader_parameter("cooked_stage", stage)
+		$BatterCanvas.material.set_shader_parameter("cooked_stage", stage)
 
 func cook_level_to_stage(level: float) -> float:
 	if level < 0.4:
@@ -328,6 +332,7 @@ func start_dragging_dosa():
 		submit_dosa = true
 		dosa_drag_sprite = Sprite2D.new()
 		dosa_drag_sprite.set_meta("item_type", "dosa")
+		dosa_drag_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		# snapshot the current canvas as the drag visual
 		var drag_texture = ImageTexture.create_from_image(canvas_image)
 		dosa_drag_sprite.texture = drag_texture

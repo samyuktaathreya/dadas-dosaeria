@@ -119,7 +119,7 @@ func _drop(node, original_position):
 				z_index_on_banana_leaf += 1
 				dosa_pile_positions.pop_back()
 				# dosa_on_banana_leaf = true
-				CookingState.add_to_banana_leaf_items(dosa)
+				CookingState.pending_items.push_back(dosa)
 			else:
 				print("dosa pile positions -1 : ", dosa_pile_positions[-1])
 				dosa_pile[-1].global_position = dosa_pile_positions[-1]
@@ -127,7 +127,7 @@ func _drop(node, original_position):
 	if node is Katori:
 		# if it lands on the banana leaf, it lands
 		if mouse_on_banana_leaf:
-			CookingState.add_to_banana_leaf_items(node)
+			CookingState.pending_items.push_back(node)
 		# otherwise it falls off the screen
 		else:
 			drop_katori(node)
@@ -135,7 +135,6 @@ func _drop(node, original_position):
 	dragged_object = null
 	dragged_object_original_position = null
 	
-	# THE FIX: If your mouse is still over the pile after dropping, instantly queue up the next dosa!
 	if mouse_on_dosa_pile and dosa_pile.size() > 0:
 		dragged_object = "dosa"
 		
@@ -216,13 +215,6 @@ func fill_katori(katori):
 
 func _on_continue_button_pressed() -> void:
 	# dosa_on_banana_leaf = false
-	print("=== CONTINUE PRESSED ===")
-	print("order_in_drink_scene: ", CookingState.order_in_drink_scene)
-	print("banana_leaf_items: ", CookingState.banana_leaf_items)
-	for item in CookingState.banana_leaf_items:
-		print("  item: ", item, " | is_instance_valid: ", is_instance_valid(item))
-	print("current_scene in main: ")  # you'll need to print this from main somehow
-	print("continue button pressed")
 	if CookingState.order_in_drink_scene:
 		print("order is in drink scene already")
 		# there is already an order in the drink scene 
@@ -233,6 +225,10 @@ func _on_continue_button_pressed() -> void:
 		print("banana leaf updated signal sent")
 		CookingState.order_in_drink_scene = true
 		banana_leaf_updated.emit()
+		
+		var main = get_parent()
+		var drink_scene = main.get_node("DrinkScene")
+		drink_scene._on_chutney_scene_banana_leaf_updated()
 
 func _on_warning_timer_timeout() -> void:
 	$ContinueButton/WarningLabel.hide()

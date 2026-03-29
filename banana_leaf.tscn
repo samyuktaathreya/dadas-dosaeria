@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://cb4xv2pchwnxa"]
+
+[ext_resource type="Texture2D" uid="uid://c4vvy37fghkvk" path="res://assets/CookingUtensils/BananaLeaf.png" id="1_ai4go"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ptjgn"]
+radius = 188.0
+height = 694.0
+
+[node name="BananaLeaf" type="Area2D" unique_id=495446425]
+scale = Vector2(0.8, 0.8)
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1909079448]
+scale = Vector2(0.53, 0.53)
+texture = ExtResource("1_ai4go")
+offset = Vector2(-30, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1892316413]
+position = Vector2(-55, 7)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_ptjgn")
