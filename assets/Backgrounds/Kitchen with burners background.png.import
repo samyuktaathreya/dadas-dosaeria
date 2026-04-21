@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7cg2rm1421s8"
-path="res://.godot/imported/GirlyPopSpeaking.PNG-0820395e44a9bf309f9a0eaa8383b529.ctex"
+uid="uid://dmh6hv42sktxm"
+path="res://.godot/imported/Kitchen with burners background.png-89ed9cc4af9a33781054e801301512db.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Customers/GirlyPop/GirlyPopSpeaking.PNG"
-dest_files=["res://.godot/imported/GirlyPopSpeaking.PNG-0820395e44a9bf309f9a0eaa8383b529.ctex"]
+source_file="res://assets/Backgrounds/Kitchen with burners background.png"
+dest_files=["res://.godot/imported/Kitchen with burners background.png-89ed9cc4af9a33781054e801301512db.ctex"]
 
 [params]
 

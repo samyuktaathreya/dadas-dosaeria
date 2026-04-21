@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://oxv28jdynp51" path="res://girlypopfacingforward.PNG" id="2_ansjy"]
 [ext_resource type="Texture2D" uid="uid://c4vvy37fghkvk" path="res://assets/CookingUtensils/BananaLeaf.png" id="3_8kuvi"]
 [ext_resource type="Texture2D" uid="uid://bl1ukvmt00slq" path="res://tip_jar.webp" id="4_gs1np"]
-[ext_resource type="PackedScene" uid="uid://bkasbe31a11q2" path="res://ui.tscn" id="5_8kuvi"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_gs1np"]
 animations = [{
@@ -70,7 +69,3 @@ offset_bottom = 1080.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
-
-[node name="UI" parent="." unique_id=1022981567 instance=ExtResource("5_8kuvi")]
-offset_top = -79.0
-offset_bottom = -39.0

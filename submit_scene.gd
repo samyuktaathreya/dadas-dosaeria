@@ -36,7 +36,9 @@ func play_submit_animation():
 	var chutney_score = snappedf(calculate_chutney_score(), 0.01)
 	var drink_score = snappedf(calculate_drink_score(), 0.01)
 	var total_score = snappedf((order_score + cooking_score + chutney_score + drink_score) / 4, 0.01)
-
+	
+	var main_scene = get_parent()
+	main_scene.update_total_score(total_score)
 	# Fade in from black
 	var tween = create_tween()
 	tween.tween_property($BlackOverlay, "modulate:a", 0.0, TIME_INTERVAL)

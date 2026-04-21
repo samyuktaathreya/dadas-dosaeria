@@ -101,7 +101,7 @@ func spawn_customer():
 	customer.waiting_customer.connect(_on_customer_waiting_customer)
 	
 	$CustomerSpawner.start()
-	$CustomerSpawner.wait_time = randf_range(5.0, 20.0)
+	$CustomerSpawner.wait_time = randf_range(1.0, 4.0)
 	
 	customer_spawn_point.x += CUSTOMER_DISTANCE
 	print("customer spawned")
@@ -111,7 +111,7 @@ func _on_customer_spawner_timeout() -> void:
 	
 func _on_customer_order_requested(customer):
 	print("customer requested: ", customer)
-	if customer_spawn_point.x > ($CustomerSpawnPoint.global_position.x + 200):
+	if customer_spawn_point.x > ($CustomerSpawnPoint.global_position.x + 400):
 		customer_spawn_point.x -= CUSTOMER_DISTANCE
 	#we only want to register click on customer
 	#if the customer is the first in line
@@ -131,8 +131,9 @@ func _on_order_scene_order_complete() -> void:
 	if not customer_at_order_spot: # or customer not colliding with order spot
 		# $OrderArrow.hide()
 		pass
-
-	customer.moveCustomerOutOfLine()
+	
+	if customer != null:
+		customer.moveCustomerOutOfLine()
 
 func _on_customer_waiting_customer(customer) -> void:
 	#when a customer is waiting, check if they

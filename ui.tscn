@@ -14,7 +14,7 @@ script = ExtResource("1_27fn8")
 ticket_scene = ExtResource("3_27fn8")
 
 [node name="TicketHolder" type="Sprite2D" parent="." unique_id=1104468353]
-position = Vector2(961, 551)
+position = Vector2(961, 502)
 texture = ExtResource("3_nltto")
 
 [node name="TicketMarkers" type="Control" parent="." unique_id=2135681904]
@@ -23,13 +23,13 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Marker2D" type="Marker2D" parent="TicketMarkers" unique_id=1893108393]
-position = Vector2(1773, 73)
+position = Vector2(1771, 28)
 
 [node name="Marker2D2" type="Marker2D" parent="TicketMarkers" unique_id=1650911790]
-position = Vector2(1597, 69)
+position = Vector2(1595, 26)
 
 [node name="Marker2D3" type="Marker2D" parent="TicketMarkers" unique_id=1133496958]
-position = Vector2(1447, 69)
+position = Vector2(1445, 26)
 
 [node name="CookingButton" type="Button" parent="." unique_id=200217667]
 custom_minimum_size = Vector2(20, 20)
@@ -120,6 +120,15 @@ offset_right = 388.0
 offset_bottom = 176.0
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="TotalScoreLabel" type="Label" parent="." unique_id=496909537]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 39.0
+offset_right = 203.0
+offset_bottom = 101.0
+theme_override_font_sizes/font_size = 50
+text = "hello"
 
 [connection signal="pressed" from="CookingButton" to="." method="_on_cooking_button_pressed"]
 [connection signal="pressed" from="ChutneyButton" to="." method="_on_chutney_button_pressed"]

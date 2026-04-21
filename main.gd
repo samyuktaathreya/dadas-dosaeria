@@ -14,8 +14,12 @@ const TICKET_START_X = 1773
 
 var current_scene = "CustomerLineScene"
 
+const NoButtonScenes = ["OrderScene", "SubmitScene", "MenuScene"]
+
 var mouse_on_submit_ticket_area = false
 var dragged_ticket = null
+
+var total_score
 
 var dragging = false
 
@@ -35,6 +39,8 @@ func _ready():
 	var submit_ticket_area = $DrinkScene/SubmitTicketHere
 	submit_ticket_area.mouse_entered.connect(_on_submit_ticket_area_mouse_entered)
 	submit_ticket_area.mouse_exited.connect(_on_submit_ticket_area_mouse_exited)
+	
+	$UI.show()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -54,13 +60,9 @@ func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 		if dragging:
 			dragging = false
-			print("dragged_ticket: ", dragged_ticket)
 			if dragged_ticket != null:
-				print("dropped ticket, dragged_ticket: ", dragged_ticket)
-				print("DrinkScene visible: ", $DrinkScene.visible)
 				# Manually check if mouse is over the submit area
 				var submit_area = $DrinkScene/SubmitTicketHere
-				print("mouse over submit: ", _is_mouse_over_control(submit_area))
 				if $DrinkScene.visible and _is_mouse_over_control(submit_area):
 					CookingState.customer_of_submitted_order = dragged_ticket.customer_of_ticket
 					dragged_ticket.hide()
@@ -113,11 +115,53 @@ func add_new_banana_leaf_to_drink_scene():
 	new_banana_leaf.z_index = 0
 	$DrinkScene.add_child(new_banana_leaf)
 	$DrinkScene.connect_signals_to_new_banana_leaf(new_banana_leaf)
-	
+
+func reset_game():
+		# reset all values from previous game
+		# update total score
+		total_score = 0
+		update_total_score(0)
+		# remove customers from previous game
+		for node in $CustomerLineScene.get_children():
+			if node in $CustomerLineScene.customerArray:
+				node.queue_free()
+		
+		# remove tickets from previous game
+		for node in $UI.get_children():
+			if node is Ticket:
+				node.queue_free()
+				
+		# remove dosas
+		for obj in $CookingScene.get_children():
+			if obj is TawaController:
+				obj.reset_tawa()
+				
+		for obj in $ChutneyScene/DosaPile.get_children():
+			if obj is not Area2D:
+				obj.queue_free()
+				
+		# remove chutneys
+		for obj in $ChutneyScene.get_children():
+			if obj is Katori:
+				obj.queue_free()
+				
+		for obj in $ChutneyScene/DosaPile.get_children():
+			if obj in CookingState.banana_leaf_items:
+				obj.queue_free()
+
+		# remove cups
+		for obj in $DrinkScene/BananaLeaf.get_children():
+			if obj in CookingState.banana_leaf_items:
+				obj.queue_free()
+				
+				
+		CookingState.reset()
+		
 func showScene(scene):
-	print("--- CURRENT SCENE : ", current_scene)
-	print("--- NEXT SCENE : ", scene)
-	
+	if scene == "MenuScene":
+		reset_game()
+		pass
+		
 	if current_scene == "SubmitScene":
 		for child in $UI.get_children():
 			if child is Ticket:
@@ -146,19 +190,6 @@ func showScene(scene):
 			$SubmitScene/BananaLeaf.add_child(child)
 			child.global_position = saved_global_pos
 
-	'''if scene == "SubmitScene":
-		var banana_leaf = $DrinkScene/BananaLeaf
-		for child in banana_leaf.get_children():
-			banana_leaf.remove_child(child)
-			$SubmitScene/BananaLeaf.add_child(child)
-			child.global_position = child.global_position
-			# prevent the reparented node from intercepting mouse events
-			if child.has_method("set_process_input"):
-				child.set_process_input(false)
-			if child.has_method("set_process_unhandled_input"):
-				child.set_process_unhandled_input(false)
-	'''
-	
 	# hide buttons during order scene
 	if scene == "OrderScene":
 		for child in $UI.get_children():
@@ -169,7 +200,7 @@ func showScene(scene):
 				child.order_scene_called()
 				
 	# if previous scene was order scene, then show buttons
-	elif current_scene == "OrderScene":
+	else:
 		for child in $UI.get_children():
 			if child.name.ends_with("Button"):
 				child.show()
@@ -179,18 +210,20 @@ func showScene(scene):
 	current_scene = scene
 
 func _on_ui_cooking_button_pressed() -> void:
-	if current_scene != "OrderScene" and current_scene != "SubmitScene":
+	if current_scene not in NoButtonScenes:
 		showScene("CookingScene")
 
 func _on_ui_chutney_button_pressed() -> void:
-	if current_scene != "OrderScene" and current_scene != "SubmitScene":
+	if current_scene not in NoButtonScenes:
 		showScene("ChutneyScene")
 
 func _on_ui_drink_button_pressed() -> void:
-	if current_scene != "OrderScene" and current_scene != "SubmitScene":
+	if current_scene not in NoButtonScenes:
 		showScene("DrinkScene")
 
 func _on_ui_order_button_pressed() -> void:
+	if current_scene not in NoButtonScenes:
+		showScene("CustomerLineScene")
 	if current_scene != "OrderScene" and current_scene != "SubmitScene":
 		showScene("CustomerLineScene")
 
@@ -199,7 +232,6 @@ func _on_chutney_scene_banana_leaf_updated() -> void:
 	# showScene("DrinkScene")
 
 func _on_submit_ticket_area_mouse_entered():
-	print("mouse on ticket area")
 	if $DrinkScene.visible:
 		mouse_on_submit_ticket_area = true
 	
@@ -207,21 +239,26 @@ func _on_submit_ticket_area_mouse_exited():
 	mouse_on_submit_ticket_area = false
 	
 func _on_ticket_being_dragged(ticket):
-	print("on ticket being dragged signal called")
-	print("ticket : ", ticket)
-	print("ticket.is_dragging : ", ticket.is_dragging)
 	if ticket.is_dragging:
 		dragged_ticket = ticket
 
 func _on_submit_scene_submit_scene_finished() -> void:
 	for child in $SubmitScene/BananaLeaf.get_children():
 		if child in CookingState.banana_leaf_items:
-			print("child getting freed : ", child)
 			child.queue_free()
 	CookingState.clear_on_submit()
 	showScene("CustomerLineScene")
 
-
 func _on_button_pressed() -> void:
 	$CustomerLineScene/CustomerSpawner.start()
+	$MenuScene/GameTimer.start()
 	showScene("CustomerLineScene")
+
+func _on_game_timer_timeout() -> void:
+	showScene("MenuScene")
+	$MenuScene/TotalScore.show()
+	
+func update_total_score(new_score):
+	total_score += new_score
+	$UI/TotalScoreLabel.text = "Total Score: " + str(total_score)
+	

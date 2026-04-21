@@ -24,11 +24,11 @@ size = Vector2(51.75, 67.25)
 script = ExtResource("1_ptjgn")
 cup_scene = ExtResource("2_woxac")
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=1397293593]
-offset_left = 14.0
-offset_top = 2.0
-offset_right = 1922.0
-offset_bottom = 1228.0
+[node name="Background" type="TextureRect" parent="." unique_id=1173905020]
+offset_left = 6.1035156e-05
+offset_top = -67.99994
+offset_right = 1958.0
+offset_bottom = 1253.0
 texture = ExtResource("3_gyhev")
 
 [node name="BananaLeaf" parent="." unique_id=495446425 instance=ExtResource("3_herq5")]

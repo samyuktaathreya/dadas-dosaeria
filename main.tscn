@@ -28,15 +28,15 @@ position = Vector2(0, 100)
 [node name="DrinkScene" parent="." unique_id=838950850 instance=ExtResource("10_dg77c")]
 visible = false
 
-[node name="UI" parent="." unique_id=1022981567 instance=ExtResource("5_lquwl")]
-offset_right = 0.0
-offset_bottom = 0.0
-
 [node name="SubmitScene" parent="." unique_id=810134885 instance=ExtResource("11_dg77c")]
 position = Vector2(0, -21)
 
 [node name="OrderScene" parent="." unique_id=1516490798 instance=ExtResource("4_1bvp3")]
 visible = false
+
+[node name="UI" parent="." unique_id=1022981567 instance=ExtResource("5_lquwl")]
+offset_right = 0.0
+offset_bottom = 0.0
 
 [node name="MenuScene" type="Node2D" parent="." unique_id=1512093519]
 
@@ -53,12 +53,21 @@ offset_bottom = 857.0
 theme_override_font_sizes/font_size = 100
 text = "START GAME"
 
+[node name="GameTimer" type="Timer" parent="MenuScene" unique_id=984849294]
+wait_time = 5.0
+one_shot = true
+
+[node name="TotalScore" type="Label" parent="MenuScene" unique_id=1493903895]
+offset_right = 40.0
+offset_bottom = 23.0
+
 [connection signal="order_scene" from="." to="UI" method="_on_main_order_scene"]
 [connection signal="dosa_submitted" from="CookingScene" to="ChutneyScene" method="_on_cooking_scene_dosa_submitted"]
 [connection signal="banana_leaf_updated" from="ChutneyScene" to="." method="_on_chutney_scene_banana_leaf_updated"]
+[connection signal="submit_scene_finished" from="SubmitScene" to="." method="_on_submit_scene_submit_scene_finished"]
 [connection signal="chutney_button_pressed" from="UI" to="." method="_on_ui_chutney_button_pressed"]
 [connection signal="cooking_button_pressed" from="UI" to="." method="_on_ui_cooking_button_pressed"]
 [connection signal="drink_button_pressed" from="UI" to="." method="_on_ui_drink_button_pressed"]
 [connection signal="order_button_pressed" from="UI" to="." method="_on_ui_order_button_pressed"]
-[connection signal="submit_scene_finished" from="SubmitScene" to="." method="_on_submit_scene_submit_scene_finished"]
 [connection signal="pressed" from="MenuScene/Button" to="." method="_on_button_pressed"]
+[connection signal="timeout" from="MenuScene/GameTimer" to="." method="_on_game_timer_timeout"]

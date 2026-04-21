@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://vf2u543my0jc" path="res://tawa.tscn" id="1_ewv8k"]
 [ext_resource type="Texture2D" uid="uid://dgg0o54e3jc4b" path="res://assets/Backgrounds/Blank kitchen countertop.png" id="2_a0dls"]
 [ext_resource type="Script" uid="uid://c0ojx2osfom80" path="res://dough_bucket.gd" id="2_qv3c0"]
+[ext_resource type="Texture2D" uid="uid://dmh6hv42sktxm" path="res://assets/Backgrounds/Kitchen with burners background.png" id="3_xtnnd"]
 [ext_resource type="Texture2D" uid="uid://cse8ulfig53xb" path="res://assets/CookingUtensils/DoughBucket.png" id="4_msocd"]
 [ext_resource type="Script" uid="uid://b4skg2e44jt1p" path="res://ladle.gd" id="5_tlmgs"]
 [ext_resource type="Texture2D" uid="uid://cl1rvptsgpr2" path="res://assets/CookingUtensils/EmptyLadle.png" id="5_vjjh2"]
@@ -46,19 +47,28 @@ size = Vector2(801, 325)
 [node name="CookingScene2" type="Node2D" unique_id=704392818]
 script = ExtResource("1_5mg6d")
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=1043553608]
-offset_right = 1926.0
-offset_bottom = 1086.0
+[node name="Background" type="TextureRect" parent="." unique_id=1695230012]
+offset_top = -68.0
+offset_right = 1958.0
+offset_bottom = 1253.0
 texture = ExtResource("2_a0dls")
 
+[node name="Burners" type="TextureRect" parent="." unique_id=1487633456]
+offset_left = 88.0
+offset_top = 379.0
+offset_right = 1482.0
+offset_bottom = 931.0
+scale = Vector2(0.8425394, 0.865942)
+texture = ExtResource("3_xtnnd")
+
 [node name="TawaController" parent="." unique_id=33808163 instance=ExtResource("1_ewv8k")]
-position = Vector2(-158, -97)
+position = Vector2(-36, -103)
 
 [node name="TawaController2" parent="." unique_id=806975220 instance=ExtResource("1_ewv8k")]
-position = Vector2(334, -83)
+position = Vector2(315, -91)
 
 [node name="TawaController3" parent="." unique_id=1100728395 instance=ExtResource("1_ewv8k")]
-position = Vector2(816, -70)
+position = Vector2(634, -81)
 
 [node name="DoughBucket" type="Area2D" parent="." unique_id=1657890024]
 position = Vector2(168, 154)

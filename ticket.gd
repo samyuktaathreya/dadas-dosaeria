@@ -25,7 +25,7 @@ var hovering_on_ticket = false
 
 var ticket_icons = []
 
-const UI_BAR_Y_POSITION = 200.0 #previously 280
+const UI_BAR_Y_POSITION = 160.0 #previously 280
 const VERTICAL_SPACING = 100.0
 const EXPANDED_TICKET_POSITION = Vector2(1644.0, 492.0)
 

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cmukepvd3bwuw" path="res://chutney_scene.gd" id="1_d8ey3"]
 [ext_resource type="PackedScene" uid="uid://dg4m7keqbr3yg" path="res://katori.tscn" id="2_7omhc"]
+[ext_resource type="Texture2D" uid="uid://dgg0o54e3jc4b" path="res://assets/Backgrounds/Blank kitchen countertop.png" id="3_w2k57"]
 [ext_resource type="Texture2D" uid="uid://bm2dw7m2wwkoj" path="res://assets/Chutneys/Buckets/Orange Chutney Bucket.png" id="4_kpurj"]
 [ext_resource type="Texture2D" uid="uid://c4vvy37fghkvk" path="res://assets/CookingUtensils/BananaLeaf.png" id="4_w2k57"]
 [ext_resource type="Texture2D" uid="uid://dewd20fvktids" path="res://assets/Chutneys/Buckets/White Chutney Bucket.png" id="5_kpurj"]
@@ -26,6 +27,12 @@ height = 298.0
 [node name="ChutneyScene" type="Node2D" unique_id=1190726134]
 script = ExtResource("1_d8ey3")
 katori_scene = ExtResource("2_7omhc")
+
+[node name="Background" type="TextureRect" parent="." unique_id=280463317]
+offset_top = -68.0
+offset_right = 1958.0
+offset_bottom = 1253.0
+texture = ExtResource("3_w2k57")
 
 [node name="DosaPile" type="Node2D" parent="." unique_id=1328042216]
 position = Vector2(246, 665)

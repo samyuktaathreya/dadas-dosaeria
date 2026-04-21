@@ -40,7 +40,7 @@ func _ready() -> void:
 
 		btn.position = Vector2(
 			padding + i * (button_width + spacing),
-			screen_size.y - bar_height + (bar_height - button_height) / 2 + 100
+			screen_size.y - bar_height + (bar_height - button_height) / 2
 		)
 
 		btn.size = Vector2(button_width, button_height)

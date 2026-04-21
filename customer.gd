@@ -1,6 +1,7 @@
 extends Area2D
 
 @export var walk_speed = 200.0
+
 var is_waiting = false
 var already_ordered = false
 var data = CustomerData.new()
@@ -11,6 +12,7 @@ signal waiting_customer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	print("Customer initialized! My speed is: ", walk_speed)
 	#connect signal when customer is clicked on
 	input_event.connect(_on_input_event)
 	order_start_time = Time.get_ticks_msec()

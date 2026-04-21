@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dsr3prstj5fhw"]
 
 [ext_resource type="Script" uid="uid://blmuysjjopuxg" path="res://customer.gd" id="1_r8ta2"]
-[ext_resource type="Texture2D" uid="uid://b7cg2rm1421s8" path="res://assets/Customers/GirlyPop/GirlyPopSpeaking.png" id="2_r8ta2"]
+[ext_resource type="Texture2D" uid="uid://b7cg2rm1421s8" path="res://assets/Customers/GirlyPop/GirlyPopSpeaking.PNG" id="2_r8ta2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f7asb"]
 radius = 2.0749998
