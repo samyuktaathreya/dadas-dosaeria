@@ -5,7 +5,8 @@ signal order_scene
 @export var banana_leaf: PackedScene
 
 var totalTickets = 0
-const TICKET_POSITION_Y = 280.0
+const CANVAS_SIZE = Vector2(1920.0,1080.0)
+const TICKET_POSITION_Y = 200.0
 const TICKET_SPACE = 100 #space between tickets
 
 #the rightmost ticket's x position
@@ -25,8 +26,9 @@ func _ready():
 	$CustomerLineScene.customer_clicked.connect(_on_customer_clicked)
 	for child in get_children():
 		if child.name != "UI":
+			print("child name: ", child.name)
 			child.hide()
-	showScene("CustomerLineScene")
+	showScene("MenuScene")
 	$OrderScene.order_complete.connect(_on_order_scene_order_complete)
 	
 	# connect to mouse_entered signal from $DrinkScene/SubmitTicketHere
@@ -85,7 +87,8 @@ func _is_mouse_over_control(area: Area2D) -> bool:
 	
 func _on_order_scene_order_complete(customer) -> void:
 	# find the position that the ticket should shrink to
-	var ticket_position_x = TICKET_START_X - (TICKET_SPACE * (totalTickets - 1))
+	var raw_x = TICKET_START_X - (TICKET_SPACE * (totalTickets - 1))
+	var ticket_position_x = posmod(raw_x, int(CANVAS_SIZE[0]))
 	var ticket_position = Vector2(ticket_position_x, TICKET_POSITION_Y)
 	
 	# tell the order scene to move the ticket there
@@ -109,6 +112,7 @@ func add_new_banana_leaf_to_drink_scene():
 	new_banana_leaf.position = BANANA_LEAF_POSITION_IN_DRINK_SCENE
 	new_banana_leaf.z_index = 0
 	$DrinkScene.add_child(new_banana_leaf)
+	$DrinkScene.connect_signals_to_new_banana_leaf(new_banana_leaf)
 	
 func showScene(scene):
 	print("--- CURRENT SCENE : ", current_scene)
@@ -119,9 +123,9 @@ func showScene(scene):
 			if child is Ticket:
 				child.show()
 		$UI/TicketHolder.show()
-		$SubmitScene/BananaLeaf.show()
-		$DrinkScene/BananaLeaf.show()
-		
+		# $SubmitScene/BananaLeaf.show()
+		$DrinkScene.global_banana_leaf.show()
+
 		# re-add a new banana leaf to the drink scene
 		# since the old one gets deleted
 		add_new_banana_leaf_to_drink_scene()
@@ -135,7 +139,7 @@ func showScene(scene):
 		
 		# transfer banana leaf items from drink scene
 		# to the drink scene
-		var banana_leaf = $DrinkScene/BananaLeaf
+		var banana_leaf = $DrinkScene.global_banana_leaf
 		for child in banana_leaf.get_children():
 			var saved_global_pos = child.global_position
 			banana_leaf.remove_child(child)
@@ -215,4 +219,9 @@ func _on_submit_scene_submit_scene_finished() -> void:
 			print("child getting freed : ", child)
 			child.queue_free()
 	CookingState.clear_on_submit()
+	showScene("CustomerLineScene")
+
+
+func _on_button_pressed() -> void:
+	$CustomerLineScene/CustomerSpawner.start()
 	showScene("CustomerLineScene")

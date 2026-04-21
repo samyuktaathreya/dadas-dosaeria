@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bkasbe31a11q2"]
 
 [ext_resource type="Script" uid="uid://cayee208it3ih" path="res://ui.gd" id="1_27fn8"]
-[ext_resource type="Texture2D" uid="uid://oc3h3j3117ih" path="res://assets/ticketrope.png" id="2_nltto"]
 [ext_resource type="PackedScene" uid="uid://cidvkgpklrdm5" path="res://ticket.tscn" id="3_27fn8"]
+[ext_resource type="Texture2D" uid="uid://84tbbj8nujug" path="res://assets/UITicketHolder.png" id="3_nltto"]
 [ext_resource type="Script" uid="uid://banep37kar5pr" path="res://button.gd" id="4_nltto"]
 
 [node name="UI" type="Control" unique_id=1022981567]
@@ -14,8 +14,8 @@ script = ExtResource("1_27fn8")
 ticket_scene = ExtResource("3_27fn8")
 
 [node name="TicketHolder" type="Sprite2D" parent="." unique_id=1104468353]
-position = Vector2(961, 544)
-texture = ExtResource("2_nltto")
+position = Vector2(961, 551)
+texture = ExtResource("3_nltto")
 
 [node name="TicketMarkers" type="Control" parent="." unique_id=2135681904]
 anchors_preset = 0
@@ -23,13 +23,13 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Marker2D" type="Marker2D" parent="TicketMarkers" unique_id=1893108393]
-position = Vector2(1773, 163)
+position = Vector2(1773, 73)
 
 [node name="Marker2D2" type="Marker2D" parent="TicketMarkers" unique_id=1650911790]
-position = Vector2(1597, 159)
+position = Vector2(1597, 69)
 
 [node name="Marker2D3" type="Marker2D" parent="TicketMarkers" unique_id=1133496958]
-position = Vector2(1447, 159)
+position = Vector2(1447, 69)
 
 [node name="CookingButton" type="Button" parent="." unique_id=200217667]
 custom_minimum_size = Vector2(20, 20)

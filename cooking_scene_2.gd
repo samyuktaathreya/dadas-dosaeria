@@ -2,6 +2,10 @@ extends Node2D
 
 signal dosa_submitted
 
+
+var open_trash_texture = load("res://assets/Trashtrashed.png")
+var closed_trash_texture = load("res://assets/Trash.png")
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -24,9 +28,11 @@ func serve_dosa():
 	var scores = {
 		"cook_score": dosa_sprite.get_meta("cook_score"),
 		"shape_score": dosa_sprite.get_meta("shape_score"),
-		"total_score": dosa_sprite.get_meta("total_score")
+		"total_score": dosa_sprite.get_meta("total_score"),
+		"onion": dosa_sprite.get_meta("onion")
 	}
-	CookingState.add_dosa(dosa_sprite.texture, dosa_sprite.material, scores)
+	var pan_center = dosa_sprite.get_meta("pan_center")
+	CookingState.add_dosa(dosa_sprite.texture, dosa_sprite.material, scores, pan_center)
 	dosa_submitted.emit()
 	var tween = create_tween()
 	tween.set_parallel(true)
@@ -51,3 +57,12 @@ func serve_dosa():
 		if dosa_sprite:
 			dosa_sprite.queue_free()
 	)
+
+func _on_trash_mouse_entered() -> void:
+	if visible:
+		CookingState.mouse_on_trash = true
+		$Trash/TrashSprite.texture = open_trash_texture
+
+func _on_trash_mouse_exited() -> void:
+	CookingState.mouse_on_trash = false
+	$Trash/TrashSprite.texture = closed_trash_texture

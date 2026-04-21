@@ -5,6 +5,7 @@ signal order_complete
 var current_order = {}
 const TIME_INTERVAL = 1.0
 var customerOrdered
+const CUSTOMER_FILE_PATH = "res://assets/customers/"
 const DOSA_FILE_PATH = "res://assets/dosas/"
 const CHUTNEY_FILE_PATH = "res://assets/chutneys/"
 const DRINK_FILE_PATH = "res://assets/drinks/"
@@ -22,17 +23,47 @@ const BIG_TICKET_DRINK_SCALE = Vector2(0.4, 0.4)
 
 var ticket_icons = []
 
-var testing_order_scene = true
+var testing_order_scene = false
+var customer_order_sprite 
+
+# --- NEW: Flag to track if we are currently waiting ---
+var waiting_for_step = false
 
 func _ready():
 	SPEECH_BUBBLE_POSITION = $OrderBubble/SpeechBubbleIconPosition.position
 	if testing_order_scene:
 		show_order(null)
 	$OrderBubble/BubbleSprite.hide()
+	
+	for child in $CustomerOrderSprites.get_children():
+		child.hide()
+
+# --- NEW: Detect clicks to skip the current wait ---
+func _input(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if waiting_for_step:
+			waiting_for_step = false # This breaks the loop in wait_or_skip instantly
+
+# --- NEW: Helper function to wait or skip ---
+func wait_or_skip(duration: float):
+	waiting_for_step = true
+	var timer = get_tree().create_timer(duration)
+	
+	# Wait until either the timer runs out OR waiting_for_step becomes false via a click
+	while waiting_for_step and timer.time_left > 0:
+		await get_tree().process_frame
+	
+	waiting_for_step = false
 
 func show_order(customer):
 	if testing_order_scene:
-		current_order = { "dosa": ["OnionDosa"], "chutney": ["MintChutney"], "drink": "MangoLassi", "sugar": true, "ice": false}
+		current_order = { 
+			"dosa": ["OnionDosa"], 
+			"chutney": ["MintChutney"], 
+			"drink": "MangoLassi", 
+			"sugar": true, 
+			"ice": false
+		}
 	else:
 		current_order = customer.data.order
 		customerOrdered = customer
@@ -40,6 +71,11 @@ func show_order(customer):
 	$TicketCinematic.position = Vector2(1644, 492)
 	$TicketCinematic.scale = Vector2(1.,1.)
 	show()
+	# show the correct customer sprite
+	print("customer name: ", customer.name)
+	customer_order_sprite = $CustomerOrderSprites.get_node(customer.data.name)
+	customer_order_sprite.show()
+	
 	play_order_animation()
 
 func play_order_animation():
@@ -47,11 +83,11 @@ func play_order_animation():
 	
 	# Fade in from black
 	tween.tween_property($BlackOverlay, "modulate:a", 0.0, TIME_INTERVAL)
-	await get_tree().create_timer(TIME_INTERVAL).timeout
+	await wait_or_skip(TIME_INTERVAL)
 	
 	await show_icons()
 	
-	on_animation_complete()
+	await on_animation_complete()
 
 func show_icons():
 	var ticket_position = $TicketCinematic/IconStartingTicketPosition.global_position
@@ -61,15 +97,15 @@ func show_icons():
 		
 		$OrderBubble/BubbleSprite.show()
 		var speech_bubble_dosa = spawn_icon(dosa_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_DOSA_SCALE)
-		await get_tree().create_timer(TIME_INTERVAL).timeout
+		await wait_or_skip(TIME_INTERVAL)
 		ticket_icons.pop_back()		
 
 		spawn_icon(dosa_texture, ticket_position, BIG_TICKET_DOSA_SCALE)
-		await get_tree().create_timer(TIME_INTERVAL).timeout
+		await wait_or_skip(TIME_INTERVAL)
 		
 		speech_bubble_dosa.queue_free()
 		$OrderBubble/BubbleSprite.hide()
-		await get_tree().create_timer(TIME_INTERVAL).timeout
+		await wait_or_skip(TIME_INTERVAL)
 		
 		ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
 
@@ -78,33 +114,41 @@ func show_icons():
 		
 		$OrderBubble/BubbleSprite.show()
 		var speech_bubble_chutney = spawn_icon(chutney_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_CHUTNEY_SCALE)
-		await get_tree().create_timer(TIME_INTERVAL).timeout
+		await wait_or_skip(TIME_INTERVAL)
 		ticket_icons.pop_back()
 		
 		spawn_icon(chutney_texture, ticket_position, BIG_TICKET_CHUTNEY_SCALE)
-		await get_tree().create_timer(TIME_INTERVAL).timeout
+		await wait_or_skip(TIME_INTERVAL)
 		
 		speech_bubble_chutney.queue_free()
 		$OrderBubble/BubbleSprite.hide()
-		await get_tree().create_timer(TIME_INTERVAL).timeout
+		await wait_or_skip(TIME_INTERVAL)
 		
 		ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
 		
 	# handle drinks
 	var drink = current_order.drink
-	var drink_texture = load(DRINK_FILE_PATH + drink + ".png")
+	var drink_texture
+	if current_order.sugar:
+		drink_texture = load(DRINK_FILE_PATH + drink + "Sugar.png")
+	else:
+		drink_texture = load(DRINK_FILE_PATH + drink + "Ice.png")
+		
+	print("drink texture: ", drink_texture)
+	print(DRINK_FILE_PATH + drink + "Sugar.png")
+	print(DRINK_FILE_PATH + drink + "Ice.png")
 	
 	$OrderBubble/BubbleSprite.show()
 	var speech_bubble_chutney = spawn_icon(drink_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_DRINK_SCALE)
-	await get_tree().create_timer(TIME_INTERVAL).timeout
+	await wait_or_skip(TIME_INTERVAL)
 	ticket_icons.pop_back()
 	
 	spawn_icon(drink_texture, ticket_position, BIG_TICKET_DRINK_SCALE)
-	await get_tree().create_timer(TIME_INTERVAL).timeout
+	await wait_or_skip(TIME_INTERVAL)
 	
 	speech_bubble_chutney.queue_free()
 	$OrderBubble/BubbleSprite.hide()
-	await get_tree().create_timer(TIME_INTERVAL).timeout
+	await wait_or_skip(TIME_INTERVAL)
 	
 	ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
 
@@ -113,6 +157,7 @@ func on_animation_complete():
 		var icon = ticket_icons.pop_front()
 		icon.queue_free()
 	print("Order animation finished!")
+	customer_order_sprite.hide()
 	# send signal to main that the order is finished
 	# main will 
 	# animate the cinematic ticket moving to the UI

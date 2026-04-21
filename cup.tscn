@@ -1,124 +1,47 @@
 [gd_scene format=3 uid="uid://cfvcomapmnrg0"]
 
-[ext_resource type="Texture2D" uid="uid://fv3qs1u1ng31" path="res://assets/cupcoffee1.png" id="1_nuwg6"]
 [ext_resource type="Script" uid="uid://b6tdtknjhlbm2" path="res://cup.gd" id="1_s2ibe"]
-[ext_resource type="Texture2D" uid="uid://u18g0gjuswvj" path="res://assets/cupcoffee2.png" id="2_s2ibe"]
-[ext_resource type="Texture2D" uid="uid://cbdj6g0qw5npd" path="res://assets/cupcoffee3.png" id="3_qmqbs"]
-[ext_resource type="Texture2D" uid="uid://d25s1jq5wvewj" path="res://assets/cupcoffee4.png" id="4_7ist6"]
-[ext_resource type="Texture2D" uid="uid://dkpxsb8pg2c5g" path="res://assets/cupcoffee6.png" id="5_oxmff"]
-[ext_resource type="Texture2D" uid="uid://7wnjo0403dqh" path="res://assets/cupcoffee7.png" id="6_4ylx2"]
-[ext_resource type="Texture2D" uid="uid://b0a1ffyy25nwm" path="res://assets/cupcoffee8.png" id="7_4n8aq"]
-[ext_resource type="Texture2D" uid="uid://burqbhh5ktbd" path="res://assets/cupcoffee9.png" id="8_nns7q"]
-[ext_resource type="Texture2D" uid="uid://dp3agu6ptv35a" path="res://assets/cupcoffee10.png" id="9_2syoj"]
-[ext_resource type="Texture2D" uid="uid://crfqr5grn6nkb" path="res://assets/cupcoffee11.png" id="10_5ykya"]
-[ext_resource type="Texture2D" uid="uid://dkwb0fgxtk62r" path="res://assets/cupmangolassianimation1.png" id="11_62csj"]
-[ext_resource type="Texture2D" uid="uid://cjysgmm0vgy4g" path="res://assets/cupmangolassianimation2.png" id="12_8a3u1"]
-[ext_resource type="Texture2D" uid="uid://bf23ulhomt0w7" path="res://assets/cupanimationmangolassi3.png" id="13_cg7jl"]
-[ext_resource type="Texture2D" uid="uid://bgbdqhnlqrhl7" path="res://assets/cupanimationmangolassi4.png" id="14_8qoko"]
-[ext_resource type="Texture2D" uid="uid://c17eaobgwxjlp" path="res://assets/cupmangolassianimation5.png" id="15_m1qye"]
-[ext_resource type="Texture2D" uid="uid://dplv7nq2y7mim" path="res://assets/cupmangolassianimation7.png" id="16_b7aeq"]
-[ext_resource type="Texture2D" uid="uid://c48c536in7vng" path="res://assets/cupmangolassianimation9.png" id="17_vqp0c"]
-[ext_resource type="Texture2D" uid="uid://t7q1yv0d76r8" path="res://assets/cupmangolassianimation10.png" id="18_0qfni"]
-[ext_resource type="Texture2D" uid="uid://d3cvdep5uvixy" path="res://assets/cupmangolassianimation11.png" id="19_x4q41"]
-[ext_resource type="Texture2D" uid="uid://c7r7kelxntog2" path="res://assets/cup.png" id="20_vu0lc"]
+[ext_resource type="Texture2D" uid="uid://de5fvdbap2k77" path="res://assets/Cups/Empty cup.png" id="2_75kmb"]
+[ext_resource type="Texture2D" uid="uid://j6vrj0fq2hnc" path="res://assets/Cups/FilteredCoffee/Half.png" id="3_e6vj4"]
+[ext_resource type="Texture2D" uid="uid://dn8t3km48pj8k" path="res://assets/Cups/FilteredCoffee/Full.png" id="4_twtw0"]
+[ext_resource type="Texture2D" uid="uid://ivexvt7n56t3" path="res://assets/Cups/IceOverlay.png" id="7_75kmb"]
+[ext_resource type="Texture2D" uid="uid://joivnu6uumwy" path="res://assets/Cups/SugarOverlay.png" id="8_cuay7"]
+[ext_resource type="Texture2D" uid="uid://bfjwatn2psj5p" path="res://assets/Cups/MangoLassi/HalfFull.PNG" id="11_m4rhd"]
+[ext_resource type="Texture2D" uid="uid://dowiws5itq3ae" path="res://assets/Cups/MangoLassi/Full.PNG" id="12_mup7r"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4ik6j"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_nuwg6")
+"texture": ExtResource("2_75kmb")
 }, {
-"duration": 1.0,
-"texture": ExtResource("2_s2ibe")
+"duration": 4.0,
+"texture": ExtResource("3_e6vj4")
 }, {
-"duration": 1.0,
-"texture": ExtResource("3_qmqbs")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_7ist6")
-}, {
-"duration": 1.0,
-"texture": ExtResource("5_oxmff")
-}, {
-"duration": 1.0,
-"texture": ExtResource("5_oxmff")
-}, {
-"duration": 1.0,
-"texture": ExtResource("6_4ylx2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("6_4ylx2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("5_oxmff")
-}, {
-"duration": 1.0,
-"texture": ExtResource("6_4ylx2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("5_oxmff")
-}, {
-"duration": 1.0,
-"texture": ExtResource("7_4n8aq")
-}, {
-"duration": 1.0,
-"texture": ExtResource("8_nns7q")
-}, {
-"duration": 1.0,
-"texture": ExtResource("9_2syoj")
-}, {
-"duration": 1.0,
-"texture": ExtResource("10_5ykya")
+"duration": 4.0,
+"texture": ExtResource("4_twtw0")
 }],
 "loop": false,
-"name": &"FilterCoffee",
+"name": &"FilteredCoffee",
 "speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("11_62csj")
+"texture": ExtResource("4_twtw0")
+}],
+"loop": true,
+"name": &"FilteredCoffeeIdle",
+"speed": 5.0
 }, {
+"frames": [{
 "duration": 1.0,
-"texture": ExtResource("12_8a3u1")
+"texture": ExtResource("2_75kmb")
 }, {
-"duration": 1.0,
-"texture": ExtResource("13_cg7jl")
+"duration": 4.0,
+"texture": ExtResource("11_m4rhd")
 }, {
-"duration": 1.0,
-"texture": ExtResource("14_8qoko")
-}, {
-"duration": 1.0,
-"texture": ExtResource("15_m1qye")
-}, {
-"duration": 1.0,
-"texture": ExtResource("15_m1qye")
-}, {
-"duration": 1.0,
-"texture": ExtResource("14_8qoko")
-}, {
-"duration": 1.0,
-"texture": ExtResource("14_8qoko")
-}, {
-"duration": 1.0,
-"texture": ExtResource("15_m1qye")
-}, {
-"duration": 1.0,
-"texture": ExtResource("14_8qoko")
-}, {
-"duration": 1.0,
-"texture": ExtResource("15_m1qye")
-}, {
-"duration": 1.0,
-"texture": ExtResource("16_b7aeq")
-}, {
-"duration": 1.0,
-"texture": ExtResource("17_vqp0c")
-}, {
-"duration": 1.0,
-"texture": ExtResource("18_0qfni")
-}, {
-"duration": 1.0,
-"texture": ExtResource("19_x4q41")
+"duration": 4.0,
+"texture": ExtResource("12_mup7r")
 }],
 "loop": false,
 "name": &"MangoLassi",
@@ -126,7 +49,15 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("20_vu0lc")
+"texture": ExtResource("12_mup7r")
+}],
+"loop": true,
+"name": &"MangoLassiIdle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_75kmb")
 }],
 "loop": true,
 "name": &"idle",
@@ -140,14 +71,20 @@ size = Vector2(220.7298, 258.26093)
 script = ExtResource("1_s2ibe")
 
 [node name="CupSprite" type="AnimatedSprite2D" parent="." unique_id=899327788]
-position = Vector2(-688.00006, 52)
-scale = Vector2(0.76111114, 0.76666665)
+scale = Vector2(0.2, 0.202)
 sprite_frames = SubResource("SpriteFrames_4ik6j")
 animation = &"idle"
-frame_progress = 0.14238183
-offset = Vector2(900, -50)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1878119568]
 position = Vector2(1.9998779, 12)
 scale = Vector2(0.76111114, 0.76666665)
 shape = SubResource("RectangleShape2D_qo2ml")
+
+[node name="IceOverlay" type="Sprite2D" parent="." unique_id=1275525143]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("7_75kmb")
+
+[node name="SugarOverlay" type="Sprite2D" parent="." unique_id=52602511]
+visible = false
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("8_cuay7")

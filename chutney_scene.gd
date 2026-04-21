@@ -11,6 +11,7 @@ var dosa_pile_positions = []
 var dragging_dosa = false
 var mouse_on_banana_leaf = false
 var mouse_on_katori = false
+const FOLDED_DOSA_SPRITE_SCALE = Vector2(0.5, 0.5)
 
 var dragged_object = null
 var dragged_object_original_position = null
@@ -81,13 +82,16 @@ func _on_cooking_scene_dosa_submitted() -> void:
 	var s = Sprite2D.new()
 	var i = len(CookingState.dosas) - 1
 	s.texture = CookingState.dosas[i]
-	s.material = CookingState.dosa_materials[i]
+	# s.material = CookingState.dosa_materials[i]
 	s.set_meta("item_type", "dosa")
 	s.set_meta("total_score", CookingState.dosa_scores[i].total_score)
+	s.set_meta("onion", CookingState.dosa_scores[i].onion)
+	s.scale = FOLDED_DOSA_SPRITE_SCALE
 	
-	var pan_center_normalized = s.material.get_shader_parameter("pan_center")
+	var pan_center_normalized = CookingState.dosa_pan_centers[i]
 	var pan_center = pan_center_normalized * Vector2(1920, 1080)
-	s.offset = Vector2(960, 540) - pan_center + DOSA_COOKING_SPRITE_OFFSET
+	# s.offset = Vector2(760, 540) - pan_center + DOSA_COOKING_SPRITE_OFFSET
+	s.offset = Vector2(-50,-80)
 	s.position = Vector2(i * 6, -i * 8) 
 	s.z_index = i + 10
 	s.visible = true
@@ -179,7 +183,7 @@ func slide_katori_in(katori):
 	var tween = create_tween()
 	tween.tween_property(katori, "global_position",
 		katori.global_position, 0.6)\
-		.from(Vector2(CANVAS_SIZE.x + 200, katori.position.y))\
+		.from(Vector2(katori.position.x, 0))\
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 		
 func drop_katori(katori):

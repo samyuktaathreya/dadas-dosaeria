@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bkasbe31a11q2" path="res://ui.tscn" id="5_lquwl"]
 [ext_resource type="PackedScene" uid="uid://cwg3522v8sj6p" path="res://cooking_scene_2.tscn" id="7_4c57u"]
 [ext_resource type="PackedScene" uid="uid://36hp7hvdr83p" path="res://chutney_scene.tscn" id="9_4c57u"]
+[ext_resource type="Texture2D" uid="uid://ccs4d3gp1nc6d" path="res://assets/MenuScreen.png" id="10_4c57u"]
 [ext_resource type="PackedScene" uid="uid://dng8bgp6rya5o" path="res://drink_scene.tscn" id="10_dg77c"]
 [ext_resource type="PackedScene" uid="uid://cxoinwbbw7h18" path="res://submit_scene.tscn" id="11_dg77c"]
 
@@ -28,14 +29,29 @@ position = Vector2(0, 100)
 visible = false
 
 [node name="UI" parent="." unique_id=1022981567 instance=ExtResource("5_lquwl")]
-offset_top = -100.0
-offset_bottom = -60.0
+offset_right = 0.0
+offset_bottom = 0.0
 
 [node name="SubmitScene" parent="." unique_id=810134885 instance=ExtResource("11_dg77c")]
 position = Vector2(0, -21)
 
 [node name="OrderScene" parent="." unique_id=1516490798 instance=ExtResource("4_1bvp3")]
 visible = false
+
+[node name="MenuScene" type="Node2D" parent="." unique_id=1512093519]
+
+[node name="TextureRect" type="TextureRect" parent="MenuScene" unique_id=1602692097]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("10_4c57u")
+
+[node name="Button" type="Button" parent="MenuScene" unique_id=194852837]
+offset_left = 706.0
+offset_top = 649.0
+offset_right = 1273.0
+offset_bottom = 857.0
+theme_override_font_sizes/font_size = 100
+text = "START GAME"
 
 [connection signal="order_scene" from="." to="UI" method="_on_main_order_scene"]
 [connection signal="dosa_submitted" from="CookingScene" to="ChutneyScene" method="_on_cooking_scene_dosa_submitted"]
@@ -45,3 +61,4 @@ visible = false
 [connection signal="drink_button_pressed" from="UI" to="." method="_on_ui_drink_button_pressed"]
 [connection signal="order_button_pressed" from="UI" to="." method="_on_ui_order_button_pressed"]
 [connection signal="submit_scene_finished" from="SubmitScene" to="." method="_on_submit_scene_submit_scene_finished"]
+[connection signal="pressed" from="MenuScene/Button" to="." method="_on_button_pressed"]

@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://dditg6olfh5od" path="res://progress_bar.gd" id="3_8uu6o"]
 [ext_resource type="Shader" uid="uid://cejgqwynjtpx7" path="res://batter.gdshader" id="3_cxa3y"]
 [ext_resource type="Texture2D" uid="uid://cnyoi53x5v2ts" path="res://assets/dosadoughtexture.png" id="4_8uu6o"]
+[ext_resource type="Texture2D" uid="uid://cdt43old6g5ej" path="res://chopped_onions.webp" id="6_gxv0q"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cxa3y"]
 radius = 136.0588
@@ -13,6 +14,7 @@ radius = 136.0588
 shader = ExtResource("3_cxa3y")
 shader_parameter/cooked_stage = 0.0
 shader_parameter/pan_center = Vector2(0, 0)
+shader_parameter/onions = false
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8uu6o"]
 radius = 31.016125
@@ -73,6 +75,11 @@ position = Vector2(418, 630)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TawaCenter" unique_id=1452953611]
 position = Vector2(-82, 80)
 shape = SubResource("CircleShape2D_8uu6o")
+
+[node name="Onions" type="Sprite2D" parent="." unique_id=1279325794]
+position = Vector2(331.99997, 708.99994)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("6_gxv0q")
 
 [connection signal="mouse_entered" from="Tawa" to="." method="_on_tawa_mouse_entered"]
 [connection signal="mouse_exited" from="Tawa" to="." method="_on_tawa_mouse_exited"]

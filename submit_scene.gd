@@ -5,7 +5,7 @@ signal submit_scene_finished
 
 var customer
 
-const T_MIN = 10.0
+const T_MIN = 30.0
 const T_MAX = 120.0
 
 var SCORE_LABELS_PATH
@@ -30,13 +30,12 @@ func _process(delta: float) -> void:
 	
 func play_submit_animation():
 	var CustomerData = CookingState.customer_of_submitted_order
-	
-	# fake scores for now
-	var order_score = calculateOrderScore()
-	var cooking_score = calculate_cooking_score()
-	var chutney_score = calculate_chutney_score()
-	var drink_score = 100
-	var total_score = (order_score + cooking_score + chutney_score + drink_score) / 4
+
+	var order_score = snappedf(calculateOrderScore(), 0.01)
+	var cooking_score = snappedf(calculate_cooking_score(), 0.01)
+	var chutney_score = snappedf(calculate_chutney_score(), 0.01)
+	var drink_score = snappedf(calculate_drink_score(), 0.01)
+	var total_score = snappedf((order_score + cooking_score + chutney_score + drink_score) / 4, 0.01)
 
 	# Fade in from black
 	var tween = create_tween()
@@ -44,16 +43,16 @@ func play_submit_animation():
 	await tween.finished
 
 	# show each score with a pause between each
-	await show_label_animated(SCORE_LABELS_PATH.get_node("OrderScore"), str(order_score))
-	await show_label_animated(SCORE_LABELS_PATH.get_node("CookingScore"), str(cooking_score))
-	await show_label_animated(SCORE_LABELS_PATH.get_node("ChutneyScore"), str(chutney_score))
-	await show_label_animated(SCORE_LABELS_PATH.get_node("DrinkScore"), str(drink_score))
+	await show_label_animated(SCORE_LABELS_PATH.get_node("OrderScore"), str(order_score) + "%")
+	await show_label_animated(SCORE_LABELS_PATH.get_node("CookingScore"), str(cooking_score) + "%")
+	await show_label_animated(SCORE_LABELS_PATH.get_node("ChutneyScore"), str(chutney_score) + "%")
+	await show_label_animated(SCORE_LABELS_PATH.get_node("DrinkScore"), str(drink_score) + "%")
 
 	# total score
-	await show_label_animated(SCORE_LABELS_PATH.get_node("TotalScore"), str(total_score))
+	await show_label_animated(SCORE_LABELS_PATH.get_node("TotalScore"), "Total Score : " + str(total_score) + "%")
 
 	# tip
-	await show_label_animated($Tip, str(total_score * 0.01 * 5))
+	await show_label_animated($Tip, "Tip : $" + str(total_score * 0.01 * 5))
 	
 	# hide the scores when they are done being shown
 	hide_score_labels()
@@ -97,24 +96,54 @@ func calculate_cooking_score():
 
 	var submitted_count = dosas.size()
 	print("submitted count : ", submitted_count)
-	var expected_count  = len(customer.data.order.dosa)
+	
+	# Duplicate the array so we can remove items as we match them
+	var expected_dosas = customer.data.order.dosa.duplicate()
+	var expected_count = expected_dosas.size()
 	print("expected count : ", expected_count)
 
 	# Count penalty: deduct proportionally for wrong number
 	var count_ratio = 0.0
 	if expected_count > 0:
-		# e.g. asked for 2, gave 1 → 0.5 ratio; gave 3 → capped at 1.0
+		# e.g. asked for 2, gave 1 -> 0.5 ratio; gave 3 -> capped at 1.0
 		count_ratio = clamp(float(submitted_count) / float(expected_count), 0.0, 1.0)
 
 	# Average the cook quality across submitted dosas
 	var avg_dosa_quality = 0.0
 	for dosa in dosas:
-		avg_dosa_quality += dosa.get_meta("total_score")  # already 0-100
-		print("average dosa quality : ", avg_dosa_quality)
+		var dosa_score = dosa.get_meta("total_score")  # already 0-100
+		
+		# Check if the submitted dosa has onion
+		var has_onion = dosa.has_meta("onion") and dosa.get_meta("onion") == true
+		
+		# Look for a matching expected dosa
+		var matched_index = -1
+		for i in range(expected_dosas.size()):
+			# Stringify and check for "onion" to safely handle Strings or Dictionaries
+			var expects_onion = "onion" in str(expected_dosas[i]).to_lower()
+			print("expects onion : ", expects_onion)
+			print("has onion: ", has_onion)
+			
+			if has_onion == expects_onion:
+				matched_index = i
+				break # Found a match, stop looking
+				
+		if matched_index != -1:
+			# Correct type served! Add full score and remove from expected list
+			avg_dosa_quality += dosa_score
+			expected_dosas.remove_at(matched_index)
+		else:
+			# Wrong type served! (e.g., gave onion when plain was expected, or vice versa)
+			print("Penalty applied: Incorrect dosa type served (Onion mismatch)")
+			# Apply a 50% penalty to this specific dosa's score (adjust 0.5 as needed)
+			avg_dosa_quality += dosa_score * 0.5 
+
+		print("current dosa quality sum : ", avg_dosa_quality)
+
 	if submitted_count > 0:
 		avg_dosa_quality /= submitted_count
 
-	# Final dosa score: quality × count accuracy
+	# Final dosa score: quality * count accuracy
 	# If they gave too many dosas, count_ratio is capped at 1.0 (no bonus)
 	print("count ratio ", count_ratio)
 	return avg_dosa_quality * count_ratio
@@ -183,11 +212,12 @@ func calculate_drink_score():
 	)
 
 	# no cup served at all
-	if cups.is_empty():
+	if cups.is_empty() and expected_drink != "":
 		return 0.0
 
 	# just score the first cup for now
 	var cup = cups[0]
+	print("ball score : ", cup.get_meta("sugar_or_ice_score"))
 	var served_drink = cup.get_meta("drink_name") if cup.has_meta("drink_name") else ""
 
 	# wrong drink type = 0 immediately
@@ -199,9 +229,13 @@ func calculate_drink_score():
 
 	# sugar score (30 pts)
 	var sugar_score = 0.0
+	var ball_score
 	var served_sugar = cup.has_meta("sugar_or_ice") and cup.get_meta("sugar_or_ice") == "sugar"
+	print("sugar or ice: ", cup.get_meta("sugar_or_ice"))
+	prints("served sugar :", served_sugar)
+	
 	if wants_sugar and served_sugar:
-		var ball_score = cup.get_meta("sugar_or_ice_score") if cup.has_meta("sugar_or_ice_score") else 0.0
+		ball_score = cup.get_meta("sugar_or_ice_score")
 		sugar_score = (ball_score / 100.0) * 30.0
 	elif not wants_sugar and not served_sugar:
 		sugar_score = 30.0  # correctly omitted
@@ -209,12 +243,14 @@ func calculate_drink_score():
 		sugar_score = 0.0   # forgot sugar
 	else:
 		sugar_score = 0.0   # added sugar they didn't want
+		
+	sugar_score *= 2
 
 	# ice score (30 pts)
 	var ice_score = 0.0
 	var served_ice = cup.has_meta("sugar_or_ice") and cup.get_meta("sugar_or_ice") == "ice"
 	if wants_ice and served_ice:
-		var ball_score = cup.get_meta("sugar_or_ice_score") if cup.has_meta("sugar_or_ice_score") else 0.0
+		ball_score = cup.get_meta("sugar_or_ice_score") if cup.has_meta("sugar_or_ice_score") else 0.0
 		ice_score = (ball_score / 100.0) * 30.0
 	elif not wants_ice and not served_ice:
 		ice_score = 30.0
@@ -222,5 +258,22 @@ func calculate_drink_score():
 		ice_score = 0.0
 	else:
 		ice_score = 0.0
+		
+	if wants_sugar:
+		ice_score = 0
+	if wants_ice:
+		sugar_score = 0
+		
+	ice_score *= 2
+	
+	drink_type_score += ice_score + sugar_score
+	
+	print("---CALCULATE DRINK SCORE DEBUG---")
+	print("drink type score: ", drink_type_score)
+	print("sugar score : ", sugar_score)
+	print("ice score : ", ice_score)
+	print("ball score: ", ball_score)
+	print("wants sugar ", wants_sugar)
+	print("wants ice : ", wants_ice)
 
-	return drink_type_score + sugar_score + ice_score
+	return snappedf(drink_type_score, 0.01)

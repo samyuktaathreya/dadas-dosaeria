@@ -11,7 +11,6 @@ signal waiting_customer
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$AnimatedSprite2D.play("walk")
 	#connect signal when customer is clicked on
 	input_event.connect(_on_input_event)
 	order_start_time = Time.get_ticks_msec()
@@ -23,7 +22,6 @@ func _process(delta: float) -> void:
 		
 func stop_and_wait():
 	if already_ordered: return
-	$AnimatedSprite2D.play("idle")
 	is_waiting = true
 	waiting_customer.emit(self)
 
@@ -43,7 +41,6 @@ func moveCustomerOutOfLine():
 
 func move_forward_in_line():
 	if already_ordered: return
-	$AnimatedSprite2D.play("walk")
 	is_waiting = false
 
 func _on_area_exited(area: Area2D) -> void:

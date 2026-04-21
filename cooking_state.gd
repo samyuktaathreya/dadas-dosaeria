@@ -13,6 +13,7 @@ var order_in_drink_scene = false
 
 var dosas: Array[Texture2D] = []
 var dosa_materials = []
+var dosa_pan_centers = []
 var dosa_scores = []
 
 var customer_of_submitted_order = null
@@ -23,11 +24,16 @@ var dragging_ticket = null
 # prevent user from dragging multiple dosas at once
 var dragging_dosa = null
 
-func add_dosa(tex: Texture2D, material, scores):
+var dragging_onions = false
+
+var mouse_on_trash = false
+
+func add_dosa(tex: Texture2D, material, scores, pan_center):
 	dosas.append(tex)
 	dosa_materials.append(material)
 	dosa_scores.append(scores)
-
+	dosa_pan_centers.append(pan_center)
+	
 func clear():
 	banana_leaf_items = []
 	

@@ -36,6 +36,7 @@ scale = Vector2(0.8, 0.8)
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=163308388]
+visible = false
 position = Vector2(-30, 0)
 scale = Vector2(0.52, 0.52)
 texture = ExtResource("3_8kuvi")

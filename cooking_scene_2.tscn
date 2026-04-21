@@ -2,12 +2,17 @@
 
 [ext_resource type="Script" uid="uid://bpabrjfuht7vf" path="res://cooking_scene_2.gd" id="1_5mg6d"]
 [ext_resource type="PackedScene" uid="uid://vf2u543my0jc" path="res://tawa.tscn" id="1_ewv8k"]
+[ext_resource type="Texture2D" uid="uid://dgg0o54e3jc4b" path="res://assets/Backgrounds/Blank kitchen countertop.png" id="2_a0dls"]
 [ext_resource type="Script" uid="uid://c0ojx2osfom80" path="res://dough_bucket.gd" id="2_qv3c0"]
 [ext_resource type="Texture2D" uid="uid://cse8ulfig53xb" path="res://assets/CookingUtensils/DoughBucket.png" id="4_msocd"]
 [ext_resource type="Script" uid="uid://b4skg2e44jt1p" path="res://ladle.gd" id="5_tlmgs"]
 [ext_resource type="Texture2D" uid="uid://cl1rvptsgpr2" path="res://assets/CookingUtensils/EmptyLadle.png" id="5_vjjh2"]
 [ext_resource type="Texture2D" uid="uid://cifp1er0aro8n" path="res://assets/CookingUtensils/Full Dosa Ladle.png" id="6_d11v2"]
 [ext_resource type="Texture2D" uid="uid://c4vvy37fghkvk" path="res://assets/CookingUtensils/BananaLeaf.png" id="8_msocd"]
+[ext_resource type="Script" uid="uid://dijic3hs1h5yb" path="res://chopped_onions.gd" id="9_d11v2"]
+[ext_resource type="Texture2D" uid="uid://dym61v7q5xlac" path="res://chopped_onions.jpg" id="10_l558y"]
+[ext_resource type="Script" uid="uid://cdtdva3x3if4x" path="res://trash.gd" id="12_n7x67"]
+[ext_resource type="Texture2D" uid="uid://djdj4p2xhauh1" path="res://assets/Trash.png" id="13_a0dls"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_l558y"]
 animations = [{
@@ -32,8 +37,19 @@ animations = [{
 radius = 48.0
 height = 153.99998
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_n7x67"]
+size = Vector2(240.5, 232.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_a0dls"]
+size = Vector2(801, 325)
+
 [node name="CookingScene2" type="Node2D" unique_id=704392818]
 script = ExtResource("1_5mg6d")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1043553608]
+offset_right = 1926.0
+offset_bottom = 1086.0
+texture = ExtResource("2_a0dls")
 
 [node name="TawaController" parent="." unique_id=33808163 instance=ExtResource("1_ewv8k")]
 position = Vector2(-158, -97)
@@ -53,10 +69,11 @@ scale = Vector2(0.2, 0.2)
 texture = ExtResource("4_msocd")
 
 [node name="Ladle" type="AnimatedSprite2D" parent="DoughBucket" unique_id=1247408045]
-position = Vector2(19.597225, -29.666664)
+position = Vector2(19.597, -50)
 scale = Vector2(0.20561111, 0.27333337)
 sprite_frames = SubResource("SpriteFrames_l558y")
 animation = &"empty_ladle"
+offset = Vector2(-40, 90)
 script = ExtResource("5_tlmgs")
 
 [node name="LadleCooldown" type="Timer" parent="DoughBucket" unique_id=442809622]
@@ -79,6 +96,31 @@ texture = ExtResource("8_msocd")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="BananaLeaf" unique_id=2139552668]
 polygon = PackedVector2Array(-6.666992, -155, 128.33301, -136.66663, 214.99976, -81.666626, 261.66626, 18.333374, 198.33301, 118.333374, 128.33301, 146.66663, -56.666992, 165, -338.33374, 108.333374, -410.00024, 21.666626, -376.667, -51.666626, -143.33374, -140)
 
+[node name="ChoppedOnions" type="Area2D" parent="." unique_id=1189665315]
+script = ExtResource("9_d11v2")
+
+[node name="ChoppedOnionsSprite" type="Sprite2D" parent="ChoppedOnions" unique_id=1908024678]
+position = Vector2(460, 163)
+scale = Vector2(0.3, 0.19500001)
+texture = ExtResource("10_l558y")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChoppedOnions" unique_id=1780176481]
+position = Vector2(459.75, 163.25)
+shape = SubResource("RectangleShape2D_n7x67")
+
+[node name="Trash" type="Area2D" parent="." unique_id=2018953214]
+position = Vector2(1371, 264)
+scale = Vector2(0.4, 0.4)
+script = ExtResource("12_n7x67")
+metadata/_edit_group_ = true
+
+[node name="TrashSprite" type="Sprite2D" parent="Trash" unique_id=822016425]
+texture = ExtResource("13_a0dls")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Trash" unique_id=1147443187]
+position = Vector2(-3.5, -12.5)
+shape = SubResource("RectangleShape2D_a0dls")
+
 [connection signal="drag_ladle_signal" from="TawaController" to="." method="_on_tawa_controller_drag_ladle_signal"]
 [connection signal="drag_ladle_signal" from="TawaController" to="DoughBucket/Ladle" method="_on_tawa_controller_drag_ladle_signal"]
 [connection signal="drag_ladle_signal" from="TawaController2" to="DoughBucket/Ladle" method="_on_tawa_controller_2_drag_ladle_signal"]
@@ -98,3 +140,7 @@ polygon = PackedVector2Array(-6.666992, -155, 128.33301, -136.66663, 214.99976, 
 [connection signal="mouse_exited" from="BananaLeaf" to="TawaController" method="_on_banana_leaf_mouse_exited"]
 [connection signal="mouse_exited" from="BananaLeaf" to="TawaController2" method="_on_banana_leaf_mouse_exited"]
 [connection signal="mouse_exited" from="BananaLeaf" to="TawaController3" method="_on_banana_leaf_mouse_exited"]
+[connection signal="mouse_entered" from="ChoppedOnions" to="ChoppedOnions" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="ChoppedOnions" to="ChoppedOnions" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="Trash" to="." method="_on_trash_mouse_entered"]
+[connection signal="mouse_exited" from="Trash" to="." method="_on_trash_mouse_exited"]

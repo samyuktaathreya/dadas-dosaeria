@@ -9,6 +9,14 @@ var next_customer_id
 
 var customer_at_order_spot = false
 
+var customer_spawn_point
+const CUSTOMER_DISTANCE = 200
+
+
+const CUSTOMER_OFFSET = Vector2(-10, 30)
+# TODO: add more customers!
+const CUSTOMER_OPTIONS = ["GirlyPop", "Tourist"]
+
 # structure of order
 # dictionary of lists
 # key   : value
@@ -48,10 +56,9 @@ func generate_random_order(dosa_cap: int = 1, chutney_cap: int = 1):
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$OrderArrow.hide()
-	$CustomerSpawner.start()
-	$CustomerSpawner.wait_time = randf_range(8.0, 16.0)
+	# $OrderArrow.hide()
 	next_customer_id = 0 
+	customer_spawn_point = $CustomerSpawnPoint.global_position
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -59,7 +66,7 @@ func _process(delta: float) -> void:
 
 func _on_order_spot_area_entered(area: Area2D) -> void:
 	if area.has_method("stop_and_wait"):
-		$OrderArrow.show()
+		# $OrderArrow.show()
 		area.stop_and_wait()
 	
 
@@ -70,7 +77,7 @@ func spawn_customer():
 	#name, appearance, order
 	var data := CustomerData.new()
 	data.id = next_customer_id
-	data.name = "GirlyPop"
+	data.name = CUSTOMER_OPTIONS.pick_random()
 	data.order = generate_random_order()
 	data.state = CustomerData.CustomerState.IN_LINE
 	#create customer child node
@@ -80,7 +87,10 @@ func spawn_customer():
 	customer.data = data
 	
 	#spawn the customer at the spawn position
-	customer.position = $CustomerSpawnPoint.position
+	customer.position = customer_spawn_point
+	customer.get_node("Sprite2D").offset = CUSTOMER_OFFSET
+	customer.get_node("Sprite2D").texture = load("res://assets/Customers/" + data.name + "/" + data.name + "Speaking.png")
+	print(customer.get_node("Sprite2D").texture)
 	add_child(customer)
 	
 	#add customer to array
@@ -89,12 +99,20 @@ func spawn_customer():
 	#connect signal to customer
 	customer.order_requested.connect(_on_customer_order_requested.bind(customer))
 	customer.waiting_customer.connect(_on_customer_waiting_customer)
+	
+	$CustomerSpawner.start()
+	$CustomerSpawner.wait_time = randf_range(5.0, 20.0)
+	
+	customer_spawn_point.x += CUSTOMER_DISTANCE
+	print("customer spawned")
 
 func _on_customer_spawner_timeout() -> void:
 	spawn_customer()
-	$CustomerSpawner.wait_time = randf_range(100.0, 200.0)
 	
 func _on_customer_order_requested(customer):
+	print("customer requested: ", customer)
+	if customer_spawn_point.x > ($CustomerSpawnPoint.global_position.x + 200):
+		customer_spawn_point.x -= CUSTOMER_DISTANCE
 	#we only want to register click on customer
 	#if the customer is the first in line
 	if customer == customerArray[0]:
@@ -102,19 +120,19 @@ func _on_customer_order_requested(customer):
 		customer_clicked.emit(customer)
 
 func order_arrow():
-	$OrderArrow.show()
-	$OrderArrow.get_node("AnimatedSprite2D").play("bobbing")
-
+	pass
+	# $OrderArrow.show()
+	# $OrderArrow.get_node("AnimatedSprite2D").play("bobbing")
 
 func _on_order_scene_order_complete() -> void:
 	#move the first customer out of line
 	#they wait somewhere else
 	var customer = customerArray.pop_front()
 	if not customer_at_order_spot: # or customer not colliding with order spot
-		$OrderArrow.hide()
+		# $OrderArrow.hide()
+		pass
 
 	customer.moveCustomerOutOfLine()
-
 
 func _on_customer_waiting_customer(customer) -> void:
 	#when a customer is waiting, check if they
@@ -123,7 +141,7 @@ func _on_customer_waiting_customer(customer) -> void:
 	if customerArray[0].data.id == customer.data.id:
 		order_arrow()
 
-
 func _on_order_spot_area_exited(area: Area2D) -> void:
 	if area.has_method("stop_and_wait"):
-		$OrderArrow.hide()
+		# $OrderArrow.hide()
+		pass

@@ -2,22 +2,34 @@
 
 [ext_resource type="Script" uid="uid://njp1iswwd5e1" path="res://drink_scene.gd" id="1_ptjgn"]
 [ext_resource type="PackedScene" uid="uid://cfvcomapmnrg0" path="res://cup.tscn" id="2_woxac"]
+[ext_resource type="Texture2D" uid="uid://dgg0o54e3jc4b" path="res://assets/Backgrounds/Blank kitchen countertop.png" id="3_gyhev"]
 [ext_resource type="PackedScene" uid="uid://cb4xv2pchwnxa" path="res://banana_leaf.tscn" id="3_herq5"]
-[ext_resource type="Texture2D" uid="uid://echvx6hretqk" path="res://assets/emptiestdrinkdispenser.png" id="3_rei6w"]
 [ext_resource type="Script" uid="uid://b1ptpjw0hbv18" path="res://banana_leaf.gd" id="4_fmbap"]
 [ext_resource type="Texture2D" uid="uid://e4xrojj2n3e2" path="res://assets/emptydrinkdispenser.png" id="4_herq5"]
 [ext_resource type="Script" uid="uid://c230gj2h3hdfy" path="res://sugar_ice_collection.gd" id="5_qo2ml"]
 [ext_resource type="Texture2D" uid="uid://bkqxh5yu3d8um" path="res://assets/barfordispensingicesugar.png" id="7_51ej6"]
+[ext_resource type="Texture2D" uid="uid://co4b6jdr48e2u" path="res://assets/Drinks/DrinkDispenser/Mango lassi drink icon,.png" id="7_cahwq"]
 [ext_resource type="Texture2D" uid="uid://du7vil3nk84lh" path="res://assets/ballfordispensingsugarice.png" id="8_cahwq"]
+[ext_resource type="Texture2D" uid="uid://dwqfupbxfpwrg" path="res://assets/Drinks/DrinkDispenser/Coffee drink icon.png" id="8_lmtur"]
 [ext_resource type="Script" uid="uid://dkw7td5ghjghf" path="res://ball.gd" id="9_lmtur"]
-[ext_resource type="Texture2D" uid="uid://by3if2fs0j31n" path="res://assets/submit_ticket.png" id="10_herq5"]
+[ext_resource type="Texture2D" uid="uid://cniuvvdk3733l" path="res://assets/Drinks/DrinkDispenser/Ice drink icon.png" id="10_cahwq"]
+[ext_resource type="Texture2D" uid="uid://bnq347k6xo8j2" path="res://assets/Backgrounds/DrinkDispenser.PNG" id="10_fmbap"]
+[ext_resource type="Texture2D" uid="uid://d2bv2cpia12sg" path="res://assets/Drinks/DrinkDispenser/Sugar drink icon .png" id="10_lmtur"]
+[ext_resource type="Texture2D" uid="uid://b4o55v1p1v1dp" path="res://assets/SubmitTicketArea.png" id="11_fmbap"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fmbap"]
-size = Vector2(47.25, 69.25)
+size = Vector2(51.75, 67.25)
 
 [node name="DrinkScene" type="Node2D" unique_id=838950850]
 script = ExtResource("1_ptjgn")
 cup_scene = ExtResource("2_woxac")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1397293593]
+offset_left = 14.0
+offset_top = 2.0
+offset_right = 1922.0
+offset_bottom = 1228.0
+texture = ExtResource("3_gyhev")
 
 [node name="BananaLeaf" parent="." unique_id=495446425 instance=ExtResource("3_herq5")]
 position = Vector2(978, 731)
@@ -33,14 +45,16 @@ offset_bottom = 391.0
 scale = Vector2(0.5, 0.5)
 
 [node name="CupSpawnPoint" type="Marker2D" parent="DrinkDispenser" unique_id=2027452296]
-position = Vector2(-676, 10)
+position = Vector2(-676, 200)
 scale = Vector2(2, 2)
-
-[node name="DrinkDispenserRect" type="Sprite2D" parent="DrinkDispenser" unique_id=786062488]
-texture = ExtResource("3_rei6w")
 
 [node name="EmptyDrinkDispenser" type="Sprite2D" parent="DrinkDispenser" unique_id=114546349]
 texture = ExtResource("4_herq5")
+
+[node name="DrinkDispenserSprite" type="Sprite2D" parent="DrinkDispenser/EmptyDrinkDispenser" unique_id=950703339]
+position = Vector2(-721.99994, -397.99997)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("10_fmbap")
 
 [node name="DrinkCollection" type="Control" parent="DrinkDispenser/EmptyDrinkDispenser" unique_id=1604842740]
 layout_mode = 3
@@ -50,21 +64,19 @@ offset_bottom = 40.0
 
 [node name="MangoLassi" type="Button" parent="DrinkDispenser/EmptyDrinkDispenser/DrinkCollection" unique_id=1850374841]
 layout_mode = 0
-offset_left = -1216.0
-offset_top = -702.0
-offset_right = -896.0
-offset_bottom = -426.0
-text = "Mango Lassi
-"
+offset_left = -1166.0
+offset_top = -506.0
+offset_right = -1037.0
+offset_bottom = -361.0
+icon = ExtResource("7_cahwq")
 
 [node name="FilterCoffee" type="Button" parent="DrinkDispenser/EmptyDrinkDispenser/DrinkCollection" unique_id=2117774288]
 layout_mode = 0
-offset_left = -886.0
-offset_top = -700.0
-offset_right = -482.0
-offset_bottom = -432.0
-text = "Filter Coffee
-"
+offset_left = -1164.0
+offset_top = -660.0
+offset_right = -1062.0
+offset_bottom = -540.0
+icon = ExtResource("8_lmtur")
 
 [node name="SugarIceCollection" type="Control" parent="DrinkDispenser/EmptyDrinkDispenser" unique_id=542582512]
 layout_mode = 3
@@ -75,33 +87,37 @@ script = ExtResource("5_qo2ml")
 
 [node name="SugarButton" type="Button" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=395170539]
 layout_mode = 0
-offset_left = -1208.0
-offset_top = -620.0
-offset_right = -970.0
-offset_bottom = -424.0
-text = "Sugar"
+offset_left = -380.0
+offset_top = -656.0
+offset_right = -278.0
+offset_bottom = -538.0
+icon = ExtResource("10_lmtur")
 
 [node name="IceButton" type="Button" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=703863723]
 layout_mode = 0
-offset_left = -428.0
-offset_top = -610.0
-offset_right = -114.0
-offset_bottom = -424.0
-text = "Ice"
+offset_left = -382.0
+offset_top = -502.0
+offset_right = -278.0
+offset_bottom = -386.0
+icon = ExtResource("10_cahwq")
 
 [node name="Bar" type="Sprite2D" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=1766269558]
+position = Vector2(-392, -7.6293945e-06)
+scale = Vector2(0.39861107, 0.44555554)
 texture = ExtResource("7_51ej6")
 
 [node name="Ball" type="Sprite2D" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=305465467]
+position = Vector2(-274.00003, 40)
+scale = Vector2(0.52187496, 0.57222223)
 texture = ExtResource("8_cahwq")
 script = ExtResource("9_lmtur")
 
 [node name="ButtonForMinigame" type="Button" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=631999875]
 layout_mode = 0
-offset_left = -722.0
-offset_top = -504.0
-offset_right = -618.0
-offset_bottom = -410.0
+offset_left = -684.0
+offset_top = -228.0
+offset_right = -638.0
+offset_bottom = -178.0
 
 [node name="SugarIceEncouragement" type="Label" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=15182794]
 layout_mode = 0
@@ -109,27 +125,31 @@ offset_left = -1548.0
 offset_top = -418.0
 offset_right = -1214.0
 offset_bottom = -158.0
+theme_override_font_sizes/font_size = 50
 
 [node name="SugarIceEncouragementTimer" type="Timer" parent="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" unique_id=657138879]
+one_shot = true
 
 [node name="TooManyCupsWarning" type="Label" parent="." unique_id=279763916]
-offset_left = 353.0
-offset_top = 371.0
-offset_right = 541.0
-offset_bottom = 420.0
+offset_left = 115.0
+offset_top = 385.0
+offset_right = 303.0
+offset_bottom = 434.0
 text = "Too many cups in queue
 Cannot dispense drink"
 
 [node name="TooManyCupsWarningTimer" type="Timer" parent="." unique_id=1693873020]
 wait_time = 3.0
+one_shot = true
 
 [node name="SubmitTicketHere" type="Area2D" parent="." unique_id=334729559]
-position = Vector2(333, 745)
+position = Vector2(211, 776)
 metadata/_edit_group_ = true
 
 [node name="SubmitTicketSprite" type="Sprite2D" parent="SubmitTicketHere" unique_id=2102267453]
-scale = Vector2(0.4, 0.4)
-texture = ExtResource("10_herq5")
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("11_fmbap")
+offset = Vector2(305, 50)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SubmitTicketHere" unique_id=1710386996]
 position = Vector2(4.5, -3.5)
@@ -150,11 +170,13 @@ offset_bottom = 385.0
 text = "pouring other drink in progress"
 
 [node name="CantPourNowTimer" type="Timer" parent="." unique_id=557789173]
+one_shot = true
 
 [connection signal="mouse_entered" from="BananaLeaf" to="." method="_on_banana_leaf_mouse_entered"]
 [connection signal="mouse_exited" from="BananaLeaf" to="." method="_on_banana_leaf_mouse_exited"]
 [connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/DrinkCollection/MangoLassi" to="." method="_on_mango_lassi_pressed"]
 [connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/DrinkCollection/FilterCoffee" to="." method="_on_filter_coffee_pressed"]
+[connection signal="received_ball_score" from="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" to="." method="_on_sugar_ice_collection_received_ball_score"]
 [connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection/SugarButton" to="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" method="_on_sugar_button_pressed"]
 [connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection/IceButton" to="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection" method="_on_ice_button_pressed"]
 [connection signal="pressed" from="DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection/ButtonForMinigame" to="." method="_on_button_for_minigame_pressed"]

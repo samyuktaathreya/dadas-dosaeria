@@ -1,28 +1,20 @@
 [gd_scene format=3 uid="uid://fan0ons4hwq4"]
 
-[ext_resource type="Texture2D" uid="uid://m06mhpoglw3o" path="res://front customer.png" id="1_n3ahm"]
 [ext_resource type="Script" uid="uid://xntgvel2skfj" path="res://order_scene.gd" id="1_ngo0w"]
 [ext_resource type="Texture2D" uid="uid://bhhnjubuaemof" path="res://speechbubble.png" id="2_k0wy0"]
-[ext_resource type="Texture2D" uid="uid://dc5mwp1lwkpws" path="res://customer front view.png" id="2_ngo0w"]
-[ext_resource type="Texture2D" uid="uid://dm1kyt05vexsv" path="res://chefWritingIdle.png" id="3_du5q0"]
+[ext_resource type="Texture2D" uid="uid://bi0esqg8pavrs" path="res://assets/Customers/GirlyPop/GirlyPopMouthClosed.PNG" id="3_ngo0w"]
+[ext_resource type="Texture2D" uid="uid://blgojsrpm0j56" path="res://assets/DadaSprites/Dada Backview.png" id="4_du5q0"]
+[ext_resource type="Texture2D" uid="uid://cniem5efb42nn" path="res://assets/Customers/Tourist/TouristForward.png" id="4_nntr7"]
 [ext_resource type="Texture2D" uid="uid://6v3f8eqxyxug" path="res://ticket.webp" id="9_6171k"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_kjrd7"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_nntr7"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_n3ahm")
+"texture": ExtResource("3_ngo0w")
 }],
 "loop": true,
-"name": &"idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_ngo0w")
-}],
-"loop": true,
-"name": &"talking",
+"name": &"default",
 "speed": 5.0
 }]
 
@@ -30,7 +22,7 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_du5q0")
+"texture": ExtResource("4_du5q0")
 }],
 "loop": true,
 "name": &"idle",
@@ -53,20 +45,25 @@ texture = ExtResource("2_k0wy0")
 [node name="SpeechBubbleIconPosition" type="Marker2D" parent="OrderBubble" unique_id=2086863294]
 position = Vector2(918, 255)
 
-[node name="CustomerOrdering" type="Node2D" parent="." unique_id=337452924]
-position = Vector2(0, 400)
+[node name="CustomerOrderSprites" type="Control" parent="." unique_id=719902354]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CustomerOrdering" unique_id=723420492]
-position = Vector2(1133, 25)
-scale = Vector2(0.3, 0.3)
-sprite_frames = SubResource("SpriteFrames_kjrd7")
-animation = &"talking"
+[node name="GirlyPop" type="AnimatedSprite2D" parent="CustomerOrderSprites" unique_id=497069947]
+position = Vector2(1415, 197)
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_nntr7")
+
+[node name="Tourist" type="Sprite2D" parent="CustomerOrderSprites" unique_id=1771558985]
+position = Vector2(1173, 446)
+scale = Vector2(0.28, 0.28)
+texture = ExtResource("4_nntr7")
 
 [node name="ChefWriting" type="Node2D" parent="." unique_id=1228292993]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="ChefWriting" unique_id=1552869529]
-position = Vector2(734.00006, 432.99994)
-scale = Vector2(1.3685185, 1.4361111)
+position = Vector2(722, 574)
 sprite_frames = SubResource("SpriteFrames_6171k")
 animation = &"idle"
 

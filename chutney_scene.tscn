@@ -2,17 +2,26 @@
 
 [ext_resource type="Script" uid="uid://cmukepvd3bwuw" path="res://chutney_scene.gd" id="1_d8ey3"]
 [ext_resource type="PackedScene" uid="uid://dg4m7keqbr3yg" path="res://katori.tscn" id="2_7omhc"]
-[ext_resource type="Texture2D" uid="uid://ddbooh5xnnk5r" path="res://assets/sambarcontainer.png" id="4_kpurj"]
+[ext_resource type="Texture2D" uid="uid://bm2dw7m2wwkoj" path="res://assets/Chutneys/Buckets/Orange Chutney Bucket.png" id="4_kpurj"]
 [ext_resource type="Texture2D" uid="uid://c4vvy37fghkvk" path="res://assets/CookingUtensils/BananaLeaf.png" id="4_w2k57"]
-[ext_resource type="Texture2D" uid="uid://ctkv6aeapd7l3" path="res://assets/coconutchutneycontainer.png" id="5_w2k57"]
-[ext_resource type="Texture2D" uid="uid://dvwlef71t5m0j" path="res://assets/mintchutneycontainer.png" id="6_4io5g"]
+[ext_resource type="Texture2D" uid="uid://dewd20fvktids" path="res://assets/Chutneys/Buckets/White Chutney Bucket.png" id="5_kpurj"]
+[ext_resource type="Texture2D" uid="uid://d3i8mjanlcmyi" path="res://assets/Chutneys/Buckets/Green Chutney Bucket.png" id="6_w2k57"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7omhc"]
 radius = 188.0
 height = 694.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5ru28"]
-size = Vector2(199, 25)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_w2k57"]
+radius = 83.000015
+height = 301.99997
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4io5g"]
+radius = 86.0
+height = 300.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5ru28"]
+radius = 82.0
+height = 298.0
 
 [node name="ChutneyScene" type="Node2D" unique_id=1190726134]
 script = ExtResource("1_d8ey3")
@@ -38,7 +47,6 @@ shape = SubResource("CapsuleShape2D_7omhc")
 [node name="BananaLeaf" type="Area2D" parent="." unique_id=1330158170]
 position = Vector2(978, 631)
 scale = Vector2(0.8, 0.8)
-metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="BananaLeaf" unique_id=12128473]
 scale = Vector2(0.53, 0.53)
@@ -51,7 +59,7 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_7omhc")
 
 [node name="KatoriSpawnPoint" type="Marker2D" parent="." unique_id=1793355345]
-position = Vector2(1606, 634)
+position = Vector2(1321, 229)
 
 [node name="SambarChutneyContainer" type="Control" parent="." unique_id=357273474]
 layout_mode = 3
@@ -63,47 +71,49 @@ offset_bottom = 40.0
 position = Vector2(338, 317)
 
 [node name="Sprite2D" type="Sprite2D" parent="SambarChutneyContainer/SambarContainer" unique_id=1927538283]
-position = Vector2(51, -352)
+position = Vector2(-1.9999962, -61.00003)
+scale = Vector2(0.4, 0.4)
 texture = ExtResource("4_kpurj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SambarChutneyContainer/SambarContainer" unique_id=171949763]
-position = Vector2(-1.5, -99.5)
-shape = SubResource("RectangleShape2D_5ru28")
+position = Vector2(-1, -80)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_w2k57")
 
 [node name="CoconutChutneyContainer" type="Area2D" parent="SambarChutneyContainer" unique_id=1347080038]
 position = Vector2(612, 316)
 
 [node name="Sprite2D" type="Sprite2D" parent="SambarChutneyContainer/CoconutChutneyContainer" unique_id=614074459]
-position = Vector2(51, -352)
-texture = ExtResource("5_w2k57")
+position = Vector2(61, -61)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("5_kpurj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SambarChutneyContainer/CoconutChutneyContainer" unique_id=1316573572]
-position = Vector2(-4, -95)
-shape = SubResource("RectangleShape2D_5ru28")
+position = Vector2(65, -80)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_4io5g")
 
 [node name="MintChutneyContainer" type="Area2D" parent="SambarChutneyContainer" unique_id=1937206544]
 position = Vector2(880, 324)
 
 [node name="Sprite2D" type="Sprite2D" parent="SambarChutneyContainer/MintChutneyContainer" unique_id=446568149]
-position = Vector2(51, -352)
-texture = ExtResource("6_4io5g")
+position = Vector2(140, -61.00003)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("6_w2k57")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SambarChutneyContainer/MintChutneyContainer" unique_id=1983889567]
-position = Vector2(-2, -96)
-shape = SubResource("RectangleShape2D_5ru28")
+position = Vector2(144, -79)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_5ru28")
 
 [node name="ContinueButton" type="Button" parent="." unique_id=335829934]
-offset_left = 1457.0
-offset_top = 473.0
-offset_right = 1532.0
-offset_bottom = 498.0
-
-[node name="ContinueLabel" type="Label" parent="ContinueButton" unique_id=1000376642]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Continue
-"
+offset_left = 1308.0
+offset_top = 367.0
+offset_right = 1383.0
+offset_bottom = 392.0
+theme_override_font_sizes/font_size = 30
+text = "Continue"
+metadata/_edit_group_ = true
 
 [node name="WarningLabel" type="Label" parent="ContinueButton" unique_id=1511769056]
 layout_mode = 0

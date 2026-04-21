@@ -2,10 +2,9 @@
 
 [ext_resource type="Script" uid="uid://coovcxgy8jqs4" path="res://customer_line.gd" id="1_x1yed"]
 [ext_resource type="PackedScene" uid="uid://dsr3prstj5fhw" path="res://customer.tscn" id="2_lulkg"]
-[ext_resource type="Texture2D" uid="uid://bsqp31karqdyu" path="res://assets/rough_draft_dadas_dosaeria.webp" id="3_30po8"]
+[ext_resource type="Texture2D" uid="uid://d4ijgvkt55wgw" path="res://assets/Backgrounds/ShopFront.png" id="3_lulkg"]
 [ext_resource type="Texture2D" uid="uid://c4k6c7gb8i7eq" path="res://greenarrow1.png" id="4_3g1oq"]
 [ext_resource type="Texture2D" uid="uid://wvk4ipwsydix" path="res://greenarrow2.png" id="5_87dal"]
-[ext_resource type="Texture2D" uid="uid://bw47y2os6oyoe" path="res://assets/DadaSprites/Dada front.png" id="6_30po8"]
 [ext_resource type="Texture2D" uid="uid://dejcstf6mlakr" path="res://assets/DadaSprites/Dada front 2.png" id="7_3g1oq"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_kek77"]
@@ -32,9 +31,6 @@ height = 134.0
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_30po8")
-}, {
-"duration": 1.0,
 "texture": ExtResource("7_3g1oq")
 }],
 "loop": true,
@@ -47,12 +43,13 @@ script = ExtResource("1_x1yed")
 customer_scene = ExtResource("2_lulkg")
 
 [node name="DadaDosaeria" type="Sprite2D" parent="." unique_id=2074490168]
-position = Vector2(532.75, 389.24997)
+position = Vector2(567.00006, 405.00003)
 scale = Vector2(0.6868655, 0.65482026)
-texture = ExtResource("3_30po8")
+texture = ExtResource("3_lulkg")
 
 [node name="OrderArrow" type="Area2D" parent="." unique_id=1196096896]
-position = Vector2(931, 283)
+visible = false
+position = Vector2(905, 363)
 scale = Vector2(0.8, 0.8)
 metadata/_edit_group_ = true
 
@@ -73,13 +70,15 @@ scale = Vector2(5, 5)
 shape = SubResource("RectangleShape2D_0xm2m")
 
 [node name="CustomerSpawner" type="Timer" parent="." unique_id=338197363]
+one_shot = true
 
 [node name="CustomerSpawnPoint" type="Marker2D" parent="." unique_id=877030944]
-position = Vector2(1562, 575)
+position = Vector2(893, 573)
 
 [node name="DadaIdle" type="AnimatedSprite2D" parent="." unique_id=2119843223]
+position = Vector2(423.99997, 377.00003)
+scale = Vector2(0.71417564, 0.7394366)
 sprite_frames = SubResource("SpriteFrames_87dal")
-frame = 1
 frame_progress = 0.26833898
 
 [connection signal="area_entered" from="OrderSpot" to="." method="_on_order_spot_area_entered"]

@@ -14,6 +14,8 @@ var flip_cooldown = 0.0
 
 var mouse_on_banana_leaf = false
 
+var onion_on_dosa = false
+
 var submit_dosa = false
 
 var canvas_image: Image
@@ -61,11 +63,28 @@ var dosa_cooked_amounts = [0,0] # two indices for the two sides of the dosa
 var dosa_cooked_amounts_index = 0 # index changes when the dosa is flipped
 
 const DOSA_COOKING_SPRITE_OFFSET = Vector2(760, -170) - Vector2(235, -80)
+
+var FOLDED_DOSA_SPRITE_OFFSET
+# Vector2(6.0, 38.0)
+const FOLDED_DOSA_SPRITE_SCALE = Vector2(0.5, 0.5)
+
 # const DOSA_COOKING_SPRITE_OFFSET = Vector2.ZERO
 
-const DOSA_COOKING_SPRITES_FILE_PATH = "res://assets/DosaCookingSprites/"
+var DOSA_COOKING_SPRITES_FILE_PATH = "res://assets/DosaCookingSprites/"
+var FOLDED_DOSA_SPRITES_FILE_PATH = "res://assets/FoldedDosas/"
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
+	$Onions.hide()
+	var ONION_DOSA_SPRITES_FILE_PATH = "res://assets/OnionDosaCookingSprites/"
+
+	$BatterCanvas.material.set_shader_parameter("dosa_texture_undercooked_onion", load(ONION_DOSA_SPRITES_FILE_PATH + "UndercookedDosa.png"))
+	$BatterCanvas.material.set_shader_parameter("dosa_texture_cooked_onion", load(ONION_DOSA_SPRITES_FILE_PATH + "CookedDosa.png"))
+	$BatterCanvas.material.set_shader_parameter("dosa_texture_slightly_overcooked_onion", load(ONION_DOSA_SPRITES_FILE_PATH + "SlightlyOvercookedDosa.png"))
+	$BatterCanvas.material.set_shader_parameter("dosa_texture_overcooked_onion", load(ONION_DOSA_SPRITES_FILE_PATH + "OvercookedDosa.png"))
+	$BatterCanvas.material.set_shader_parameter("onions", false)
+	
 	$Tawa/CookingProgressUI/ProgressBar.max_value = 2.0
 	$BatterCanvas.material = $BatterCanvas.material.duplicate()
 
@@ -101,6 +120,7 @@ func _ready() -> void:
 	$BatterCanvas.global_position = CANVAS_SIZE / 2  # (960, 540)
 	$BatterCanvas.centered = true  # this is default
 	DOSA_PAN_COLLISION_CENTER = $Tawa/TawaCenterMarker.global_position
+	FOLDED_DOSA_SPRITE_OFFSET = DOSA_PAN_COLLISION_CENTER
 
 	var normalized_offset = (DOSA_COOKING_SPRITE_OFFSET) / CANVAS_SIZE
 	$BatterCanvas.material.set_shader_parameter("pan_center", DOSA_PAN_COLLISION_CENTER / CANVAS_SIZE + normalized_offset)
@@ -131,16 +151,25 @@ func _ready() -> void:
 	batter_pos = DOSA_PAN_COLLISION_CENTER
 	last_mouse_pos = mouse_pos
 	last_batter_pos = batter_pos
-
+	
+func trash_dosa():
+	reset_tawa()
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if dosaInPan and mouse_over_pan and CookingState.dragging_onions and not onion_on_dosa:
+		drop_onions_on_dosa()
 	if submit_dosa and dosa_drag_sprite:
-		var offset = Vector2(400, 600) - DOSA_PAN_COLLISION_CENTER
+		# var offset = -DOSA_PAN_COLLISION_CENTER
+		var offset = Vector2.ZERO
 		dosa_drag_sprite.global_position = get_global_mouse_position() + offset
 	if flip_cooldown > 0:
 		flip_cooldown -= delta
 	if mouse_over_pan:
 		mouse_pos = get_global_mouse_position()
+		
+	if CookingState.dragging_dosa == self and CookingState.mouse_on_trash:
+		trash_dosa()
 
 # case 1: the mouse is clicking down
 # case 2: the mouse is not clicking down 
@@ -170,7 +199,7 @@ func _process(delta: float) -> void:
 			stamp_along_path(last_batter_pos, batter_pos, brush_index)
 			canvas_texture.update(canvas_image)
 			last_batter_pos = batter_pos
-	if dosaInPan:
+	if dosaInPan and not dosa_drag_sprite:
 		cook_level = clamp(cook_level + COOK_SPEED * delta, 0.0, 2.0)
 	last_mouse_pos = mouse_pos
 	
@@ -187,12 +216,32 @@ func _process(delta: float) -> void:
 
 	$Tawa/CookingProgressUI/FlipLabel.visible = (cook_level >= 1.0)
 	
-	$Tawa/CookingProgressUI/ProgressBar.visible = mouse_over_pan \
+	$Tawa/CookingProgressUI.visible = mouse_over_pan \
 	and not CookingState.drag_ladle and flip_cooldown <= 0.0
 	
 	
 func _on_mouse_entered():
 	mouse_over_pan = true
+	# if cookingstate.dragging_onions and mouse over pan and dosa in pan
+	# then drop the onions on the dosa
+		
+func drop_onions_on_dosa():
+	# change sprite texture of dosa
+	FOLDED_DOSA_SPRITES_FILE_PATH = "res://assets/OnionFoldedDosas/"
+	$BatterCanvas.material.set_shader_parameter("onions", true)
+	
+	if not onion_on_dosa:
+		onion_on_dosa = true
+		var visible_cook_level = dosa_cooked_amounts[1 - dosa_cooked_amounts_index]
+		$BatterCanvas.material.set_shader_parameter("cook_level", visible_cook_level)
+
+		# pick which sprite to show based on how cooked that side is
+		var stage = cook_level_to_stage(visible_cook_level)
+		if stage == 0.0:
+			$Onions.show()
+		else:
+			$Onions.hide()
+			$BatterCanvas.material.set_shader_parameter("cooked_stage", stage)
 
 func _on_mouse_exited():
 	mouse_over_pan = false
@@ -205,7 +254,9 @@ func _input(event):
 			
 		# Check if they have moved the mouse far enough to count as a "drag" (e.g., 10 pixels)
 		if dosaInPan and not CookingState.drag_ladle and mouse_over_pan \
-		and CookingState.dragging_dosa == null and click_start_pos.distance_to(event.global_position) > 10.0:
+			and CookingState.dragging_dosa == null and click_start_pos.distance_to(event.global_position) > 10.0 \
+			and CookingState.dragging_onions == false and CookingState.dragging_ticket == null \
+			and flip_cooldown <= 0:
 			CookingState.dragging_dosa = self
 			start_dragging_dosa()
 			
@@ -313,11 +364,16 @@ func flip_dosa():
 
 		# pick which sprite to show based on how cooked that side is
 		var stage = cook_level_to_stage(visible_cook_level)
+		if stage == 0.0 and onion_on_dosa:
+			$Onions.show()
+		else:
+			$Onions.hide()
+			
 		$BatterCanvas.material.set_shader_parameter("cooked_stage", stage)
 
 func cook_level_to_stage(level: float) -> float:
 	if level < 0.4:
-		return 0
+		return 0.0
 	if level < 1.0:
 		return 1.0
 	elif level < 1.5:
@@ -332,20 +388,52 @@ func start_dragging_dosa():
 		submit_dosa = true
 		dosa_drag_sprite = Sprite2D.new()
 		dosa_drag_sprite.set_meta("item_type", "dosa")
-		dosa_drag_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		dosa_drag_sprite.set_meta("onion", onion_on_dosa)
 		# snapshot the current canvas as the drag visual
-		var drag_texture = ImageTexture.create_from_image(canvas_image)
-		dosa_drag_sprite.texture = drag_texture
+		'''
+		old code: 
+		# dosa_drag_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		# var drag_texture = ImageTexture.create_from_image(canvas_image)
+		# dosa_drag_sprite.texture = drag_texture
+		# dosa_drag_sprite.offset = DOSA_COOKING_SPRITE_OFFSET
+		# dosa_drag_sprite.scale = Vector2(1.0, 1.0)  # scale it down to dosa size
+		
+		now switching to folded dosa sprite when dragging dosa
+		'''
+		# when dragging dosa, switch to a folded dosa sprite
+		
+		var cooked_dict = {
+			0.0: "UndercookedDosa",
+			1.0: "UndercookedDosa",
+			2.0: "CookedDosa",
+			3.0: "SlightlyOvercookedDosa",
+			4.0: "OvercookedDosa"
+		}
+		
+		var cooked_amount = cooked_dict[cook_level_to_stage(cook_level)]
+		
+		# choose texture based on cooked amount
+		var folded_texture = load(
+			FOLDED_DOSA_SPRITES_FILE_PATH + cooked_amount + ".png"
+		)
+		
+		
+		dosa_drag_sprite.texture = folded_texture
+		dosa_drag_sprite.visible = true
+		# dosa_drag_sprite.offset = FOLDED_DOSA_SPRITE_OFFSET
+		dosa_drag_sprite.scale = FOLDED_DOSA_SPRITE_SCALE
+		
 		dosa_drag_sprite.centered = true
-		dosa_drag_sprite.material = $BatterCanvas.material.duplicate()
+		# dosa_drag_sprite.material = $BatterCanvas.material.duplicate()
 		# dosa_drag_sprite.material.set_shader_parameter("pan_center", Vector2(0.5, 0.5))
-		dosa_drag_sprite.offset = DOSA_COOKING_SPRITE_OFFSET
 		# get score of dosa
 		var scores = calculate_dosa_score()
 		dosa_drag_sprite.set_meta("cook_score", scores.cook_score)
 		dosa_drag_sprite.set_meta("shape_score", scores.shape_score)
 		dosa_drag_sprite.set_meta("total_score", scores.total)
-		dosa_drag_sprite.scale = Vector2(1.0, 1.0)  # scale it down to dosa size
+		
+		var normalized_offset = (DOSA_COOKING_SPRITE_OFFSET) / CANVAS_SIZE
+		dosa_drag_sprite.set_meta("pan_center", DOSA_PAN_COLLISION_CENTER / CANVAS_SIZE + normalized_offset)
 		# make dosa sprite a child of CookingScene
 		get_parent().add_child(dosa_drag_sprite)
 		# hide the original canvas
@@ -364,6 +452,10 @@ func _on_banana_leaf_mouse_entered() -> void:
 	mouse_on_banana_leaf = true
 	
 func reset_tawa():
+	$Onions.hide()
+	onion_on_dosa = false
+	$BatterCanvas.material.set_shader_parameter("onions", false)
+	FOLDED_DOSA_SPRITES_FILE_PATH = "res://assets/FoldedDosas/"
 	mouse_over_pan = false
 	flip_cooldown = 0.0
 

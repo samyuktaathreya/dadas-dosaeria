@@ -13,15 +13,19 @@ const SPACE_BETWEEN_TICKET_ICONS = 45.0
 const CHUTNEY_MINIMIZED_SCALE = 0.2
 const CHUTNEY_POSITION = Vector2(0, 160)
 
+const DRINK_MINIMIZED_SCALE = 0.2
+
 const DOSA_FILE_PATH = "res://assets/dosas/"
 const CHUTNEY_FILE_PATH = "res://assets/chutneys/"
+const DRINK_FILE_PATH = "res://assets/drinks/"
+
 var customer_of_ticket
 var customer_data
 var hovering_on_ticket = false
 
 var ticket_icons = []
 
-const UI_BAR_Y_POSITION = 280.0
+const UI_BAR_Y_POSITION = 200.0 #previously 280
 const VERTICAL_SPACING = 100.0
 const EXPANDED_TICKET_POSITION = Vector2(1644.0, 492.0)
 
@@ -62,6 +66,17 @@ func spawn_chutney_icon(chutney_texture, icon_position):
 	icon.global_position = icon_position
 	ticket_icons.append(icon)
 	return icon
+	
+func spawn_drink_icon(drink_texture, icon_position):
+	var icon = Sprite2D.new()
+	icon.texture = drink_texture
+	icon.scale = Vector2(DRINK_MINIMIZED_SCALE, DRINK_MINIMIZED_SCALE)
+	icon.show()
+	$BlankOrderTicket.add_child(icon)
+	icon.global_position = icon_position
+	ticket_icons.append(icon)
+	return icon
+	
 
 func load_ticket(ticket_position, customer):
 	minimized_position = ticket_position  # ADD THIS
@@ -86,6 +101,17 @@ func load_ticket(ticket_position, customer):
 		var chutney_texture = load(CHUTNEY_FILE_PATH + chutney + ".png")
 		spawn_chutney_icon(chutney_texture, icon_position)
 		icon_position.y -= SPACE_BETWEEN_TICKET_ICONS
+		
+	# spawn the drink
+	var drink_texture
+	if order.sugar:
+		drink_texture = load(DRINK_FILE_PATH + order.drink + "Sugar.png")
+	else:
+		drink_texture = load(DRINK_FILE_PATH + order.drink + "Ice.png")
+		
+	spawn_drink_icon(drink_texture, icon_position)
+	
+	icon_position.y -= SPACE_BETWEEN_TICKET_ICONS
 
 func _input(event):
 	# Handle dragging movement
@@ -93,6 +119,7 @@ func _input(event):
 		if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
 			if hovering_on_ticket and not is_dragging and CookingState.dragging_ticket == null:
 				is_dragging = true
+				minimize_ticket()
 				CookingState.dragging_ticket = self
 				ticket_being_dragged.emit(self)
 			if is_dragging and CookingState.dragging_ticket == self:
@@ -137,7 +164,7 @@ func minimize_ticket():
 			icon.scale *= (MINIMIZED_SCALE / EXPANDED_SCALE) * 2
 		
 	# move position of ticket 
-	self.position = Vector2(self.position.x, UI_BAR_Y_POSITION)
+	self.global_position = Vector2(self.global_position.x, UI_BAR_Y_POSITION)
 	
 	ticket_minimized = true
 	
