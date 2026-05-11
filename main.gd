@@ -19,11 +19,13 @@ const NoButtonScenes = ["OrderScene", "SubmitScene", "MenuScene"]
 var mouse_on_submit_ticket_area = false
 var dragged_ticket = null
 
-var total_score
+var total_score = 0
+var highest_score = 1014.86
 
 var dragging = false
 
 const BANANA_LEAF_POSITION_IN_DRINK_SCENE = Vector2(978, 731)
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -44,7 +46,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass # Replace with function body.
+	$UI/GameTimerLabel.text = str(snappedf($MenuScene/GameTimer.time_left, 1))
 
 func _on_customer_clicked(customer):
 	showScene("OrderScene")
@@ -117,45 +119,19 @@ func add_new_banana_leaf_to_drink_scene():
 	$DrinkScene.connect_signals_to_new_banana_leaf(new_banana_leaf)
 
 func reset_game():
-		# reset all values from previous game
-		# update total score
-		total_score = 0
-		update_total_score(0)
-		# remove customers from previous game
-		for node in $CustomerLineScene.get_children():
-			if node in $CustomerLineScene.customerArray:
-				node.queue_free()
-		
-		# remove tickets from previous game
-		for node in $UI.get_children():
-			if node is Ticket:
-				node.queue_free()
-				
-		# remove dosas
-		for obj in $CookingScene.get_children():
-			if obj is TawaController:
-				obj.reset_tawa()
-				
-		for obj in $ChutneyScene/DosaPile.get_children():
-			if obj is not Area2D:
-				obj.queue_free()
-				
-		# remove chutneys
-		for obj in $ChutneyScene.get_children():
-			if obj is Katori:
-				obj.queue_free()
-				
-		for obj in $ChutneyScene/DosaPile.get_children():
-			if obj in CookingState.banana_leaf_items:
-				obj.queue_free()
+	# reset all values from previous game
+	# update total score
 
-		# remove cups
-		for obj in $DrinkScene/BananaLeaf.get_children():
-			if obj in CookingState.banana_leaf_items:
-				obj.queue_free()
-				
-				
-		CookingState.reset()
+	for child in self.get_children():
+		if child.has_method("reset"):
+			child.reset()
+			
+	# show old total score
+	if total_score > highest_score:
+		highest_score = total_score
+	$MenuScene/TotalScore.text = "Highest Score: " + str(highest_score)
+			
+	CookingState.reset()
 		
 func showScene(scene):
 	if scene == "MenuScene":
@@ -252,6 +228,7 @@ func _on_submit_scene_submit_scene_finished() -> void:
 func _on_button_pressed() -> void:
 	$CustomerLineScene/CustomerSpawner.start()
 	$MenuScene/GameTimer.start()
+	update_total_score(0)
 	showScene("CustomerLineScene")
 
 func _on_game_timer_timeout() -> void:

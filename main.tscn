@@ -9,7 +9,11 @@
 [ext_resource type="PackedScene" uid="uid://36hp7hvdr83p" path="res://chutney_scene.tscn" id="9_4c57u"]
 [ext_resource type="Texture2D" uid="uid://ccs4d3gp1nc6d" path="res://assets/MenuScreen.png" id="10_4c57u"]
 [ext_resource type="PackedScene" uid="uid://dng8bgp6rya5o" path="res://drink_scene.tscn" id="10_dg77c"]
+[ext_resource type="Texture2D" uid="uid://dgg0o54e3jc4b" path="res://assets/Backgrounds/Blank kitchen countertop.png" id="10_w48qg"]
 [ext_resource type="PackedScene" uid="uid://cxoinwbbw7h18" path="res://submit_scene.tscn" id="11_dg77c"]
+[ext_resource type="Texture2D" uid="uid://d3i8mjanlcmyi" path="res://assets/Chutneys/Buckets/Green Chutney Bucket.png" id="12_vivmo"]
+[ext_resource type="Texture2D" uid="uid://bm2dw7m2wwkoj" path="res://assets/Chutneys/Buckets/Orange Chutney Bucket.png" id="13_2cqfq"]
+[ext_resource type="Texture2D" uid="uid://dewd20fvktids" path="res://assets/Chutneys/Buckets/White Chutney Bucket.png" id="14_yaehf"]
 
 [node name="main" type="Node2D" unique_id=226761845]
 script = ExtResource("1_ig7tw")
@@ -40,26 +44,72 @@ offset_bottom = 0.0
 
 [node name="MenuScene" type="Node2D" parent="." unique_id=1512093519]
 
+[node name="TextureRect2" type="TextureRect" parent="MenuScene" unique_id=1777551050]
+offset_right = 1942.0
+offset_bottom = 1226.0
+texture = ExtResource("10_w48qg")
+
 [node name="TextureRect" type="TextureRect" parent="MenuScene" unique_id=1602692097]
+visible = false
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("10_4c57u")
 
+[node name="Label" type="Label" parent="MenuScene" unique_id=512141584]
+offset_left = 23.0
+offset_top = 129.0
+offset_right = 872.0
+offset_bottom = 266.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 100
+text = "DADAS DOSAERIA"
+
 [node name="Button" type="Button" parent="MenuScene" unique_id=194852837]
-offset_left = 706.0
-offset_top = 649.0
-offset_right = 1273.0
-offset_bottom = 857.0
+offset_left = 43.0
+offset_top = 834.0
+offset_right = 662.0
+offset_bottom = 1042.0
 theme_override_font_sizes/font_size = 100
 text = "START GAME"
 
 [node name="GameTimer" type="Timer" parent="MenuScene" unique_id=984849294]
-wait_time = 5.0
+wait_time = 300.0
 one_shot = true
 
+[node name="LineEdit" type="LineEdit" parent="MenuScene" unique_id=216626016]
+visible = false
+offset_left = 201.0
+offset_top = 213.0
+offset_right = 949.0
+offset_bottom = 287.0
+
+[node name="LineEditSubmitButton" type="Button" parent="MenuScene" unique_id=875758386]
+visible = false
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="Sprite2D" type="Sprite2D" parent="MenuScene" unique_id=130715822]
+position = Vector2(186, 440)
+scale = Vector2(0.401, 0.414)
+texture = ExtResource("12_vivmo")
+
+[node name="Sprite2D2" type="Sprite2D" parent="MenuScene" unique_id=2058142162]
+position = Vector2(572, 439.99997)
+scale = Vector2(0.401, 0.414)
+texture = ExtResource("13_2cqfq")
+
+[node name="Sprite2D3" type="Sprite2D" parent="MenuScene" unique_id=521978767]
+position = Vector2(937, 446)
+scale = Vector2(0.401, 0.414)
+texture = ExtResource("14_yaehf")
+
 [node name="TotalScore" type="Label" parent="MenuScene" unique_id=1493903895]
-offset_right = 40.0
-offset_bottom = 23.0
+offset_left = 63.0
+offset_top = 696.0
+offset_right = 182.0
+offset_bottom = 765.0
+theme_override_font_sizes/font_size = 50
+text = "hello"
 
 [connection signal="order_scene" from="." to="UI" method="_on_main_order_scene"]
 [connection signal="dosa_submitted" from="CookingScene" to="ChutneyScene" method="_on_cooking_scene_dosa_submitted"]

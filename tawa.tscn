@@ -5,17 +5,17 @@
 [ext_resource type="Texture2D" uid="uid://k8amxco0fxux" path="res://assets/Backgrounds/Flame 1.png" id="2_pomxd"]
 [ext_resource type="Script" uid="uid://dditg6olfh5od" path="res://progress_bar.gd" id="3_8uu6o"]
 [ext_resource type="Shader" uid="uid://cejgqwynjtpx7" path="res://batter.gdshader" id="3_cxa3y"]
-[ext_resource type="Texture2D" uid="uid://ifa3m36tchg2" path="res://assets/Backgrounds/Flame 2.png" id="3_x7wip"]
+[ext_resource type="Texture2D" uid="uid://t514as4ix1fl" path="res://assets/Backgrounds/Flame 2.png" id="3_x7wip"]
 [ext_resource type="Texture2D" uid="uid://cnyoi53x5v2ts" path="res://assets/dosadoughtexture.png" id="4_8uu6o"]
 [ext_resource type="Texture2D" uid="uid://cdt43old6g5ej" path="res://chopped_onions.webp" id="6_gxv0q"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_t7dpt"]
 animations = [{
 "frames": [{
-"duration": 1.0,
+"duration": 3.0,
 "texture": ExtResource("2_pomxd")
 }, {
-"duration": 1.0,
+"duration": 3.0,
 "texture": ExtResource("3_x7wip")
 }],
 "loop": true,
@@ -38,11 +38,11 @@ radius = 31.016125
 [node name="TawaController" type="Node2D" unique_id=33808163]
 script = ExtResource("1_2wcu6")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=696932625]
-visible = false
-position = Vector2(368, 638)
-scale = Vector2(0.8, 0.8)
+[node name="Flame" type="AnimatedSprite2D" parent="." unique_id=696932625]
+position = Vector2(367, 664)
+scale = Vector2(0.7, 0.7)
 sprite_frames = SubResource("SpriteFrames_t7dpt")
+frame_progress = 0.12975983
 
 [node name="Tawa" type="Area2D" parent="." unique_id=333204320]
 position = Vector2(418, 630)

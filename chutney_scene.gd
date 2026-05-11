@@ -41,6 +41,33 @@ var container_to_katori_name_dict = {
 	"MintChutneyContainer": "MintChutney"
 }
 
+func reset():
+	mouse_on_dosa_pile = false
+	dosa_pile = []
+	dosa_pile_positions = []
+	dragging_dosa = false
+	mouse_on_banana_leaf = false
+	mouse_on_katori = false
+	dragged_object = null
+	dragged_object_original_position = null
+	dragging = false
+
+	mouse_on_container = null
+
+	z_index_on_banana_leaf = 10
+
+	$ContinueButton/WarningTimer.stop()
+	
+	for child in $DosaPile.get_children():
+		if child is not Area2D:
+			child.queue_free()
+			
+	for child in $BananaLeaf.get_children():
+		if child is Katori:
+			child.queue_free()
+		if child.has_meta("item_type"):
+			child.queue_free()
+	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	spawn_katori()

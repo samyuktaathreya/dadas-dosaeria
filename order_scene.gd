@@ -29,6 +29,40 @@ var customer_order_sprite
 # --- NEW: Flag to track if we are currently waiting ---
 var waiting_for_step = false
 
+var cancelled = false
+var current_tween
+
+func reset():
+	# 1. Stop the current animation loop from continuing
+	cancelled = true
+	waiting_for_step = false
+	
+	# 2. Kill any active tweens to prevent weird visual glitches
+	if current_tween and current_tween.is_valid():
+		current_tween.kill()
+
+	# 3. Hide standard UI elements
+	$OrderBubble/BubbleSprite.hide()
+	for child in $CustomerOrderSprites.get_children():
+		child.hide()
+		
+	# 4. Destroy all dynamically spawned icons
+	for icon in ticket_icons:
+		if is_instance_valid(icon):
+			icon.queue_free()
+	ticket_icons.clear() # Empty the array
+	
+	# 5. Reset data variables
+	current_order = {}
+	customerOrdered = null
+	customer_order_sprite = null
+	
+	# 6. Reset visual states (assuming BlackOverlay starts fully opaque)
+	$BlackOverlay.modulate.a = 1.0 
+	
+	# Hide the entire scene until it's called again
+	hide()
+
 func _ready():
 	SPEECH_BUBBLE_POSITION = $OrderBubble/SpeechBubbleIconPosition.position
 	if testing_order_scene:
@@ -38,13 +72,11 @@ func _ready():
 	for child in $CustomerOrderSprites.get_children():
 		child.hide()
 
-# --- NEW: Detect clicks to skip the current wait ---
 func _input(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if waiting_for_step:
 			waiting_for_step = false # This breaks the loop in wait_or_skip instantly
 
-# --- NEW: Helper function to wait or skip ---
 func wait_or_skip(duration: float):
 	waiting_for_step = true
 	var timer = get_tree().create_timer(duration)
@@ -52,10 +84,12 @@ func wait_or_skip(duration: float):
 	# Wait until either the timer runs out OR waiting_for_step becomes false via a click
 	while waiting_for_step and timer.time_left > 0:
 		await get_tree().process_frame
+		if cancelled: return
 	
 	waiting_for_step = false
 
 func show_order(customer):
+	cancelled = false
 	if testing_order_scene:
 		current_order = { 
 			"dosa": ["OnionDosa"], 
@@ -79,16 +113,20 @@ func show_order(customer):
 	play_order_animation()
 
 func play_order_animation():
-	var tween = create_tween()
+	current_tween = create_tween()
 	
 	# Fade in from black
-	tween.tween_property($BlackOverlay, "modulate:a", 0.0, TIME_INTERVAL)
+	current_tween.tween_property($BlackOverlay, "modulate:a", 0.0, TIME_INTERVAL)
 	await wait_or_skip(TIME_INTERVAL)
+	
+	if cancelled: return
 	
 	await show_icons()
 	
+	if cancelled: return
+	
 	await on_animation_complete()
-
+	
 func show_icons():
 	var ticket_position = $TicketCinematic/IconStartingTicketPosition.global_position
 	
@@ -98,14 +136,18 @@ func show_icons():
 		$OrderBubble/BubbleSprite.show()
 		var speech_bubble_dosa = spawn_icon(dosa_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_DOSA_SCALE)
 		await wait_or_skip(TIME_INTERVAL)
-		ticket_icons.pop_back()		
+		if cancelled: return
 
 		spawn_icon(dosa_texture, ticket_position, BIG_TICKET_DOSA_SCALE)
 		await wait_or_skip(TIME_INTERVAL)
-		
+		if cancelled: return
+
+		ticket_icons.erase(speech_bubble_dosa) 
 		speech_bubble_dosa.queue_free()
+		
 		$OrderBubble/BubbleSprite.hide()
 		await wait_or_skip(TIME_INTERVAL)
+		if cancelled: return
 		
 		ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
 
@@ -115,14 +157,18 @@ func show_icons():
 		$OrderBubble/BubbleSprite.show()
 		var speech_bubble_chutney = spawn_icon(chutney_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_CHUTNEY_SCALE)
 		await wait_or_skip(TIME_INTERVAL)
-		ticket_icons.pop_back()
-		
+		if cancelled: return
+
 		spawn_icon(chutney_texture, ticket_position, BIG_TICKET_CHUTNEY_SCALE)
 		await wait_or_skip(TIME_INTERVAL)
+		if cancelled: return
 		
+		ticket_icons.erase(speech_bubble_chutney)
 		speech_bubble_chutney.queue_free()
+		
 		$OrderBubble/BubbleSprite.hide()
 		await wait_or_skip(TIME_INTERVAL)
+		if cancelled: return
 		
 		ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
 		
@@ -133,30 +179,34 @@ func show_icons():
 		drink_texture = load(DRINK_FILE_PATH + drink + "Sugar.png")
 	else:
 		drink_texture = load(DRINK_FILE_PATH + drink + "Ice.png")
-		
-	print("drink texture: ", drink_texture)
-	print(DRINK_FILE_PATH + drink + "Sugar.png")
-	print(DRINK_FILE_PATH + drink + "Ice.png")
 	
 	$OrderBubble/BubbleSprite.show()
-	var speech_bubble_chutney = spawn_icon(drink_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_DRINK_SCALE)
+	var speech_bubble_drink = spawn_icon(drink_texture, SPEECH_BUBBLE_POSITION, SPEECH_BUBBLE_DRINK_SCALE)
 	await wait_or_skip(TIME_INTERVAL)
-	ticket_icons.pop_back()
+	if cancelled: return
+	
+	# --- REMOVED pop_back() FROM HERE ---
 	
 	spawn_icon(drink_texture, ticket_position, BIG_TICKET_DRINK_SCALE)
 	await wait_or_skip(TIME_INTERVAL)
+	if cancelled: return
 	
-	speech_bubble_chutney.queue_free()
+	# --- ADDED erase() HERE INSTEAD ---
+	ticket_icons.erase(speech_bubble_drink)
+	speech_bubble_drink.queue_free()
+	
 	$OrderBubble/BubbleSprite.hide()
 	await wait_or_skip(TIME_INTERVAL)
+	if cancelled: return
 	
 	ticket_position.y -= SPACE_BETWEEN_ICONS_ON_BIG_TICKET
 
 func on_animation_complete():
 	while len(ticket_icons) > 0:
 		var icon = ticket_icons.pop_front()
-		icon.queue_free()
-	print("Order animation finished!")
+		if is_instance_valid(icon): # Added safety check
+			icon.queue_free()
+
 	customer_order_sprite.hide()
 	# send signal to main that the order is finished
 	# main will 
@@ -169,7 +219,6 @@ func spawn_icon(icon_texture, icon_position, icon_scale):
 	icon.texture = icon_texture
 	icon.scale = icon_scale
 	icon.visible = true
-	print("icon global position: ", icon.global_position)
 	add_child(icon)
 	icon.global_position = icon_position
 	ticket_icons.append(icon)

@@ -24,6 +24,17 @@ const CUSTOMER_OPTIONS = ["GirlyPop", "Tourist"]
 # "chutney": [chutney1, chutney2, ...]
 # "drink": [drink] (drink is limited to 1)
 
+func reset():
+	customerCount = 0
+	while len(customerArray) > 0:
+		var customer = customerArray.pop_back()
+		customer.queue_free()
+	next_customer_id = 0
+	customer_at_order_spot = false
+	customer_spawn_point = $CustomerSpawnPoint.global_position
+	$CustomerSpawner.stop()
+
+	
 func generate_random_order(dosa_cap: int = 1, chutney_cap: int = 1):
 	const DOSA_OPTIONS = ["PlainDosa", "OnionDosa"]
 	const CHUTNEY_OPTIONS = ["CoconutChutney", "MintChutney", "Sambar"]
@@ -101,7 +112,7 @@ func spawn_customer():
 	customer.waiting_customer.connect(_on_customer_waiting_customer)
 	
 	$CustomerSpawner.start()
-	$CustomerSpawner.wait_time = randf_range(1.0, 4.0)
+	$CustomerSpawner.wait_time = randf_range(1.0, 30.0)
 	
 	customer_spawn_point.x += CUSTOMER_DISTANCE
 	print("customer spawned")

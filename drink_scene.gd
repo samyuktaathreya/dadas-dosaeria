@@ -16,6 +16,33 @@ var cups = [] # array of cups spawned
 var drink_is_pouring = false
 var global_banana_leaf
 
+
+func reset():
+	# ensure there are no more cups in the scene
+	for cup in cups:
+		cup.queue_free()
+		
+	cup_spawned = false
+	dragged_object = null
+	dragging = false
+	mouse_on_banana_leaf = false
+	cup_on_leaf = false
+	cup_count = 0
+	cups = []
+	drink_is_pouring = false
+	show_drinks()
+	$TooManyCupsWarning.hide()
+	$CantPourNowWarning.hide()
+	$CantPourNowTimer.stop()
+	$TooManyCupsWarningTimer.stop()
+	$DrinkDispenser/EmptyDrinkDispenser/SugarIceCollection/SugarIceEncouragementTimer.stop()
+
+	for child in get_children():
+		if child is BananaLeaf:
+			child.mouse_entered.connect(_on_banana_leaf_mouse_entered)
+			child.mouse_exited.connect(_on_banana_leaf_mouse_exited)
+			global_banana_leaf = child
+	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	show_drinks()
@@ -57,6 +84,8 @@ func _input(event):
 func _on_chutney_scene_banana_leaf_updated() -> void:
 	var starting_z_index = global_banana_leaf.z_index + 5
 	for item in CookingState.pending_items:
+		if item == null:
+			continue
 		var global_pos = item.global_position
 		var prev_parent = item.get_parent()
 		if prev_parent:

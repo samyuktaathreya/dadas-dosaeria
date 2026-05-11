@@ -5,10 +5,27 @@ signal submit_scene_finished
 
 var customer
 
-const T_MIN = 30.0
-const T_MAX = 120.0
+const T_MIN = 60.0
+const T_MAX = 180.0
 
 var SCORE_LABELS_PATH
+
+var current_tween: Tween = null
+var cancelled = false
+
+# --- NEW: Flags to handle skipping animations ---
+var waiting_for_step = false
+var skip_animations = false
+
+func reset():
+	cancelled = true
+	waiting_for_step = false
+	if current_tween:
+		current_tween.kill()
+		current_tween = null
+	hide_score_labels()
+	$Tip.hide()
+	$BlackOverlay.modulate.a = 1.0
 
 func _ready() -> void:
 	SCORE_LABELS_PATH = get_parent().get_node("UI").get_node("ScoreLabels")
@@ -20,6 +37,12 @@ func _ready() -> void:
 	$Tip.add_theme_font_size_override("font_size", 32)
 	$Tip.hide()
 
+# --- NEW: Input function to trigger skips ---
+func _input(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		skip_animations = true
+		waiting_for_step = false # Breaks any active while loops immediately
+
 func hide_score_labels():
 	for child in get_parent().get_node("UI").get_node("ScoreLabels").get_children():
 		child.add_theme_font_size_override("font_size", 32)
@@ -27,8 +50,32 @@ func hide_score_labels():
 		
 func _process(delta: float) -> void:
 	pass
+
+# --- NEW: Helper functions to handle safe waiting and skipping ---
+func wait_for_tween_or_skip(tween: Tween):
+	waiting_for_step = true
+	while waiting_for_step and tween.is_valid() and tween.is_running():
+		await get_tree().process_frame
+		if cancelled: return
+	waiting_for_step = false
+	
+	# If the loop was broken by a click, kill the tween
+	if tween and tween.is_valid():
+		tween.kill()
+
+func wait_or_skip(duration: float):
+	if skip_animations: return # Ignore timer entirely if we are skipping
+	waiting_for_step = true
+	var timer = get_tree().create_timer(duration)
+	while waiting_for_step and timer.time_left > 0:
+		await get_tree().process_frame
+		if cancelled: return
+	waiting_for_step = false
 	
 func play_submit_animation():
+	cancelled = false # FIX: Reset the cancellation flag!
+	skip_animations = false # Start fresh without skipping
+	
 	var CustomerData = CookingState.customer_of_submitted_order
 
 	var order_score = snappedf(calculateOrderScore(), 0.01)
@@ -39,23 +86,39 @@ func play_submit_animation():
 	
 	var main_scene = get_parent()
 	main_scene.update_total_score(total_score)
+	
 	# Fade in from black
-	var tween = create_tween()
-	tween.tween_property($BlackOverlay, "modulate:a", 0.0, TIME_INTERVAL)
-	await tween.finished
+	current_tween = create_tween()
+	current_tween.tween_property($BlackOverlay, "modulate:a", 0.0, TIME_INTERVAL)
+	await wait_for_tween_or_skip(current_tween)
+	if cancelled: return
+	$BlackOverlay.modulate.a = 0.0 # Force state in case of skip
 
 	# show each score with a pause between each
 	await show_label_animated(SCORE_LABELS_PATH.get_node("OrderScore"), str(order_score) + "%")
+	if cancelled: return
 	await show_label_animated(SCORE_LABELS_PATH.get_node("CookingScore"), str(cooking_score) + "%")
+	if cancelled: return
 	await show_label_animated(SCORE_LABELS_PATH.get_node("ChutneyScore"), str(chutney_score) + "%")
+	if cancelled: return
 	await show_label_animated(SCORE_LABELS_PATH.get_node("DrinkScore"), str(drink_score) + "%")
+	if cancelled: return
 
 	# total score
 	await show_label_animated(SCORE_LABELS_PATH.get_node("TotalScore"), "Total Score : " + str(total_score) + "%")
+	if cancelled: return
 
 	# tip
 	await show_label_animated($Tip, "Tip : $" + str(total_score * 0.01 * 5))
+	if cancelled: return
 	
+	# --- NEW: Final read delay ---
+	# If they skipped to the end, give them a few seconds to actually read their final score.
+	# If they click one more time during this wait, it will instantly close the scene.
+	skip_animations = false 
+	await wait_or_skip(3.5) 
+	if cancelled: return
+
 	# hide the scores when they are done being shown
 	hide_score_labels()
 	$Tip.hide()
@@ -66,16 +129,22 @@ func play_submit_animation():
 
 func show_label_animated(label: Node, text: String) -> void:
 	label.text = text
-	label.modulate.a = 0.0
 	label.show()
+	
+	# If skipping, bypass tween entirely
+	if skip_animations:
+		label.modulate.a = 1.0
+		return
 
-	# fade in
-	var tween = create_tween()
-	tween.tween_property(label, "modulate:a", 1.0, 0.4)
-	await tween.finished
+	label.modulate.a = 0.0
+	current_tween = create_tween()
+	current_tween.tween_property(label, "modulate:a", 1.0, 0.4)
+	
+	await wait_for_tween_or_skip(current_tween)
+	if cancelled: return
+	label.modulate.a = 1.0 # Force state in case of skip
 
-	# pause before next label
-	await get_tree().create_timer(TIME_INTERVAL).timeout
+	await wait_or_skip(TIME_INTERVAL)
 	
 func calculateOrderScore():
 	# check how long the player took to get the customer's order

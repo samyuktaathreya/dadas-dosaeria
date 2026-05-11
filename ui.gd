@@ -12,6 +12,11 @@ const EXPANDED_TICKET_SCALE = Vector2(1.0, 1.0)
 
 const VERTICAL_SCORE_OFFSET = Vector2(125, -100)
 
+func reset():
+	for obj in get_children():
+		if obj is Ticket:
+			obj.queue_free()
+			
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var buttons := [

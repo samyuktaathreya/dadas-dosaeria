@@ -75,6 +75,7 @@ var FOLDED_DOSA_SPRITES_FILE_PATH = "res://assets/FoldedDosas/"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	$Flame.play("default")
 	
 	$Onions.hide()
 	var ONION_DOSA_SPRITES_FILE_PATH = "res://assets/OnionDosaCookingSprites/"
@@ -337,6 +338,7 @@ func _on_tawa_center_mouse_entered() -> void:
 	if CookingState.drag_ladle and not dosaInPan and not CookingState.dragging_ladle:
 		dough_spread_triggered = true
 		dosaInPan = true
+		$Flame.show()
 		CookingState.dragging_ladle = true
 		$Tawa/DoughSpreadingTimer.start()
 
@@ -467,6 +469,7 @@ func reset_tawa():
 	click_bucket = false
 
 	dosaInPan = false
+	$Flame.hide()
 
 	force_constant = 40
 
@@ -486,6 +489,7 @@ func reset_tawa():
 	dosa_cooked_amounts_index = 0 # index changes when the dosa is flipped
 	submit_dosa = false
 	dosaInPan = false
+	$Flame.hide()
 	cook_level = 0.0
 	dosa_cooked_amounts = [0, 0]
 	dosa_cooked_amounts_index = 0

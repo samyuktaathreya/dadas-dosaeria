@@ -130,6 +130,14 @@ offset_bottom = 101.0
 theme_override_font_sizes/font_size = 50
 text = "hello"
 
+[node name="GameTimerLabel" type="Label" parent="." unique_id=1934024037]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 136.0
+offset_right = 198.0
+offset_bottom = 205.0
+theme_override_font_sizes/font_size = 50
+
 [connection signal="pressed" from="CookingButton" to="." method="_on_cooking_button_pressed"]
 [connection signal="pressed" from="ChutneyButton" to="." method="_on_chutney_button_pressed"]
 [connection signal="pressed" from="DrinkButton" to="." method="_on_drink_button_pressed"]

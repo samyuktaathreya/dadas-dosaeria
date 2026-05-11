@@ -47,30 +47,30 @@ func clear_on_submit():
 	
 func reset():
 	banana_leaf_items = []
-	var drag_ladle = false
+	drag_ladle = false
 
 	# prevents dragging dough on multiple dosa pans in one go
-	var dragging_ladle = false 
+	dragging_ladle = false 
 
-	var drag_cooldown = false
+	drag_cooldown = false
 
-	var pending_items = [] # items on banana leaf in chutney scene
-	var banana_leaf_items = []  # items on banana leaf in drink scene
-	var order_in_drink_scene = false
+	pending_items = [] # items on banana leaf in chutney scene
+	banana_leaf_items = []  # items on banana leaf in drink scene
+	order_in_drink_scene = false
 
-	var dosas: Array[Texture2D] = []
-	var dosa_materials = []
-	var dosa_pan_centers = []
-	var dosa_scores = []
+	dosas = []
+	dosa_materials = []
+	dosa_pan_centers = []
+	dosa_scores = []
 
-	var customer_of_submitted_order = null
+	customer_of_submitted_order = null
 
 	# prevent user from dragging multiple tickets at once
-	var dragging_ticket = null
+	dragging_ticket = null
 
 	# prevent user from dragging multiple dosas at once
-	var dragging_dosa = null
+	dragging_dosa = null
 
-	var dragging_onions = false
+	dragging_onions = false
 
-	var mouse_on_trash = false
+	mouse_on_trash = false

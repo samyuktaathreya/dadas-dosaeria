@@ -6,6 +6,12 @@ signal dosa_submitted
 var open_trash_texture = load("res://assets/Trashtrashed.png")
 var closed_trash_texture = load("res://assets/Trash.png")
 
+func reset():
+	$DoughBucket/LadleCooldown.stop()
+	for child in get_children():
+		if child is TawaController:
+			child.reset_tawa()
+	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
